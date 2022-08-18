@@ -11,49 +11,49 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-	hostedGame Game?
-	player Player?
+  id         Int     @id @default(autoincrement())
+  name       String
+  hostedGame Game?
+  player     Player?
 }
 
 model Game {
-	id	Int @id @default(autoincrement())
-	createdAt DateTime @default(now())
-	host User @relation(fields: [hostId], references: [id])
-	hostId Int @unique
-	players Player[]
-	rounds Round[]
-	endedAt DateTime?
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  host      User      @relation(fields: [hostId], references: [id])
+  hostId    Int       @unique
+  players   Player[]
+  rounds    Round[]
+  endedAt   DateTime?
 }
 
 model Role {
-	id Int @id @default(autoincrement())
-	name String
-	type String
-	nightTimePrompt String?
-	roleDesc String
-	players Player[]
+  id              Int      @id @default(autoincrement())
+  name            String
+  type            String
+  nightTimePrompt String?
+  roleDesc        String
+  players         Player[]
 }
 
 model Player {
-	id Int @id @default(autoincrement())
-	role Role? @relation(fields: [roleId], references: [id])
-	roleId Int?
-	game Game @relation(fields:[gameId], references: [id])
-	gameId Int
-	roundDied Round? @relation(fields: [roundDiedId], references: [id])
-	roundDiedId Int?
-	user User @relation(fields: [userId], references: [id])
-	userId Int @unique
+  id          Int    @id @default(autoincrement())
+  role        Role?  @relation(fields: [roleId], references: [id])
+  roleId      Int?
+  game        Game   @relation(fields: [gameId], references: [id])
+  gameId      Int
+  roundDied   Round? @relation(fields: [roundDiedId], references: [id])
+  roundDiedId Int?
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int    @unique
 }
 
 model Round {
-	id Int @id @default(autoincrement())
-	gameId Int
-	game Game @relation(fields: [gameId], references: [id])
-	roundNumber Int
-	createdAt DateTime @default(now())
-	died Player[]
-	endedAt DateTime?
+  id          Int       @id @default(autoincrement())
+  game        Game      @relation(fields: [gameId], references: [id])
+	gameId      Int
+  roundNumber Int
+  createdAt   DateTime  @default(now())
+  died        Player[]
+  endedAt     DateTime?
 }
