@@ -90,6 +90,23 @@ _This a web application that will allow users to play a mafia themed styled hidd
 Everything you need to interact with our API.
 ### Making Requests
 - In progress
+
+- User:
+  - GET `/user` retrieves all users.
+  - GET `/user/:id` retrieves a single user by id.
+  - POST `/user/` creates a new user.
+  - PUT `/user/:id` updates a single user.
+  - DELETE `user/:id` deletes a single user.
+
+- Game:
+  - GET `/game` retrieves all games.
+  - GET `/game/:id` retrieves a single game.
+  - POST `/game/:id` creates a new game.
+
+- Round:
+  - GET `/round/:id` retrieves specific round from game.
+  - GET `/rounds/:gameID` retrieves all rounds from game.
+
 ### The Request Body
 - In progress
 ### Models

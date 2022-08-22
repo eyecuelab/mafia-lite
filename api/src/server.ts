@@ -12,12 +12,14 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket: any) => {
-  console.log('a user connected');
+  console.log('a user connected', socket.id);
+  socket.on('disconnect', () => {
+    console.log('socket closed');
+  })
 });
 /***/
 
 
 const port = 3000;
-server.listen(port, () => //Change server to app to toggle between REST and web sockets
-  console.log(`🚀 Server ready at: http://localhost:3000`)
+server.listen(port, () => console.log(`🚀 Server ready at: http://localhost:3000`)
 )

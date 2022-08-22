@@ -5,6 +5,7 @@ import './App.css';
 import reactLogo from './assets/react.svg';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+const socket = io(API_ENDPOINT);
 
 type UserCreateInput = {
   email: string,
@@ -31,9 +32,11 @@ const handleResponse = async (response: Response) => {
   }
 }
 
+//using /game instead of /users to view UI
 const getUsers = async (): Promise<User[]> => {
-  const url = `${API_ENDPOINT}`;
+  const url = `${API_ENDPOINT}/game`;
   const response = await fetch(url, { ...BASE_HEADERS });
+  console.log(response)
   return await handleResponse(response);
 }
 
@@ -49,12 +52,12 @@ function App() {
   const queryClient = useQueryClient();
 
   const { isLoading, error, data: users } = useQuery(["users"], getUsers);
-  const socket = io(API_ENDPOINT);
+
 
   useEffect(() => {
     console.log("attempting socket connection")
-    socket.on('connection', () => {
-      console.log('socket open');
+    socket.on('connect', () => {
+      console.log('socket open', socket.id);
     })
   }, [])
 
