@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { Fragment, useEffect, useState } from 'react';
+import io from "socket.io-client";
+import './App.css';
+import reactLogo from './assets/react.svg';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -21,6 +22,7 @@ const BASE_HEADERS = {
 }
 
 const handleResponse = async (response: Response) => {
+  console.log(response)
   const json = await response.json();
   if (!response.ok) {
     throw Error(json.error);
@@ -30,7 +32,7 @@ const handleResponse = async (response: Response) => {
 }
 
 const getUsers = async (): Promise<User[]> => {
-  const url = `${API_ENDPOINT}/users`;
+  const url = `${API_ENDPOINT}`;
   const response = await fetch(url, { ...BASE_HEADERS });
   return await handleResponse(response);
 }
@@ -47,6 +49,14 @@ function App() {
   const queryClient = useQueryClient();
 
   const { isLoading, error, data: users } = useQuery(["users"], getUsers);
+  const socket = io(API_ENDPOINT);
+
+  useEffect(() => {
+    console.log("attempting socket connection")
+    socket.on('connection', () => {
+      console.log('socket open');
+    })
+  }, [])
 
   const mutation = useMutation(createUser, {
     onSuccess: () => {
@@ -91,9 +101,9 @@ function App() {
       <h2>I am the signup form!</h2>
       <form className="form" onSubmit={onSubmit}>
         <label htmlFor="name">Name</label>
-        <input name="name" onChange={(e) => setUserName(e.target.value)}/>
+        <input name="name" onChange={(e) => setUserName(e.target.value)} />
         <label htmlFor="email">Email</label>
-        <input name="email" onChange={(e) => setUserEmail(e.target.value)}/>
+        <input name="email" onChange={(e) => setUserEmail(e.target.value)} />
         <button type="submit" disabled={!userEmail}>
           Add User
         </button>
@@ -102,9 +112,9 @@ function App() {
         <h2>List of existing users:</h2>
         {users?.map((user) => {
           return (
-          <Fragment key={user.id}>
-            <p>{user.name} ({user.email})</p>
-          </Fragment>
+            <Fragment key={user.id}>
+              <p>{user.name} ({user.email})</p>
+            </Fragment>
           );
         })}
         {!users?.length && (
