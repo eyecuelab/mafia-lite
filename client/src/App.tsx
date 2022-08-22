@@ -3,17 +3,19 @@ import React, { Fragment, useEffect, useState } from 'react';
 import io from "socket.io-client";
 import './App.css';
 import reactLogo from './assets/react.svg';
+import GenericButton from './Components/GenericButton';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const socket = io(API_ENDPOINT);
 
-type UserCreateInput = {
-  email: string,
-  name?: string
+type GameCreateInput = {
+  hostId: Number
 }
 
-interface User extends UserCreateInput {
+interface Game extends GameCreateInput {
   id: string;
+  createdAt: string;
+  endedAt?: string;
 }
 
 const BASE_HEADERS = {
@@ -23,8 +25,9 @@ const BASE_HEADERS = {
 }
 
 const handleResponse = async (response: Response) => {
-  console.log(response)
+
   const json = await response.json();
+
   if (!response.ok) {
     throw Error(json.error);
   } else {
@@ -32,39 +35,27 @@ const handleResponse = async (response: Response) => {
   }
 }
 
-//using /game instead of /users to view UI
-const getUsers = async (): Promise<User[]> => {
+
+const getGames = async (): Promise<Game[]> => {
   const url = `${API_ENDPOINT}/game`;
   const response = await fetch(url, { ...BASE_HEADERS });
-  console.log(response)
   return await handleResponse(response);
 }
 
-const createUser = async (user: UserCreateInput) => {
-  const url = `${API_ENDPOINT}/signup`;
-  const response = await fetch(url, { ...BASE_HEADERS, method: 'POST', body: JSON.stringify(user) });
+const createGame = async (newGame: GameCreateInput) => {
+  const url = `${API_ENDPOINT}/game`;
+  const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(newGame) });
   return await handleResponse(response);
 }
 
 function App() {
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+
+  const [hostId, setHostId] = useState("");
+  const { isLoading, error, data: games } = useQuery(["games"], getGames);
   const queryClient = useQueryClient();
-
-  const { isLoading, error, data: users } = useQuery(["users"], getUsers);
-
-
-  useEffect(() => {
-    console.log("attempting socket connection")
-    socket.on('connect', () => {
-      console.log('socket open', socket.id);
-    })
-  }, [])
-
-  const mutation = useMutation(createUser, {
+  const mutation = useMutation(createGame, {
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries(['users'])
+      queryClient.invalidateQueries(['games'])
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -74,8 +65,15 @@ function App() {
     }
   })
 
+  useEffect(() => {
+    console.log("attempting socket connection")
+    socket.on('connect', () => {
+      console.log('socket open', socket.id);
+    })
+  }, [])
+
   if (isLoading) {
-    return <p>Loading...</p>
+    <p>Loading...</p>
   }
 
   if (error instanceof Error) {
@@ -85,47 +83,35 @@ function App() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate({
-      name: userName,
-      email: userEmail,
-    })
-  };
+      hostId: parseInt(hostId)
+    });
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React Sample</h1>
-      <h2>I am the signup form!</h2>
-      <form className="form" onSubmit={onSubmit}>
-        <label htmlFor="name">Name</label>
-        <input name="name" onChange={(e) => setUserName(e.target.value)} />
-        <label htmlFor="email">Email</label>
-        <input name="email" onChange={(e) => setUserEmail(e.target.value)} />
-        <button type="submit" disabled={!userEmail}>
-          Add User
-        </button>
+    <div className='App'>
+      <h1>Mafia Lite</h1>
+      <form onSubmit={onSubmit}>
+        <input name="host-id" onChange={e => setHostId(e.target.value)} />
+        <GenericButton
+          type={"submit"}
+          text={"Host Game"}
+        />
       </form>
-      <div className="card">
-        <h2>List of existing users:</h2>
-        {users?.map((user) => {
+      <div>
+        <h2>Existing Games:</h2>
+        {games?.map(game => {
           return (
-            <Fragment key={user.id}>
-              <p>{user.name} ({user.email})</p>
+            <Fragment key={game.id}>
+              <p>game: {game.id}</p>
             </Fragment>
           );
         })}
-        {!users?.length && (
-          <p>No users</p>
+        {!games?.length && (
+          <p>No games</p>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export default App
