@@ -1,17 +1,19 @@
 import React, { Fragment, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import GenericButton from './Components/GenericButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-type UserCreateInput = {
-  email: string,
-  name?: string
+type GameCreateInput = {
+	hostId: Number
 }
 
-interface User extends UserCreateInput {
-  id: string;
+interface Game extends GameCreateInput {
+	id: string;
+	createdAt: string;
+	endedAt?: string;
 }
 
 const BASE_HEADERS = {
@@ -21,7 +23,8 @@ const BASE_HEADERS = {
 }
 
 const handleResponse = async (response: Response) => {
-  const json = await response.json();
+	const json = await response.json();
+
   if (!response.ok) {
     throw Error(json.error);
   } else {
@@ -29,29 +32,25 @@ const handleResponse = async (response: Response) => {
   }
 }
 
-const getUsers = async (): Promise<User[]> => {
-  const url = `${API_ENDPOINT}/users`;
-  const response = await fetch(url, { ...BASE_HEADERS });
-  return await handleResponse(response);
+const getGames = async (): Promise<Game[]> => {
+	const url = `${API_ENDPOINT}/game`;
+	const response = await fetch(url, {...BASE_HEADERS});
+	return await handleResponse(response);
 }
 
-const createUser = async (user: UserCreateInput) => {
-  const url = `${API_ENDPOINT}/signup`;
-  const response = await fetch(url, { ...BASE_HEADERS, method: 'POST', body: JSON.stringify(user) });
-  return await handleResponse(response);
+const createGame = async (newGame: GameCreateInput) => {
+	const url = `${API_ENDPOINT}/game`;
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(newGame) });	
+	return await handleResponse(response);
 }
 
 function App() {
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const queryClient = useQueryClient();
-
-  const { isLoading, error, data: users } = useQuery(["users"], getUsers);
-
-  const mutation = useMutation(createUser, {
+	const [hostId, setHostId] = useState("");
+	const { isLoading, error, data: games } = useQuery(["games"], getGames);
+	const queryClient = useQueryClient();
+	const mutation = useMutation(createGame, {
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries(['users'])
+      queryClient.invalidateQueries(['games'])
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -61,58 +60,46 @@ function App() {
     }
   })
 
-  if (isLoading) {
-    return <p>Loading...</p>
+	if (isLoading) {
+		<p>Loading...</p>
   }
 
   if (error instanceof Error) {
     return <p>'An error has occurred: {error.message}</p>
   }
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutation.mutate({
-      name: userName,
-      email: userEmail,
-    })
-  };
+	const onSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		mutation.mutate({
+			hostId: parseInt(hostId)
+		});
+	}
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React Sample</h1>
-      <h2>I am the signup form!</h2>
-      <form className="form" onSubmit={onSubmit}>
-        <label htmlFor="name">Name</label>
-        <input name="name" onChange={(e) => setUserName(e.target.value)}/>
-        <label htmlFor="email">Email</label>
-        <input name="email" onChange={(e) => setUserEmail(e.target.value)}/>
-        <button type="submit" disabled={!userEmail}>
-          Add User
-        </button>
-      </form>
-      <div className="card">
-        <h2>List of existing users:</h2>
-        {users?.map((user) => {
-          return (
-          <Fragment key={user.id}>
-            <p>{user.name} ({user.email})</p>
-          </Fragment>
-          );
-        })}
-        {!users?.length && (
-          <p>No users</p>
-        )}
-      </div>
-    </div>
-  )
+	return (
+		<div className='App'>
+			<h1>Mafia Lite</h1>
+			<form onSubmit={onSubmit}>
+				<input name="host-id" onChange={e => setHostId(e.target.value)} />
+				<GenericButton
+					type={"submit"}
+					text={"Host Game"}
+				/>
+			</form>
+			<div>
+				<h2>Existing Games:</h2>
+				{games?.map(game => {
+					return (
+						<Fragment key={game.id}>
+							<p>game: {game.id}</p>
+						</Fragment>
+					);
+				})}
+				{!games?.length && (
+					<p>No games</p>
+				)}
+			</div>
+		</div>
+	);
 }
 
 export default App

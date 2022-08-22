@@ -22,6 +22,13 @@ app.post("/game", async (req, res) => {
 		return res.status(500).json({ error: "Host not found"});
 	}
 
+	const hostedGame = await prisma.game.findFirst({
+		where: { hostId: Number(hostId) },
+	});
+	if (hostedGame) {
+		return res.status(500).json({ error: "User already hosting game" });
+	}
+
 	const game = await prisma.game.create({
 		data: {
 			hostId
