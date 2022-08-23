@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 const roundControllers = {
 	async getRounds(req: any, res: any) {
         const { gameId } = req.params;
-		const rounds = await prisma.round.findUniqueOrThrow({
+		const rounds = await prisma.round.findMany({
             where: {gameId : Number(gameId)}
         });
 		res.json(rounds);
