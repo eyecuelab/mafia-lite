@@ -40,7 +40,7 @@ const getGames = async (): Promise<Game[]> => {
 
 const createGame = async (newGame: GameCreateInput) => {
 	const url = `${API_ENDPOINT}/game`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(newGame) });	
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST" });	
 	return await handleResponse(response);
 }
 
@@ -48,7 +48,8 @@ function App() {
 	const [hostId, setHostId] = useState("");
 	const { isLoading, error, data: games } = useQuery(["games"], getGames);
 	const queryClient = useQueryClient();
-	const mutation = useMutation(createGame, {
+	
+	const gameMutation = useMutation(createGame, {
     onSuccess: () => {
       queryClient.invalidateQueries(['games'])
     },
@@ -61,7 +62,7 @@ function App() {
   })
 
 	if (isLoading) {
-		<p>Loading...</p>
+		return <p>Loading...</p>
   }
 
   if (error instanceof Error) {
@@ -70,7 +71,8 @@ function App() {
 
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		mutation.mutate({
+		
+		gameMutation.mutate({
 			hostId: parseInt(hostId)
 		});
 	}
@@ -79,7 +81,7 @@ function App() {
 		<div className='App'>
 			<h1>Mafia Lite</h1>
 			<form onSubmit={onSubmit}>
-				<input name="host-id" onChange={e => setHostId(e.target.value)} />
+				<input name="name" placeholder="Enter Name" onChange={e => setHostId(e.target.value)} />
 				<GenericButton
 					type={"submit"}
 					text={"Host Game"}
