@@ -12,7 +12,7 @@ const gameControllers = {
 			
 			const newUser = await prisma.user.create({
 				data: {
-					name: name
+					name: name,
 				},
 			});
 

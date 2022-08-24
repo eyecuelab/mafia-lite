@@ -5,6 +5,7 @@ import gameRouter from "./Routes/game";
 import roundRouter from "./Routes/round";
 import userRouter from "./Routes/user";
 import playerRouter from "./Routes/player";
+import gameSettingsRouter from "./Routes/gameSettings"
 
 
 const prisma = new PrismaClient()
@@ -15,7 +16,7 @@ app.use(cors({ origin: '*'}));
 app.use(express.json())
 
 
-app.use(gameRouter, userRouter, roundRouter, playerRouter)
+app.use(gameRouter, userRouter, roundRouter, playerRouter, gameSettingsRouter)
 
 
 
