@@ -19,13 +19,14 @@ model User {
 }
 
 model Game {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  host      User      @relation(fields: [hostId], references: [id])
-  hostId    Int       @unique
-  players   Player[]
-  rounds    Round[]
-  endedAt   DateTime?
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  host          User        @relation(fields: [hostId], references: [id])
+  hostId        Int         @unique
+  players       Player[]
+  rounds        Round[]
+  endedAt       DateTime?
+  settings      GameSettings? 
 }
 
 model Role {
@@ -57,4 +58,12 @@ model Round {
   createdAt   DateTime  @default(now())
   died        Player[]
   endedAt     DateTime?
+}
+
+model GameSettings {
+  id              Int       @id @default(autoincrement())
+  game            Game      @relation(fields: [gameId], references: [id])
+  gameId          Int       @unique
+  dayDuration     Int
+  nightDuration   Int       
 }
