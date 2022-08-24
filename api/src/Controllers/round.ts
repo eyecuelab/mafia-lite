@@ -9,6 +9,7 @@ const roundControllers = {
 		});
 		res.json(rounds);
 	},
+
 	async getSingleRound(req: any, res: any) {
 		const { id } = req.params;
 		try {
