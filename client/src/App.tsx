@@ -1,24 +1,15 @@
-import React, { Fragment, useState } from 'react'
-import './App.css'
-import Homepage from './Containers/Homepage';
-import Lobby from './Containers/Lobby';
-
-
+import {Routes, Route } from "react-router-dom";
+import GameSettings from './Components/GameSettings';
+import Homepage from './Components/Homepage';
 
 function App() {
-	const [inLobby, setInLobby] = useState(false);
-	const [gameId, setGameId] = useState(0);
-
-	const openLobby = (gameId: number) => {
-		setInLobby(true);
-		setGameId(gameId);
-	}
-
+	//Need to add routes for 404 and unauthorized 
 	return (
-		<div className='App'>
-			{ inLobby ? <Lobby gameId={gameId} /> : <Homepage openLobby={openLobby} /> }
-		</div>
-	);
+		<Routes>
+			<Route path="/" element={<Homepage />} />
+			<Route path="/gameSettings" element={<GameSettings />} />
+		</Routes>
+	)
 }
 
 export default App

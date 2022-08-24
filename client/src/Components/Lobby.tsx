@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper"
-import List, { listItem } from "../Components/List"
+import List, { listItem } from "./List"
 
 type propTypes = {
 	gameId: number

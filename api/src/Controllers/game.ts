@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const gameControllers = {
-	async createGame(req: any, res: any) {
+		async createGame(req: any, res: any) {
 		const { name, isHost } = req.body;
 		const newGame = await prisma.game.create({
 			data: {}

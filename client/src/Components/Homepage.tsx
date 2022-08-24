@@ -1,11 +1,8 @@
 import React, { Fragment, useState } from 'react';
-import GenericButton from '../Components/GenericButton';
+import GenericButton from './GenericButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 
-type propTypes = {
-	openLobby: Function
-}
 
 type GameCreateInput = {
 	name: string
@@ -29,15 +26,13 @@ const createGame = async (username: GameCreateInput) => {
 	return await handleResponse(response);
 }
 
-function Homepage(props: propTypes) {
+function Homepage() {
 	const [hostName, setHostName] = useState("");
 	const { isLoading, error, data: games } = useQuery(["games"], getGames);
 	const queryClient = useQueryClient();
-	
 	const gameMutation = useMutation(createGame, {
     onSuccess: (data) => {
       queryClient.invalidateQueries(['games']);
-			props.openLobby(data.game.id);
     },
     onError: (error) => {
       if (error instanceof Error) {
