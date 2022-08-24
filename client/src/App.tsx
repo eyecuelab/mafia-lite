@@ -16,7 +16,7 @@ function App() {
 
 	return (
 		<div className='App'>
-			{inLobby ? <Lobby gameId={gameId} /> : <Homepage openLobby={openLobby} />}
+			{ inLobby ? <Lobby gameId={gameId} /> : <Homepage openLobby={openLobby} /> }
 		</div>
 	);
 }

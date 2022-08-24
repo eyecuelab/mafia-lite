@@ -47,8 +47,8 @@ function Homepage(props: propTypes) {
     }
   })
 
-	if (isLoading) {		
-		//return <p>Loading...</p>
+	if (isLoading) {
+		queryClient.invalidateQueries(['games']);
   }
 
   if (error instanceof Error) {
@@ -75,6 +75,7 @@ function Homepage(props: propTypes) {
 			</form>
 			<div>
 				<h2>Existing Games:</h2>
+				{isLoading && <p>Loading...</p>}
 				{games?.map(game => {
 					return (
 						<Fragment key={game.id}>
@@ -82,7 +83,7 @@ function Homepage(props: propTypes) {
 						</Fragment>
 					);
 				})}
-				{!games?.length && (
+				{!isLoading && !games?.length && (
 					<p>No games</p>
 				)}
 			</div>

@@ -1,18 +1,22 @@
 import { Fragment } from "react";
 
+export type listItem = {
+	id: number,
+	data: any
+}
+
 type propTypes = {
-	listItems: any
+	listItems: listItem[]
 }
 
 const List = (props: propTypes): JSX.Element => {
 	const { listItems } = props;
-	console.log("🚀 ~ file: List.tsx ~ line 7 ~ List ~ listItems", listItems)
-
+	
 	return (
 		<ul>
-			{listItems?.map((item: any) => 
+			{listItems?.map((item: listItem) => 
 				<Fragment key={item.id}>
-					<li>{item.id}</li>
+					<li>{item.data}</li>
 				</Fragment>
 			)}
 		</ul>
