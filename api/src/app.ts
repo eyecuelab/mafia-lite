@@ -29,7 +29,10 @@ app.use(session({
 }));
 
 app.use(cors({ origin: '*'}));
+app.use(express.json());
+
 
 app.use(gameRouter, userRouter, roundRouter, playerRouter, roleRouter);
+
 
 export default app;

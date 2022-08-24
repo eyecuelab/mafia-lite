@@ -14,6 +14,7 @@ const playerControllers = {
 			return res.status(404).json({ error: "Player not found" });
 		}
 	},
+
   async getPlayers(req: any, res: any) {
         const { gameId } = req.params;
 		const players = await prisma.player.findMany({
@@ -21,11 +22,13 @@ const playerControllers = {
         });
 		res.json(players);
 	},
+
 	async createPlayer(req: any, res: any) {
 		const { userId, gameId } = req.body;
 		if (!userId) {
 			return res.status(500).json({ error: "User needed to create in-game player"});
 		} else if (!gameId) {
+
 			return res.status(500).json({ error: "A Game needs to be created"})
 		}
 

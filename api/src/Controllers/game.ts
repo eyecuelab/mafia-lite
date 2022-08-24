@@ -22,7 +22,14 @@ const gameControllers = {
 				}
 			});
 
-			res.json({ userId: newUser.id, game: newGame });
+			const newPlayer = await prisma.player.create({
+				data: {
+					userId: newUser.id,
+					gameId: newGame.id,
+				}
+			});
+
+			res.json({ userId: newUser.id, playerId: newPlayer.id, game: newGame });
 		} else {
 			const host = await prisma.user.findUnique({
 				where: { id: Number(hostId) }
@@ -37,7 +44,14 @@ const gameControllers = {
 				}
 			});
 
-			res.status(201).json(newGame);
+			const newPlayer = await prisma.player.create({
+				data: {
+					userId: hostId,
+					gameId: newGame.id,
+				}
+			});
+
+			res.status(201).json({playerId: newPlayer.id, game: newGame });
 		}
 	},
 
