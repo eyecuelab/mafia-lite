@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const createRole = async (name: string, type: string, roleDesc: string) => {
+const createRole = async (name: string, type: string, roleDesc: string, nightTimePrompt: string) => {
   return await prisma.role.create ({
     data: {
       name,
       type,
+      nightTimePrompt,
       roleDesc
     }
   });
