@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper"
 import List from "../Components/List"
+import GenericButton from '../Components/GenericButton';
 
 type propTypes = {
 	gameId: number
@@ -32,6 +33,14 @@ const Lobby = (props: propTypes): JSX.Element => {
 			<h1>Lobby</h1>
 			{isLoading && ( <p>Loading...</p> )}
 			{!isLoading && ( <List listItems={lobbyMembers} /> )}
+				<GenericButton
+					type={"submit"}
+					text={"Start Game"}
+					/>
+				<GenericButton
+					type={"submit"}
+					text={"Game Settings"}
+					/>	
 		</div>
 	);
 }
