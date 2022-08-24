@@ -1,12 +1,11 @@
-import React, { Fragment, useState } from 'react'
-import '../App.css'
+import React, { Fragment, useState } from 'react';
 import GenericButton from './GenericButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 type GameCreateInput = {
-	hostId: Number
+	name: string
 }
 
 interface Game extends GameCreateInput {
@@ -15,42 +14,25 @@ interface Game extends GameCreateInput {
 	endedAt?: string;
 }
 
-const BASE_HEADERS = {
-  headers: {
-    'Content-Type': 'application/json'
-  },
-}
-
-const handleResponse = async (response: Response) => {
-	const json = await response.json();
-
-  if (!response.ok) {
-    throw Error(json.error);
-  } else {
-    return json;
-  }
-}
-
 const getGames = async (): Promise<Game[]> => {
 	const url = `${API_ENDPOINT}/game`;
 	const response = await fetch(url, {...BASE_HEADERS});
 	return await handleResponse(response);
 }
 
-const createGame = async (newGame: GameCreateInput) => {
+const createGame = async (username: GameCreateInput) => {
 	const url = `${API_ENDPOINT}/game`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST" });	
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(username) });	
 	return await handleResponse(response);
 }
 
-const Home = () => {
-	const [hostId, setHostId] = useState("");
+function Homepage() {
+	const [hostName, setHostName] = useState("");
 	const { isLoading, error, data: games } = useQuery(["games"], getGames);
 	const queryClient = useQueryClient();
-	
 	const gameMutation = useMutation(createGame, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['games'])
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['games']);
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -61,7 +43,7 @@ const Home = () => {
   })
 
 	if (isLoading) {
-		return <p>Loading...</p>
+		queryClient.invalidateQueries(['games']);
   }
 
   if (error instanceof Error) {
@@ -72,15 +54,15 @@ const Home = () => {
 		e.preventDefault();
 		
 		gameMutation.mutate({
-			hostId: parseInt(hostId)
+			name: hostName
 		});
 	}
 
 	return (
-		<div className='App'>
+		<div>
 			<h1>Mafia Lite</h1>
 			<form onSubmit={onSubmit}>
-				<input name="name" placeholder="Enter Name" onChange={e => setHostId(e.target.value)} />
+				<input name="name" placeholder="Enter Name" onChange={e => setHostName(e.target.value)} />
 				<GenericButton
 					type={"submit"}
 					text={"Host Game"}
@@ -88,6 +70,7 @@ const Home = () => {
 			</form>
 			<div>
 				<h2>Existing Games:</h2>
+				{isLoading && <p>Loading...</p>}
 				{games?.map(game => {
 					return (
 						<Fragment key={game.id}>
@@ -95,7 +78,7 @@ const Home = () => {
 						</Fragment>
 					);
 				})}
-				{!games?.length && (
+				{!isLoading && !games?.length && (
 					<p>No games</p>
 				)}
 			</div>
@@ -103,4 +86,4 @@ const Home = () => {
 	);
 }
 
-export default Home
+export default Homepage;
