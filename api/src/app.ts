@@ -4,6 +4,7 @@ import express from 'express';
 import gameRouter from "./Routes/game";
 import playerRouter from "./Routes/player";
 import roundRoutes from "./Routes/round";
+
 const app = express();
 
 app.use(cors({ origin: '*' }));
