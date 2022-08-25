@@ -1,11 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const GenericButton = (props: any): JSX.Element => {
-	const { onClick, type, text, ...rest } = props;
+	const { onClick, type, text, link, ...rest } = props;
 
-	return (
-		<button onClick={onClick} type={type} {...rest}>{text}</button>
-	);
+	if (link) {
+		return (
+		<Link to={link}>
+			<button onClick={onClick} type={type} {...rest}>{text}</button>
+		</Link>
+		);
+	} else {
+		return (
+			<button onClick={onClick} type={type} {...rest}>{text}</button>
+		);
+	}
+
+	
 }
 
 export default GenericButton; 

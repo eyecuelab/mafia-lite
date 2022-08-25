@@ -2,6 +2,8 @@ import React, { Fragment, useState } from 'react';
 import GenericButton from './GenericButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
+import titleImg from "../assets/The Nameless Terror Images/Title.png";
+import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
 
 
 type GameCreateInput = {
@@ -60,28 +62,32 @@ function Homepage() {
 
 	return (
 		<div>
-			<h1>Mafia Lite</h1>
+			<img src={titleImg} alt="The Nameless Terror" />
 			<form onSubmit={onSubmit}>
 				<input name="name" placeholder="Enter Name" onChange={e => setHostName(e.target.value)} />
 				<GenericButton
+					link={"/lobby"}
 					type={"submit"}
 					text={"Host Game"}
+					style={
+						{
+							background: `url("${buttonImg}") no-repeat`,
+							width: "1348px",
+							height: "151px"
+						}
+					}
 				/>
 			</form>
-			<div>
-				<h2>Existing Games:</h2>
-				{isLoading && <p>Loading...</p>}
-				{games?.map(game => {
-					return (
-						<Fragment key={game.id}>
-							<p>game: {game.id}</p>
-						</Fragment>
-					);
-				})}
-				{!isLoading && !games?.length && (
-					<p>No games</p>
-				)}
-			</div>
+			<GenericButton
+					text={"Join Game"}
+					style={
+						{
+							background: `url("${buttonImg}") no-repeat`,
+							width: "1348px",
+							height: "151px"
+						}
+					}
+				/>
 		</div>
 	);
 }
