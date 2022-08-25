@@ -11,21 +11,28 @@ const io = new Server(server, {
   }
 });
 
+
 io.on('connection', (socket: any) => {
   console.log('a user connected', socket.id);
+
   socket.on('disconnect', () => {
     console.log('socket closed');
+  })
 
-    //Tell client what to listen for
-    socket.emit("startGame");
 
-    //When client emits a "startGame", join a room, and emit to client the room.id
-    socket.on("newGameClicked", ({ userId, roomId }: { userId: object, roomId: string }) => {
-      socket.join(roomId)
-      console.log("new game started", userId, roomId)
-      socket.emit("newGameStart", userId)
-    })
-  });
+  socket.on("join_room", ({ userId, roomId }: { userId: string, roomId: string }) => {
+    socket.join(roomId)
+    console.log(userId, ' player is in room:', roomId)
+    socket.to(roomId).emit('message', `player joined room ${roomId}`)
+  })
+
+  //When client emits a "startGame", join a room, and emit to client the room.id
+  socket.on("new_game_clicked", ({ user, roomId, socketId }: { user: object, roomId: string, socketId: number }) => {
+    console.log("new game started, room ID:", user, roomId, socketId)
+    socket.emit("new_game_start", { user: user, roomId: roomId, socketId: socketId });
+    socket.join(roomId)
+  })
+
 });
 
 const port = 3000;

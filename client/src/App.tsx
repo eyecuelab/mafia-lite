@@ -18,14 +18,6 @@ function App() {
     setGameId(gameId);
   }
 
-  useEffect(() => {
-    console.log("attempting socket connection")
-    socket.on('connect', () => {
-      console.log('socket open', socket.id);
-    })
-  }, [])
-
-
   return (
     <div className='App'>
       {inLobby ? <Lobby gameId={gameId} /> : <Homepage openLobby={openLobby} />}

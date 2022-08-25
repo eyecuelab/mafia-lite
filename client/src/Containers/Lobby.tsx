@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import GenericButton from '../Components/GenericButton';
@@ -21,41 +23,46 @@ const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	return await handleResponse(response);
 }
 
+const notify = (content: string) => toast(content);
 
 const Lobby = (props: propTypes): JSX.Element => {
 	const queryClient = useQueryClient();
 	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(props.gameId));
-	const socket = io(API_ENDPOINT);
+	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const [gameStarted, setGameStarted] = useState(false)
 	const [usersJoined, setUsersJoined] = useState([])
 
-	// useEffect(() => {
-	//Establish connection when component mounts
-	socket.on('connect', () => {
-		console.log('socket open', socket.id);
-		socket.emit('newRoom', socket.id);
-	})
-	// }, [])
+	useEffect(() => {
+		//Establish connection when component mounts
+		socket.on('connect', () => {
 
-	//Listen for game start and dictate the data passed through the sockets
-	socket.on("newGameClicked", () => {
-		console.log("New Game Button Clciked")
-	})
+			socket.on("player_joined_msg", (data) => notify("New player joined"))
 
-	//Listen for the 
-	socket.on("newGameStart", (arg) => {
+			//Listen for game start and dictate the data passed through the sockets
+			socket.on("new_game_clicked", () => {
+				console.log("New Game Button Clicked")
+			})
+		})
+	}, [socket])
+
+	//Listen for the new game to start
+	socket.on("new_game_start", (arg) => {
 		console.log("New Game Starting", arg)
 		setUsersJoined(arg)
+		notify("New Game Started!")
 	})
 
 	//Use placeholder to pass data obj through to server later
 	const userAndRoomDataPlaceholder = {
-		userId: data, //To contain all users active in room
-		roomId: "123" //Placeholder for Game ID
+		user: data, //To contain all users active in room
+		roomId: "123", //Placeholder for Game ID
+		socketId: socket.id
 	}
 	//Start the actual game
 	const gameStartSwitch = () => {
-		!gameStarted && socket.emit("newGameClicked", userAndRoomDataPlaceholder)
+		if (!gameStarted) {
+			socket.emit("new_game_clicked", userAndRoomDataPlaceholder);
+		}
 		setGameStarted(!gameStarted)
 	}
 
@@ -72,18 +79,17 @@ const Lobby = (props: propTypes): JSX.Element => {
 		return item;
 	}) : []
 
-
 	return (
 		<div>
 			<h1>Lobby</h1>
 			{isLoading && (<p>Loading...</p>)}
 			{!isLoading && <List listItems={playerNames} />}
-			{usersJoined.map(each => <h5> User ID#: {each} joined</h5>)}
 
 			<GenericButton
 				onClick={() => gameStartSwitch()}
 				text={gameStarted ? 'Game Started' : 'New Game'} />
 
+			<ToastContainer />
 		</div >
 	);
 }
