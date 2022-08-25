@@ -1,15 +1,27 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import express from 'express';
 import gameRouter from "./Routes/game";
+import gameSettingsRouter from "./Routes/gameSettings";
 import playerRouter from "./Routes/player";
-import roundRoutes from "./Routes/round";
+import roundRouter from "./Routes/round";
+
+const session = require("express-session")
 
 const app = express();
 
 app.use(cors({ origin: '*' }));
-app.use(express.json());
 
-app.use(gameRouter, roundRoutes, playerRouter);
+app.use(
+  session({
+    secret: "123sDareweq123a1q",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+  })
+);
+
+app.use(express.json());
+app.use(gameRouter, roundRouter, playerRouter, gameSettingsRouter);
+
 
 export default app;

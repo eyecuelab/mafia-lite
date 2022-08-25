@@ -13,6 +13,7 @@ model Game {
   players   Player[]
   rounds    Round[]
   endedAt   DateTime?
+  settings      GameSettings? 
 }
 
 model Role {
@@ -44,4 +45,12 @@ model Round {
   createdAt   DateTime  @default(now())
   died        Player[]
   endedAt     DateTime?
+}
+
+model GameSettings {
+  id              Int       @id @default(autoincrement())
+  game            Game      @relation(fields: [gameId], references: [id])
+  gameId          Int       @unique
+  dayDuration     Int
+  nightDuration   Int       
 }
