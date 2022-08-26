@@ -13,7 +13,8 @@ model Game {
   players   Player[]
   rounds    Round[]
   endedAt   DateTime?
-  settings      GameSettings? 
+  settings  GameSettings?
+  gameCode  String    @unique
 }
 
 model Role {

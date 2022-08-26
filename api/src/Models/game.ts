@@ -25,10 +25,25 @@ const getAllGameDetails = async (id: number) => {
   });
 }
 
-const createNewGame = async (name: string, isHost: boolean) => {
+const createNewGame = async (gameCode : string) => {
   return await prisma.game.create({
-    data: {}
+    data: { gameCode : gameCode}
   });
 }
 
-export { getGames, getGameById, getAllGameDetails, createNewGame }
+const getGameByGameCode = async (gameCode : string) => {
+  try {
+    return await prisma.game.findUniqueOrThrow ({
+        where : {gameCode : gameCode},
+        include: {
+          players : true,
+          rounds: true
+        }
+    })
+  }
+  catch {
+    throw"Game not found";
+  }
+}
+
+export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode }
