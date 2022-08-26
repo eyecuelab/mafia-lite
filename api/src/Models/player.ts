@@ -3,28 +3,30 @@ const prisma = new PrismaClient();
 
 const getPlayerById = async (id: number) => {
   try {
-     return await prisma.player.findUniqueOrThrow({
-        where: { id: Number(id) },
-     });
+    return await prisma.player.findUniqueOrThrow({
+      where: { id: Number(id) },
+    });
   } catch (error) {
-     throw  "Player not found" 
+    throw "Player not found"
   }
 }
 
 const getPlayersByGameId = async (gameId: number) => {
   return await prisma.player.findMany({
-    where: {gameId : Number(gameId)}
+    where: { gameId: Number(gameId) }
   });
 }
 
-const createPlayer = async ( name: string, gameId: number, isHost: boolean) => {
+const createPlayer = async (name: string, gameId: number, isHost: boolean, avatar: string) => {
   return await prisma.player.create({
     data: {
       name,
       gameId,
-      isHost
+      isHost,
+      avatar
     }
   });
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer}
+export { getPlayerById, getPlayersByGameId, createPlayer };
+

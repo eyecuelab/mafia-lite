@@ -1,8 +1,14 @@
 import { Fragment } from "react";
+import testAvatar from "../assets/The Nameless Terror Images/Portraits/image\ 181.png";
+
+const renderImg = () => {
+	return `/src/assets/The Nameless Terror Images/Portraits/image\ 181.png`;
+}
 
 export type listItem = {
 	id: number,
-	data: any
+	name: string,
+	avatar: string
 }
 
 type propTypes = {
@@ -11,13 +17,21 @@ type propTypes = {
 
 const List = (props: propTypes): JSX.Element => {
 	const { listItems } = props;
-	
+
+	const getImg = renderImg();
+
 	return (
 		<ul>
-			{listItems?.map((item: listItem) => 
-				<Fragment key={item.id}>
-					<li>{item.data}</li>
-				</Fragment>
+			{listItems?.map((item: listItem) => {
+				return (
+					<Fragment key={item.id}>
+						<li style={{ display: `flex` }}>
+							<img style={{ width: `20%` }} src={`${getImg}`} />
+							<h4>{item.name}</h4>
+						</li>
+					</Fragment>
+				)
+			}
 			)}
 		</ul>
 	);

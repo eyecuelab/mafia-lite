@@ -1,19 +1,20 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
-import titleImg from "../assets/The Nameless Terror Images/Title.png";
-import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
-import GenericButton from '../Components/GenericButton';
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+// import testAvatar from "../../assets/The Nameless Terror Images/Portraits/image\ 181.png";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import buttonImg from "../../assets/The Nameless Terror Images/UI/image\ 15.png";
+import GenericButton from '../GenericButton';
 import HomepageCSS from './Homepage.module.css';
 
-
 type GameCreateInput = {
-	name: string
+	name: string,
+	avatar: string
 }
 
 interface Game extends GameCreateInput {
@@ -39,6 +40,7 @@ function Homepage() {
 	const { isLoading, error, data: games } = useQuery(["games"], getGames);
 	const queryClient = useQueryClient();
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
+	const navigate = useNavigate();
 
 	const gameMutation = useMutation(createGame, {
 		onSuccess: (data) => {
@@ -60,18 +62,26 @@ function Homepage() {
 		return <p>'An error has occurred: {error.message}</p>
 	}
 
-	const onSubmit = (e: React.FormEvent) => {
+	const randomlyGenerateAvatar = () => {
+		let randomImageNumber = Math.floor(Math.random() * (192 - 181) + 181)
+		const avatarBasePath = `/assets/The Nameless Terror Images/Portraits/image\ ${randomImageNumber}.png`
+		return avatarBasePath
+	}
+
+	const onSubmitHandler = (routePath: string, e: React.FormEvent) => {
 		e.preventDefault();
+		const getAvatar = randomlyGenerateAvatar();
 
 		gameMutation.mutate({
-			name: userName
+			name: userName,
+			avatar: getAvatar
 		});
+		navigate(routePath)
 	}
 
 	const notify = (content: string) => toast(content);
 
 	socket.on("message", data => notify(data))
-
 	const joinExistingGame = (IdOfGame: string) => {
 		let existingGameParams = {
 			roomId: IdOfGame
@@ -88,36 +98,35 @@ function Homepage() {
 			</div>
 
 			<div className={HomepageCSS["hostOrJoinBtns-wrapper"]}>
-				<form className={HomepageCSS.form} onSubmit={onSubmit}>
-					<input name="name" className="user-selection-input" placeholder="Enter Name" onChange={e => setUserName(e.target.value)} />
+				<form className={HomepageCSS.form} onSubmit={(e) => onSubmitHandler('/lobby', e)}>
+					<input name="name"
+						className="user-selection-input"
+						placeholder="Enter Name"
+						onChange={e => setUserName(e.target.value)} />
 
-					<Link to="/lobby">
-						<GenericButton
-							className={HomepageCSS["user-selection-input"]}
-							type={"submit"}
-							text={"Host Game"}
-							style={
-								{
-									background: `url("${buttonImg}")`,
-								}
+					<GenericButton
+						className={HomepageCSS["user-selection-input"]}
+						type={"submit"}
+						text={"Host Game"}
+						style={
+							{
+								background: `url("${buttonImg}")`,
 							}
-						/>
-					</Link>
-
-					<Link to="/join">
-						<GenericButton
-							className={HomepageCSS["user-selection-input"]}
-							text={"Join Game"}
-							style={
-								{
-									background: `url("${buttonImg}")`,
-								}
-							}
-							onClick={() => joinExistingGame(userName)}
-						/>
-					</Link>
-
+						}
+					/>
 				</form>
+
+				<GenericButton
+					className={HomepageCSS["user-selection-input"]}
+					text={"Join Game"}
+					style={
+						{
+							background: `url("${buttonImg}")`,
+						}
+					}
+					onClick={() => joinExistingGame(userName)}
+				/>
+
 			</div>
 		</>
 	);

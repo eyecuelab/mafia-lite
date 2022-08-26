@@ -6,8 +6,8 @@ const getGames = async () => {
 }
 
 const getGameById = async (id: number) => {
-  try{
-    return await prisma.game.findUniqueOrThrow ({
+  try {
+    return await prisma.game.findUniqueOrThrow({
       where: { id: Number(id) },
     });
   } catch (error) {
@@ -16,33 +16,33 @@ const getGameById = async (id: number) => {
 }
 
 const getAllGameDetails = async (id: number) => {
-  return await prisma.game.findUnique ({
+  return await prisma.game.findUnique({
     where: { id: Number(id) },
     include: {
-      players : true,
+      players: true,
       rounds: true
     }
   });
 }
 
-const createNewGame = async (gameCode : string) => {
+const createNewGame = async (gameCode: string) => {
   return await prisma.game.create({
-    data: { gameCode : gameCode}
+    data: { gameCode: gameCode }
   });
 }
 
-const getGameByGameCode = async (gameCode : string) => {
+const getGameByGameCode = async (gameCode: string) => {
   try {
-    return await prisma.game.findUniqueOrThrow ({
-        where : {gameCode : gameCode},
-        include: {
-          players : true,
-          rounds: true
-        }
+    return await prisma.game.findUniqueOrThrow({
+      where: { gameCode: gameCode },
+      include: {
+        players: true,
+        rounds: true
+      }
     })
   }
   catch {
-    throw"Game not found";
+    throw "Game not found";
   }
 }
 

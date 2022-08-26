@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Game {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
   players   Player[]
   rounds    Round[]
   endedAt   DateTime?
   settings  GameSettings?
-  gameCode  String    @unique
+  gameCode  String        @unique
 }
 
 model Role {
@@ -27,21 +27,22 @@ model Role {
 }
 
 model Player {
-  id          Int      @id @default(autoincrement())
-	isHost			Boolean  @default(false)
-	name 				String
-  role        Role?    @relation(fields: [roleId], references: [id])
+  id          Int     @id @default(autoincrement())
+  isHost      Boolean @default(false)
+  name        String
+  role        Role?   @relation(fields: [roleId], references: [id])
   roleId      Int?
-  game        Game     @relation(fields: [gameId], references: [id])
+  game        Game    @relation(fields: [gameId], references: [id])
   gameId      Int
-  roundDied   Round?   @relation(fields: [roundDiedId], references: [id])
+  roundDied   Round?  @relation(fields: [roundDiedId], references: [id])
   roundDiedId Int?
+  avatar      String
 }
 
 model Round {
   id          Int       @id @default(autoincrement())
   game        Game      @relation(fields: [gameId], references: [id])
-	gameId      Int       @unique
+  gameId      Int       @unique
   roundNumber Int
   createdAt   DateTime  @default(now())
   died        Player[]
@@ -49,9 +50,9 @@ model Round {
 }
 
 model GameSettings {
-  id              Int       @id @default(autoincrement())
-  game            Game      @relation(fields: [gameId], references: [id])
-  gameId          Int       @unique
-  dayDuration     Int
-  nightDuration   Int       
+  id            Int  @id @default(autoincrement())
+  game          Game @relation(fields: [gameId], references: [id])
+  gameId        Int  @unique
+  dayDuration   Int
+  nightDuration Int
 }

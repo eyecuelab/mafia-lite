@@ -3,9 +3,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
-import GenericButton from '../Components/GenericButton';
-import List, { listItem } from "../Components/List";
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import GenericButton from '../GenericButton';
+import List, { listItem } from "../List";
 
 type propTypes = {
 	gameId: number
@@ -15,11 +15,13 @@ interface LobbyMembers {
 	id: number
 	isHost: boolean,
 	name: string,
+	avatar: string
 }
 
 const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	const url = `${API_ENDPOINT}/players/${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
+	console.log(response)
 	return await handleResponse(response);
 }
 
@@ -29,7 +31,7 @@ const Lobby = (props: propTypes): JSX.Element => {
 	const queryClient = useQueryClient();
 	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(props.gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
-	const [gameStarted, setGameStarted] = useState(false)
+	const [gameStarted, setGameStarted] = useState(false) //socket
 	const [usersJoined, setUsersJoined] = useState([])
 
 	useEffect(() => {
@@ -37,10 +39,9 @@ const Lobby = (props: propTypes): JSX.Element => {
 		socket.on('connect', () => {
 
 			socket.on("player_joined_msg", (data) => notify("New player joined"))
-
 			//Listen for game start and dictate the data passed through the sockets
 			socket.on("new_game_clicked", () => {
-				console.log("New Game Button Clicked")
+				// console.log("New Game Button Clicked")
 			})
 		})
 	}, [socket])
@@ -58,6 +59,7 @@ const Lobby = (props: propTypes): JSX.Element => {
 		roomId: "123", //Placeholder for Game ID
 		socketId: socket.id
 	}
+
 	//Start the actual game
 	const gameStartSwitch = () => {
 		if (!gameStarted) {
@@ -75,7 +77,11 @@ const Lobby = (props: propTypes): JSX.Element => {
 	}
 
 	const playerNames = data ? data.map((player, index) => {
-		const item: listItem = { id: index, data: player.name };
+		const item: listItem = {
+			id: index,
+			name: player.name,
+			avatar: player.avatar
+		};
 		return item;
 	}) : []
 
