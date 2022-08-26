@@ -1,4 +1,5 @@
 import app from "./app";
+import { getGameById } from "./Models/game";
 
 /*** Socket setup ***/
 const http = require('http');
@@ -19,10 +20,8 @@ io.on('connection', (socket: any) => {
     console.log('socket closed');
   })
 
-
-  socket.on("join_room", ({ userId, roomId }: { userId: string, roomId: string }) => {
+  socket.on("join_room", (roomId: string) => {
     socket.join(roomId)
-    console.log(userId, ' player is in room:', roomId)
     socket.to(roomId).emit('message', `player joined room ${roomId}`)
   })
 

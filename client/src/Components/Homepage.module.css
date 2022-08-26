@@ -1,0 +1,46 @@
+.homepage-title-wrapper {
+  display: grid;
+  place-items: center;
+  margin: 2rem auto;
+  width: 30vw;
+}
+
+h5 {
+  color: white;
+  font-family: "Times New Roman";
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 0;
+  margin-right: 30%;
+  margin-top: -3%;
+}
+
+.titleImage {
+  width: 32vw;
+}
+
+.hostOrJoinBtns-wrapper {
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-selection-input, .form input{
+  margin: 1%;
+  height: 6vh;
+  width: 33vw;
+  background-size: cover;
+  transform: scale(0.8);
+  font-size: 1.5em;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  border-radius: 0;
+
+}
