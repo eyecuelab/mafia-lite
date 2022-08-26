@@ -1,7 +1,6 @@
 import cors from 'cors';
 import express from 'express';
 import gameRouter from "./Routes/game";
-import gameSettingsRouter from "./Routes/gameSettings";
 import playerRouter from "./Routes/player";
 import roundRouter from "./Routes/round";
 
@@ -21,7 +20,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use(gameRouter, roundRouter, playerRouter, gameSettingsRouter);
+app.use(gameRouter, roundRouter, playerRouter);
 
 
 export default app;

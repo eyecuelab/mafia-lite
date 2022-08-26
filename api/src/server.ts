@@ -14,10 +14,8 @@ const io = new Server(server, {
 
 
 io.on('connection', (socket: any) => {
-  console.log('a user connected', socket.id);
 
   socket.on('disconnect', () => {
-    console.log('socket closed');
   })
 
   socket.on("join_room", (roomId: string) => {
@@ -27,7 +25,6 @@ io.on('connection', (socket: any) => {
 
   //When client emits a "startGame", join a room, and emit to client the room.id
   socket.on("new_game_clicked", ({ user, roomId, socketId }: { user: object, roomId: string, socketId: number }) => {
-    console.log("new game started, room ID:", user, roomId, socketId)
     socket.emit("new_game_start", { user: user, roomId: roomId, socketId: socketId });
     socket.join(roomId)
   })

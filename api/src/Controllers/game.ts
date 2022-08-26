@@ -1,17 +1,19 @@
 import { PrismaClient } from '@prisma/client';
+import RoomCode from "../GenerateRoomCode";
 import { createNewGame, getAllGameDetails, getGameByGameCode } from "../Models/game";
 import { createPlayer } from '../Models/player';
 
 const prisma = new PrismaClient();
 
 const gameControllers = {
+
 	async createGame(req: any, res: any) {
 		const { name, isHost, avatar } = req.body;
-		//Add Random Game Code Generator Here
-		const gameCode = Math.random().toString();
+		const gameCode = RoomCode.generate();
 		const newGame = await createNewGame(gameCode)
 		const newPlayer = await createPlayer(name, newGame.id, isHost, avatar)
 		req.session.playerId = newPlayer.id
+		console.log(newGame);
 		res.status(201).json({ game: newGame, player: newPlayer });
 	},
 
@@ -40,11 +42,12 @@ const gameControllers = {
 	},
 
 	async joinGame(req: any, res: any) {
-		console.log(req.body)
 		const { name, gameCode, avatar } = req.body;
 		const game = await getGameByGameCode(gameCode);
 		const newPlayer = await createPlayer(name, game.id, false, avatar)
 		req.session.playerId = newPlayer.id
+
+		console.log(game);
 		res.status(201).json({ game: game, player: newPlayer });
 	}
 }

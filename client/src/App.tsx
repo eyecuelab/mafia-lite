@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
-      <Route path="/lobby" element={<Lobby gameId={11} />} />
+      <Route path="/lobby" element={<Lobby />} />
     </Routes>
   )
 }

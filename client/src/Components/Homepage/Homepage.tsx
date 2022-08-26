@@ -6,18 +6,24 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-// import testAvatar from "../../assets/The Nameless Terror Images/Portraits/image\ 181.png";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import buttonImg from "../../assets/The Nameless Terror Images/UI/image\ 15.png";
 import GenericButton from '../GenericButton';
 import HomepageCSS from './Homepage.module.css';
 
-type GameCreateInput = {
+type GameCreatePayload = {
 	name: string,
+	isHost: boolean,
 	avatar: string
 }
 
-interface Game extends GameCreateInput {
+type JoinGamePayload = {
+	name: string
+	gameCode: string
+	avatar: string
+}
+
+interface Game extends GameCreatePayload {
 	id: string;
 	createdAt: string;
 	endedAt?: string;
@@ -29,21 +35,42 @@ const getGames = async (): Promise<Game[]> => {
 	return await handleResponse(response);
 }
 
-const createGame = async (username: GameCreateInput) => {
+const createGame = async (createGamePayload: GameCreatePayload) => {
 	const url = `${API_ENDPOINT}/game`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(username) });
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(createGamePayload) });
 	return await handleResponse(response);
 }
 
+const joinGame = async (joinGamePayload: JoinGamePayload) => {
+	const url = `${API_ENDPOINT}/game/join`;
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(joinGamePayload) });
+	return await handleResponse(response);
+}
+
+
 function Homepage() {
 	const [userName, setUserName] = useState("");
+	const [gameCode, setGameCode] = useState("");
 	const { isLoading, error, data: games } = useQuery(["games"], getGames);
 	const queryClient = useQueryClient();
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const navigate = useNavigate();
 
+	const joinGameMutation = useMutation(joinGame, {
+		onSuccess: (data) => {
+			navigate("/lobby", { state: { gameId: data.game.id }, replace: true });
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				// Do something with the error
+				alert(`Oops! ${error.message}`);
+			}
+		}
+	})
+
 	const gameMutation = useMutation(createGame, {
 		onSuccess: (data) => {
+			navigate("/lobby", { state: { gameId: data.game.id }, replace: true });
 			queryClient.invalidateQueries(['games']);
 		},
 		onError: (error) => {
@@ -68,16 +95,29 @@ function Homepage() {
 		return avatarBasePath
 	}
 
-	const onSubmitHandler = (routePath: string, e: React.FormEvent) => {
-		e.preventDefault();
+	const onHostButtonClick = async () => {
+		// e.preventDefault();
 		const getAvatar = randomlyGenerateAvatar();
 
-		gameMutation.mutate({
+		await gameMutation.mutate({
 			name: userName,
+			isHost: true,
 			avatar: getAvatar
 		});
-		navigate(routePath)
+		// navigate(routePath)
 	}
+
+	const onJoinButtonClick = async (e: React.FormEvent) => {
+		e.preventDefault();
+		const getAvatar = randomlyGenerateAvatar();
+		await joinGameMutation.mutateAsync({
+			name: userName,
+			gameCode: gameCode,
+			avatar: getAvatar
+		})
+	}
+
+	/*** Socket Functions ***/
 
 	const notify = (content: string) => toast(content);
 
@@ -87,8 +127,10 @@ function Homepage() {
 			roomId: IdOfGame
 		}
 		socket.emit("join_room", existingGameParams);
-		console.log(socket.id)
 	}
+
+	/***/
+
 
 	return (
 		<>
@@ -98,23 +140,28 @@ function Homepage() {
 			</div>
 
 			<div className={HomepageCSS["hostOrJoinBtns-wrapper"]}>
-				<form className={HomepageCSS.form} onSubmit={(e) => onSubmitHandler('/lobby', e)}>
-					<input name="name"
-						className="user-selection-input"
-						placeholder="Enter Name"
-						onChange={e => setUserName(e.target.value)} />
+				{/* <form className={HomepageCSS.form} onSubmit={(e) => onHostButtonClick('/lobby', e)}> */}
+				<input name="name"
+					className="user-selection-input"
+					placeholder="Enter Name"
+					onChange={e => setUserName(e.target.value)} />
 
-					<GenericButton
-						className={HomepageCSS["user-selection-input"]}
-						type={"submit"}
-						text={"Host Game"}
-						style={
-							{
-								background: `url("${buttonImg}")`,
-							}
+				<input name="gameCode"
+					placeholder="Enter Game Code"
+					onChange={e => setGameCode(e.target.value)} />
+
+				<GenericButton
+					className={HomepageCSS["user-selection-input"]}
+					type={"submit"}
+					text={"Host Game"}
+					style={
+						{
+							background: `url("${buttonImg}")`,
 						}
-					/>
-				</form>
+					}
+					onClick={onHostButtonClick}
+				/>
+				{/* </form> */}
 
 				<GenericButton
 					className={HomepageCSS["user-selection-input"]}
@@ -124,7 +171,7 @@ function Homepage() {
 							background: `url("${buttonImg}")`,
 						}
 					}
-					onClick={() => joinExistingGame(userName)}
+					onClick={onJoinButtonClick}
 				/>
 
 			</div>

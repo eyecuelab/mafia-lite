@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
@@ -7,9 +8,9 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import GenericButton from '../GenericButton';
 import List, { listItem } from "../List";
 
-type propTypes = {
-	gameId: number
-}
+// type propTypes = {
+// 	gameId: number
+// }
 
 interface LobbyMembers {
 	id: number
@@ -18,18 +19,25 @@ interface LobbyMembers {
 	avatar: string
 }
 
+interface CustomizedState {
+	gameId: number
+}
+
 const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	const url = `${API_ENDPOINT}/players/${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
-	console.log(response)
 	return await handleResponse(response);
 }
 
 const notify = (content: string) => toast(content);
 
-const Lobby = (props: propTypes): JSX.Element => {
+const Lobby = (): JSX.Element => {
+	const location = useLocation();
+	const state = location.state as CustomizedState
+	const gameId = state?.gameId;
+
 	const queryClient = useQueryClient();
-	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(props.gameId));
+	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const [gameStarted, setGameStarted] = useState(false) //socket
 	const [usersJoined, setUsersJoined] = useState([])
@@ -40,6 +48,7 @@ const Lobby = (props: propTypes): JSX.Element => {
 
 			socket.on("player_joined_msg", (data) => notify("New player joined"))
 			//Listen for game start and dictate the data passed through the sockets
+
 			socket.on("new_game_clicked", () => {
 				// console.log("New Game Button Clicked")
 			})
@@ -48,7 +57,6 @@ const Lobby = (props: propTypes): JSX.Element => {
 
 	//Listen for the new game to start
 	socket.on("new_game_start", (arg) => {
-		console.log("New Game Starting", arg)
 		setUsersJoined(arg)
 		notify("New Game Started!")
 	})
