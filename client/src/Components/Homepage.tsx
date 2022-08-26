@@ -68,7 +68,6 @@ function Homepage() {
 		});
 	}
 
-	/*	Notify with toastify, listen for a message, join room function*/
 	const notify = (content: string) => toast(content);
 
 	socket.on("message", data => notify(data))
