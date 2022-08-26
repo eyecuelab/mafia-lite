@@ -3,7 +3,6 @@ import cors from 'cors';
 import gameRouter from "./Routes/game";
 import roundRouter from "./Routes/round";
 import playerRouter from "./Routes/player";
-import gameSettingsRouter from "./Routes/gameSettings"
 
 const session = require("express-session")
 
@@ -21,7 +20,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use(gameRouter, roundRouter, playerRouter, gameSettingsRouter);
+app.use(gameRouter, roundRouter, playerRouter);
 
 
 export default app;
