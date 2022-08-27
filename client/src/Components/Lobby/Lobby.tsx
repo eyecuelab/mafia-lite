@@ -8,10 +8,6 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import GenericButton from '../GenericButton';
 import List, { listItem } from "../List";
 
-// type propTypes = {
-// 	gameId: number
-// }
-
 interface LobbyMembers {
 	id: number
 	isHost: boolean,
@@ -20,7 +16,8 @@ interface LobbyMembers {
 }
 
 interface CustomizedState {
-	gameId: number
+	gameId: number,
+	lobbyName: string
 }
 
 const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
@@ -34,7 +31,7 @@ const notify = (content: string) => toast(content);
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
 	const state = location.state as CustomizedState
-	const gameId = state?.gameId;
+	const { gameId, lobbyName } = state;
 
 	const queryClient = useQueryClient();
 	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(gameId));
@@ -87,15 +84,19 @@ const Lobby = (): JSX.Element => {
 	const playerNames = data ? data.map((player, index) => {
 		const item: listItem = {
 			id: index,
-			name: player.name,
-			avatar: player.avatar
+			style: {display: `flex`},
+			data: 
+				<React.Fragment>
+					<img style={{ width: `20%` }} src={`${player.avatar}`} />
+					<h4>{player.name}</h4>
+				</React.Fragment>
 		};
 		return item;
 	}) : []
 
 	return (
 		<div>
-			<h1>Lobby</h1>
+			<h1>{lobbyName}</h1>
 			{isLoading && (<p>Loading...</p>)}
 			{!isLoading && <List listItems={playerNames} />}
 

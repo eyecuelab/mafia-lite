@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { updatePlayerById } from '../Models/player';
 const prisma = new PrismaClient();
 
 const playerControllers = {
@@ -21,6 +22,12 @@ const playerControllers = {
 				where: {gameId : Number(gameId)}
 		});
 		res.json(players);
+	},
+
+	async updatePlayer(req: any, res: any) {
+		const { id, name } = req.body;
+		const player = updatePlayerById(id, name);
+		res.json(player);
 	}
 }
 

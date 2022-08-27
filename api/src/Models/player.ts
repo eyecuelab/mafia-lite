@@ -1,6 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+const randomlyGenerateAvatar = () => {
+	let randomImageNumber = Math.floor(Math.random() * (192 - 181) + 181);
+	const avatarBasePath = `./src/assets/The Nameless Terror Images/Portraits/image\ ${randomImageNumber}.png`;
+	return avatarBasePath;
+}
+
 const getPlayerById = async (id: number) => {
   try {
     return await prisma.player.findUniqueOrThrow({
@@ -17,16 +23,22 @@ const getPlayersByGameId = async (gameId: number) => {
   });
 }
 
-const createPlayer = async (name: string, gameId: number, isHost: boolean, avatar: string) => {
+const createPlayer = async (gameId: number, isHost: boolean) => {
+
   return await prisma.player.create({
     data: {
-      name,
       gameId,
       isHost,
-      avatar
+      avatar: randomlyGenerateAvatar()
     }
   });
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer };
+const updatePlayerById = async (id: number, name: string) => {
+	return await prisma.player.update({
+		where: {id: id},
+		data: {name: name}
+	})
+}
 
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById }

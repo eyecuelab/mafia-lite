@@ -1,8 +1,14 @@
 import { PrismaClient } from '@prisma/client';
+import RoomCode from '../GenerateRoomCode';
 const prisma = new PrismaClient();
 
+export type CreateGameInput = {
+	name: string,
+	size: number
+}
+
 const getGames = async () => {
-  return await prisma.game.findMany()
+  return await prisma.game.findMany();
 }
 
 const getGameById = async (id: number) => {
@@ -25,9 +31,13 @@ const getAllGameDetails = async (id: number) => {
   });
 }
 
-const createNewGame = async (gameCode: string) => {
+const createNewGame = async (gameInput : CreateGameInput) => {
   return await prisma.game.create({
-    data: { gameCode: gameCode }
+    data: {
+			gameCode : RoomCode.generate(),
+			name: gameInput.name,
+			size: gameInput.size
+		}
   });
 }
 
@@ -39,11 +49,11 @@ const getGameByGameCode = async (gameCode: string) => {
         players: true,
         rounds: true
       }
-    })
+    });
   }
   catch {
     throw "Game not found";
   }
 }
 
-export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode }
+export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode };
