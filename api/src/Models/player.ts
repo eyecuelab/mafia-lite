@@ -23,12 +23,13 @@ const getPlayersByGameId = async (gameId: number) => {
   });
 }
 
-const createPlayer = async (gameId: number, isHost: boolean) => {
+const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
 
   return await prisma.player.create({
     data: {
       gameId,
       isHost,
+			name,
       avatar: randomlyGenerateAvatar()
     }
   });

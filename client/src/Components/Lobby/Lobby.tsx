@@ -16,12 +16,21 @@ interface LobbyMembers {
 }
 
 interface CustomizedState {
-	gameId: number,
-	lobbyName: string
+	gameId: number
+}
+
+interface Game {
+	name: string
 }
 
 const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	const url = `${API_ENDPOINT}/players/${gameId}`;
+	const response = await fetch(url, { ...BASE_HEADERS });
+	return await handleResponse(response);
+}
+
+const getLobbyName = async (gameId: number): Promise<Game> => {
+	const url = `${API_ENDPOINT}/game/${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
 }
@@ -31,10 +40,11 @@ const notify = (content: string) => toast(content);
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
 	const state = location.state as CustomizedState
-	const { gameId, lobbyName } = state;
+	const { gameId } = state;
 
 	const queryClient = useQueryClient();
-	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(gameId));
+	const {  isLoading: lobbyLoading, error: lobbyError, data: players } = useQuery(["players"], () => getLobbyMembers(gameId));
+	const { isLoading: lobbyNameLoading, error: lobbyNameError, data: gameData } = useQuery(["players"], () => getLobbyName(gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const [gameStarted, setGameStarted] = useState(false) //socket
 	const [usersJoined, setUsersJoined] = useState([])
@@ -60,7 +70,7 @@ const Lobby = (): JSX.Element => {
 
 	//Use placeholder to pass data obj through to server later
 	const userAndRoomDataPlaceholder = {
-		user: data, //To contain all users active in room
+		user: players, //To contain all users active in room
 		roomId: "123", //Placeholder for Game ID
 		socketId: socket.id
 	}
@@ -73,15 +83,11 @@ const Lobby = (): JSX.Element => {
 		setGameStarted(!gameStarted)
 	}
 
-	if (error instanceof Error) {
-		return <p>'An error has occurred: {error.message}</p>;
+	if (lobbyError instanceof Error) {
+		return <p>'An error has occurred: {lobbyError.message}</p>;
 	}
 
-	if (isLoading) {
-		queryClient.invalidateQueries(['games']);
-	}
-
-	const playerNames = data ? data.map((player, index) => {
+	const playerNames = players ? players.map((player, index) => {
 		const item: listItem = {
 			id: index,
 			style: {display: `flex`},
@@ -96,9 +102,9 @@ const Lobby = (): JSX.Element => {
 
 	return (
 		<div>
-			<h1>{lobbyName}</h1>
-			{isLoading && (<p>Loading...</p>)}
-			{!isLoading && <List listItems={playerNames} />}
+			<h1>{gameData?.name}</h1>
+			{lobbyLoading && (<p>Loading...</p>)}
+			{!lobbyLoading && <List listItems={playerNames} />}
 
 			<GenericButton
 				onClick={() => gameStartSwitch()}

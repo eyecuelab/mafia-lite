@@ -1,0 +1,53 @@
+@import url('http://fonts.cdnfonts.com/css/american-typewriter');
+@import url('http://fonts.cdnfonts.com/css/bebas-neue');
+
+.join-game-title-wrapper{
+  display: grid;
+  place-items: center;
+  margin: 2rem auto;
+  width: 30vw;
+}
+
+.titleImage {
+  width: 32vw;
+}
+
+.header {
+  color: white;
+  font-family: 'American Typewriter', sans-serif;  
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.6rem;
+  margin: 0;
+  margin-right: 42%;
+  margin-top: -3%;
+}
+
+.user-selection-input {
+  margin: 1%;
+  height: 6vh;
+  width: 33vw;
+  background-color: #ffffff;
+  transform: scale(0.8);
+  font-family: 'American Typewriter', sans-serif;
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #5B5B5B;
+  
+  text-align: center;
+  border-radius: 15px;
+}
+
+.continue-game-btn {
+  margin: 1%;
+  height: 6vh;
+  width: 33vw;
+  background-size: 100%;
+  transform: scale(0.8);
+  font-family: 'Bebas Neue';
+  font-size: 2em;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  border-radius: 0;
+}

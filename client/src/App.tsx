@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Lobby from "./Components/Lobby/Lobby";
-import Homepage from './Components/Homepage';
+import Homepage from './Components/Homepage/Homepage';
 import CreateLobby from "./Components/CreateLobby";
 import CreatePlayer from "./Components/CreatePlayer";
 import './App.css';

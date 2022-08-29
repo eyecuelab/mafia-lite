@@ -25,7 +25,7 @@ function JoinGame() {
 
 	const joinGameMutation = useMutation(joinGame, {
 		onSuccess: (data) => {
-			navigate("/lobby", { state: { gameId: data.game.id }, replace: true });
+			navigate("/newplayer", { state: { gameId: data.game.id, isHost: false }, replace: true });
 		},
 		onError: (error) => {
 			if (error instanceof Error) {

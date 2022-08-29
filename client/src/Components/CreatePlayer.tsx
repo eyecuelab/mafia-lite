@@ -7,33 +7,34 @@ import GenericButton from "./GenericButton";
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
 
 type PlayerCreateInput = {
-	id: number,
+	gameId: number,
+	isHost: boolean,
 	name: string
 }
 
 interface locationState {
 	gameId: number,
-	playerId: number,
+	isHost: boolean,
 	lobbyName: string
 }
 
-const updatePlayer = async (playerInput: PlayerCreateInput) => {
+const createPlayer = async (playerInput: PlayerCreateInput) => {
 	const url = `${API_ENDPOINT}/player`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "PUT", body: JSON.stringify(playerInput) });	
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(playerInput) });	
 	return await handleResponse(response);
 }
 
 function CreatePlayer() {
 	const location = useLocation();
 	const state = location.state as locationState;
-	const { gameId, lobbyName, playerId } = state;
+	const { gameId, isHost } = state;
 
 	const navigate = useNavigate();
 	const [name, setName] = useState("");
 	
-	const playerMutation = useMutation(updatePlayer, {
+	const playerMutation = useMutation(createPlayer, {
     onSuccess: () => {
-      navigate("/lobby", { state: { gameId: gameId, lobbyName: lobbyName }, replace: true });
+      navigate("/lobby", { state: { gameId: gameId }, replace: true });
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -46,7 +47,8 @@ function CreatePlayer() {
 		e.preventDefault();
 
 		playerMutation.mutate({
-			id: playerId,
+			gameId: gameId,
+			isHost: isHost,
 			name: name
 		});
 	};
