@@ -34,6 +34,7 @@ const createPlayer = async (gameId: number, isHost: boolean) => {
   });
 }
 
+
 const updatePlayerById = async (id: number, name: string) => {
 	return await prisma.player.update({
 		where: {id: id},
@@ -41,4 +42,6 @@ const updatePlayerById = async (id: number, name: string) => {
 	})
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById }
+export { getPlayerById, getPlayersByGameId, createPlayer };
+
+

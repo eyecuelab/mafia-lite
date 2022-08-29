@@ -44,10 +44,9 @@ const gameControllers = {
 
 	async joinGame(req: any, res: any) {
 		const { name, gameCode, avatar } = req.body;
-
 		const game = await getGameByGameCode(gameCode);
-		const newPlayer = await createPlayer(game.id, false);
-
+		const newPlayer = await createPlayer(game.id, false)
+		
 		req.session.playerId = newPlayer.id;
 		res.status(201).json({ game: game, player: newPlayer });
 	}
