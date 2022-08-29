@@ -1,20 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import RoomCode from "../GenerateRoomCode";
 import { createPlayer } from '../Models/player';
-import { getGames, getAllGameDetails, createNewGame, getGameByGameCode, CreateGameInput } from "../Models/game";
-
-const prisma = new PrismaClient();
+import { getGames, getAllGameDetails, createNewGame, getGameByGameCode } from "../Models/game";
 
 const gameControllers = {
 	async createGame(req: any, res: any) {
-		const { name, size, avatar } = req.body;
-		const gameInput: CreateGameInput = { name: name, size: size };
-
-		const newGame = await createNewGame(gameInput);
-		const newPlayer = await createPlayer(newGame.id, true);
+		const { name, size } = req.body;
+		const newGame = await createNewGame(name, size);		
 		
-		req.session.playerId = newPlayer.id
-		res.status(201).json({ game: newGame, player: newPlayer });
+		res.status(201).json({ game: newGame });
 	},
 
 	async getGames(req: any, res: any) {

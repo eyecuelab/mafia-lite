@@ -1,22 +1,14 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { createRole, deleteRole, getRoleById, getRoles, updateRole } from "../Models/role";
 
 const roleControllers ={
   async createRole(req: any, res: any) {
-    const { name, type, roleDesc } = req.body;
-    const role = await prisma.role.create({
-      data: {
-        name: name,
-        type: type,
-        roleDesc: roleDesc,
-      },
-    })
-    res.json(role)
+    const { name, type, roleDesc, nightTimePrompt } = req.body;
+    const role = await createRole(name, type, roleDesc, nightTimePrompt);
+    res.status(201).json(role);
   },
 
   async getRoles(req: any, res: any) {
-    const roles = await prisma.role.findMany();
+    const roles = await getRoles();
     res.json(roles);
   },
 
@@ -24,9 +16,7 @@ const roleControllers ={
     const { id } = req.params;
 
     try {
-      const role = await prisma.role.findFirstOrThrow ({
-        where: { id: Number(id) },
-      });
+      const role = await getRoleById(id);
       res.json(role);
     } catch (error) {
       return res.status(404).json({ error: "Role not found"})
@@ -34,27 +24,14 @@ const roleControllers ={
   },
 
   async updateRoles(req: any, res: any) {
-    const { id, name, type, roleDesc } = req.body
-    const updatedRoles = await prisma.role.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        name: name,
-        type: type,
-        roleDesc: roleDesc,
-      },
-    });
+    const { id, name, type, roleDesc, nightTimePrompt } = req.body
+    const updatedRoles = await updateRole(id, name, type, roleDesc, nightTimePrompt);
     res.json(updatedRoles);
   },
 
   async deleteRole(req: any, res: any) {
     const id = req.params.id;
-    const deletedRole = await prisma.role.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+    const deletedRole = await deleteRole(id);
     res.json(deletedRole);
   },
 }

@@ -2,11 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import RoomCode from '../GenerateRoomCode';
 const prisma = new PrismaClient();
 
-export type CreateGameInput = {
-	name: string,
-	size: number
-}
-
 const getGames = async () => {
   return await prisma.game.findMany();
 }
@@ -31,12 +26,12 @@ const getAllGameDetails = async (id: number) => {
   });
 }
 
-const createNewGame = async (gameInput : CreateGameInput) => {
+const createNewGame = async (name: string, size: number) => {
   return await prisma.game.create({
     data: {
 			gameCode : RoomCode.generate(),
-			name: gameInput.name,
-			size: gameInput.size
+			name: name,
+			size: size
 		}
   });
 }

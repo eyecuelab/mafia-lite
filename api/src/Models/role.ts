@@ -26,7 +26,7 @@ const getRoleById = async ( id: number) => {
   }
 }
 
-const updateRoles = async ( id: number, name: string, type: string, roleDesc: string) => {
+const updateRole = async ( id: number, name: string, type: string, roleDesc: string, nightTimePrompt: string) => {
   return await prisma.role.update ({
     where: {
       id: Number(id),
@@ -47,4 +47,4 @@ const deleteRole = async (id: number) => {
   });  
 }
 
-export { createRole, getRoles, getRoleById, updateRoles, deleteRole}
+export { createRole, getRoles, getRoleById, updateRole, deleteRole}
