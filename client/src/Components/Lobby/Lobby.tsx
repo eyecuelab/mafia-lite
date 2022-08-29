@@ -40,9 +40,9 @@ const Lobby = (): JSX.Element => {
 	const state = location.state as CustomizedState
 	const { gameId } = state;
 
-	const queryClient = useQueryClient();
 	const { isLoading: lobbyLoading, error: lobbyError, data: players } = useQuery(["players"], () => getLobbyMembers(gameId));
-	const { isLoading: lobbyNameLoading, error: lobbyNameError, data: gameData } = useQuery(["players"], () => getLobbyName(gameId));
+	const { isLoading: lobbyNameLoading, error: lobbyNameError, data: gameData } = useQuery(["games"], () => getLobbyName(gameId));
+
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const [lobbyEntered, setLobbyEntered] = useState(false)
 	const [gameStarted, setGameStarted] = useState(false)

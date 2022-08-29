@@ -66,4 +66,3 @@ const updatePlayerById = async (id: number, name: string) => {
 }
 
 export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById };
-

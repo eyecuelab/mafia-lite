@@ -13,9 +13,9 @@ const gameControllers = {
 	},
 
 	async getSingleGame(req: any, res: any) {
-		const { gameId } = req.params;
+		const { id } = req.params;		
 		try {
-			const game = await getAllGameDetails(gameId);
+			const game = await getAllGameDetails(id);
 			res.json(game);
 		} catch (error) {
 			return res.status(404).json({ error: "Game not found" });
