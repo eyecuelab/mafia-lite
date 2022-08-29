@@ -13,8 +13,12 @@ const io = new Server(server, {
   }
 });
 
-
 io.on('connection', (socket: any) => {
+
+  /**
+   *  .on() is an event listener for socket.io
+   *  .emit() is to emit data to all sockets listening with the same label
+   **/
 
   socket.on('disconnect', () => {
     console.log('socket disconnected')
@@ -23,8 +27,8 @@ io.on('connection', (socket: any) => {
   socket.on("join_room", async (gameId: number) => {
     const playersInRoom = await getPlayersByGameId(gameId);
     socket.join(gameId)
-    socket.to(gameId).emit("get_players_in_room", playersInRoom);
     socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
+    socket.to(gameId).emit("get_players_in_room", playersInRoom)
   })
 
   //When client emits a "startGame", join a room, and emit to client the room.id

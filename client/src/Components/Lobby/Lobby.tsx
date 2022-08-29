@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import GenericButton from '../GenericButton';
 import List, { listItem } from "../List";
+import { useNotify } from '../useToastify';
 
 interface LobbyMembers {
 	id: number
@@ -26,8 +26,6 @@ const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	return await handleResponse(response);
 }
 
-const notify = (content: string) => toast(content);
-
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
 	const state = location.state as CustomizedState
@@ -36,24 +34,32 @@ const Lobby = (): JSX.Element => {
 	const queryClient = useQueryClient();
 	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
+	const [lobbyEntered, setLobbyEntered] = useState(false)
 	const [gameStarted, setGameStarted] = useState(false) //socket
 	const [usersJoined, setUsersJoined] = useState([])
 
 	useEffect(() => {
+
+		const lobbyEnteredHandler = () => setLobbyEntered(!lobbyEntered)
+
 		//Establish connection when component mounts
 		socket.on('connect', () => {
 
+			//Alert server we've joined room
 			socket.emit("join_room", gameId)
+
+			//Perform logic on backend and receive data from backend
 			socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => {
 				setUsersJoined(PLAYERS_IN_ROOM)
 			})
-			socket.on("player_joined_msg", (data) => notify(data))
 
-			socket.on("new_game_clicked", () => {
-				// console.log("New Game Button Clicked")
-			})
+			// socket.on("player_joined_msg", (data) => useNotify(data))
 		})
-	}, [socket])
+
+		return (() => {
+			lobbyEnteredHandler()
+		})
+	}, [])
 
 
 	//Use placeholder to pass data obj through to server later
@@ -103,7 +109,6 @@ const Lobby = (): JSX.Element => {
 				onClick={() => gameStartSwitch()}
 				text={gameStarted ? 'Game Started' : 'New Game'} />
 
-			<ToastContainer />
 		</div >
 	);
 }

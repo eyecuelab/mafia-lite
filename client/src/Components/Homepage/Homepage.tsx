@@ -104,7 +104,6 @@ function Homepage() {
 			isHost: true,
 			avatar: getAvatar
 		});
-		// navigate(routePath)
 	}
 
 	const onJoinButtonClick = async (e: React.FormEvent) => {
@@ -117,19 +116,19 @@ function Homepage() {
 		})
 	}
 
-	/*** Socket Functions ***/
+	// /*** Socket Functions ***/
 
-	const notify = (content: string) => toast(content);
+	// const notify = (content: string) => toast(content);
 
-	socket.on("message", data => notify(data))
-	const joinExistingGame = (IdOfGame: string) => {
-		let existingGameParams = {
-			roomId: IdOfGame
-		}
-		socket.emit("join_room", existingGameParams);
-	}
+	// socket.on("message", data => notify(data))
+	// const joinExistingGame = (IdOfGame: string) => {
+	// 	let existingGameParams = {
+	// 		roomId: IdOfGame
+	// 	}
+	// 	socket.emit("join_room", existingGameParams);
+	// }
 
-	/***/
+	// /***/
 
 
 	return (
