@@ -2,8 +2,8 @@ import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId } fro
 
 const playerControllers = {
 	async createPlayer(req: any, res: any) {
-		const { name, isHost } = req.body;
-		const newPlayer = await createPlayer(name, isHost);
+		const { gameId, name, isHost } = req.body;
+		const newPlayer = await createPlayer(gameId,isHost, name);
 
 		req.session.playerId = newPlayer.id;
 		res.status(201).json(newPlayer);
