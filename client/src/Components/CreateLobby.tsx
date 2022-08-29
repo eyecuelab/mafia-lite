@@ -4,6 +4,8 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import { useMutation } from '@tanstack/react-query';
 import GenericButton from './GenericButton';
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
+import titleImg from "../assets/The Nameless Terror Images/Title.png";
+import CreateLobbyCSS from './CreateLobby.module.css';
 
 type GameCreatePayload = {
 	name: string,
@@ -47,20 +49,36 @@ function CreateLobby() {
 	};
 
 	return (
-		<form onSubmit={onSubmit}>
-			<input name="name" placeholder="Enter Lobby Name" onChange={e => setLobbyName(e.target.value)} />
-			<input name="size" placeholder="Enter Lobby Size" type={"number"} onChange={e => setLobbySize(parseInt(e.target.value))} />
-			<GenericButton 
-				text={"Create Game"}
-				style={
-					{
-						background: `url("${buttonImg}") no-repeat`,
-						width: "1348px",
-						height: "151px"
-					}
-				}
-			/>
-		</form>
+		<>
+		<div className={CreateLobbyCSS["create-lobby-title-wrapper"]}>
+			<img src={titleImg} className={CreateLobbyCSS.titleImage} alt="The Nameless Terror" />
+			<h5>A Lovecraftian Inspired Mafia Game</h5>
+		</div>
+			<div>
+				<form onSubmit={onSubmit}>
+					<input
+					className={CreateLobbyCSS["user-selection-input"]} 
+					name="name" 
+					placeholder="Enter game name" 
+					onChange={e => setLobbyName(e.target.value)} />
+					<input
+					className={CreateLobbyCSS["user-selection-input"]}  
+					name="size" 
+					placeholder="Choose player count" 
+					type={"number"} 
+					onChange={e => setLobbySize(parseInt(e.target.value))} />
+					<GenericButton
+						className={CreateLobbyCSS["create-game-btn"]}  
+						text={"CONTINUE"}
+						style={
+							{
+								backgroundImage: `url("${buttonImg}")`,
+							}
+						}
+					/>
+				</form>
+			</div>
+		</>
 	);
 }
 

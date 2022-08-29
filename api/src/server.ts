@@ -27,8 +27,8 @@ io.on('connection', (socket: any) => {
   socket.on("join_room", async (gameId: number) => {
     const playersInRoom = await getPlayersByGameId(gameId);
     socket.join(gameId)
-    socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
     socket.to(gameId).emit("get_players_in_room", playersInRoom) //sends players in room data to front
+    socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
   })
 
   socket.on("new_game_clicked", ({ user, gameId, socketId }: { user: object, gameId: number, socketId: number }) => {

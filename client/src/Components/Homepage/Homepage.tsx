@@ -17,10 +17,10 @@ function Homepage() {
 				<GenericButton
 					link={"/newgame"}
 					className={HomepageCSS["user-selection-input"]}
-					text={"Host Game"}
+					text={"HOST A GAME"}
 					style={
 						{
-							background: `url("${buttonImg}")`,
+							backgroundImage: `url("${buttonImg}")`,
 						}
 					}
 				/>
@@ -28,10 +28,10 @@ function Homepage() {
 				<GenericButton
 					link={"/joingame"}
 					className={HomepageCSS["user-selection-input"]}
-					text={"Join Game"}
+					text={"JOIN A GAME"}
 					style={
 						{
-							background: `url("${buttonImg}")`,
+							backgroundImage: `url("${buttonImg}")`,
 						}
 					}
 				/>

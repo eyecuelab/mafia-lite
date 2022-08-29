@@ -57,6 +57,7 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
   });
 }
 
+
 const updatePlayerById = async (id: number, name: string) => {
   return await prisma.player.update({
     where: { id: id },
