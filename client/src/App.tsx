@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import './App.css';
 import CreateLobby from "./Components/CreateLobby";
 import CreatePlayer from "./Components/CreatePlayer";
-import Homepage from './Components/Homepage';
+import Homepage from './Components/Homepage/Homepage';
 import JoinGame from "./Components/JoinGame";
 import Lobby from "./Components/Lobby/Lobby";
 

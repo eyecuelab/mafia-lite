@@ -28,9 +28,7 @@ function CreateLobby() {
 	const navigate = useNavigate();
 	const gameMutation = useMutation(createGame, {
     onSuccess: (data) => {
-      navigate("/newplayer", { state: { gameId: data.game.id, lobbyName: data.game.name, playerId: data.player.id }, replace: true });
-      console.log("🚀 ~ file: CreateLobby.tsx ~ line 32 ~ CreateLobby ~ data", data)
-			
+      navigate("/newplayer", { state: { gameId: data.game.id, isHost: true }, replace: true });			
     },
     onError: (error) => {
       if (error instanceof Error) {

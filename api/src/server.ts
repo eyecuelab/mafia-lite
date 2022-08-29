@@ -11,14 +11,14 @@ const io = new Server(server, {
     origin: '*',
     methods: ['GET', 'POST']
   }
-});
+})
+
+/**
+ *  .on() is an event listener for socket.io
+ *  .emit() is to emit data to all sockets listening with the same label
+ **/
 
 io.on('connection', (socket: any) => {
-
-  /**
-   *  .on() is an event listener for socket.io
-   *  .emit() is to emit data to all sockets listening with the same label
-   **/
 
   socket.on('disconnect', () => {
     console.log('socket disconnected')
@@ -28,10 +28,9 @@ io.on('connection', (socket: any) => {
     const playersInRoom = await getPlayersByGameId(gameId);
     socket.join(gameId)
     socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
-    socket.to(gameId).emit("get_players_in_room", playersInRoom)
+    socket.to(gameId).emit("get_players_in_room", playersInRoom) //sends players in room data to front
   })
 
-  //When client emits a "startGame", join a room, and emit to client the room.id
   socket.on("new_game_clicked", ({ user, gameId, socketId }: { user: object, gameId: number, socketId: number }) => {
     socket.emit("new_game_start", { user: user, gameId: gameId, socketId: socketId });
   })

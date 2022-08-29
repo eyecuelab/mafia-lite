@@ -30,11 +30,11 @@ model Role {
 model Player {
   id          Int     @id @default(autoincrement())
   isHost      Boolean @default(false)
-  name        String?
+  name        String
   role        Role?   @relation(fields: [roleId], references: [id])
   roleId      Int?
-  game        Game    @relation(fields: [gameId], references: [id])
-  gameId      Int
+  game        Game?    @relation(fields: [gameId], references: [id])
+  gameId      Int?
   roundDied   Round?  @relation(fields: [roundDiedId], references: [id])
   roundDiedId Int?
   avatar      String

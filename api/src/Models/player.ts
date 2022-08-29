@@ -34,23 +34,25 @@ const setUniqueAvatarPath = async (gameId: number) => {
 
   while (avatarAlreadyAssigned(uniqueAvatarPath)) {
     uniqueAvatarPath = randomlyGenerateAvatar();
+
     if (!avatarAlreadyAssigned) {
       return uniqueAvatarPath;
     } else if (avatarAlreadyAssigned(uniqueAvatarPath) && maxNumOfPlayers === getPlayersInGame.length) {
       console.log(`no unique photos remaining, total players: ${getPlayersInGame.length}`)
-      return uniqueAvatarPath = '' //Hang-up occurs here, need to handle endless loop error
+      return uniqueAvatarPath = '' //Hang-up occurs here, need to handle what happens when max number of avatars/photos reached
     }
   }
   return uniqueAvatarPath
 }
 
-const createPlayer = async (gameId: number, isHost: boolean) => {
+const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
   const getUniqueAvatarPath = await setUniqueAvatarPath(gameId);
   return await prisma.player.create({
     data: {
       gameId,
       isHost,
-      avatar: getUniqueAvatarPath
+      name,
+      avatar: getUniqueAvatarPath,
     }
   });
 }

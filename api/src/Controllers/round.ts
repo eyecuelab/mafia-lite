@@ -1,22 +1,16 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { getRoundByGameID, getRoundById } from "../Models/round";
 
 const roundControllers = {
 	async getRounds(req: any, res: any) {
 		const { gameId } = req.params;
-		const rounds = await prisma.round.findMany({
-			where: { gameId: Number(gameId) }
-		});
+		const rounds = await getRoundByGameID(gameId);
 		res.json(rounds);
 	},
 
 	async getSingleRound(req: any, res: any) {
 		const { id } = req.params;
 		try {
-			const round = await prisma.round.findUniqueOrThrow({
-				where: { id: Number(id) },
-			});
-
+			const round = await getRoundById(id);
 			res.json(round);
 		} catch (error) {
 			return res.status(404).json({ error: "Round not found" });

@@ -16,8 +16,11 @@ interface LobbyMembers {
 }
 
 interface CustomizedState {
-	gameId: number,
-	lobbyName: string
+	gameId: number
+}
+
+interface Game {
+	name: string
 }
 
 const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
@@ -26,40 +29,43 @@ const getLobbyMembers = async (gameId: number): Promise<LobbyMembers[]> => {
 	return await handleResponse(response);
 }
 
+const getLobbyName = async (gameId: number): Promise<Game> => {
+	const url = `${API_ENDPOINT}/game/${gameId}`;
+	const response = await fetch(url, { ...BASE_HEADERS });
+	return await handleResponse(response);
+}
+
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
 	const state = location.state as CustomizedState
-	const { gameId, lobbyName } = state;
+	const { gameId } = state;
 
 	const queryClient = useQueryClient();
-	const { isLoading, error, data } = useQuery(["players"], () => getLobbyMembers(gameId));
+	const { isLoading: lobbyLoading, error: lobbyError, data: players } = useQuery(["players"], () => getLobbyMembers(gameId));
+	const { isLoading: lobbyNameLoading, error: lobbyNameError, data: gameData } = useQuery(["players"], () => getLobbyName(gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT))
 	const [lobbyEntered, setLobbyEntered] = useState(false)
-	const [gameStarted, setGameStarted] = useState(false) //socket
+	const [gameStarted, setGameStarted] = useState(false)
 	const [usersJoined, setUsersJoined] = useState([])
 
-	useEffect(() => {
 
+	useEffect(() => {
 		const lobbyEnteredHandler = () => setLobbyEntered(!lobbyEntered)
 
 		//Establish connection when component mounts
 		socket.on('connect', () => {
-
 			//Alert server we've joined room
 			socket.emit("join_room", gameId)
-
-			//Perform logic on backend and receive data from backend
-			socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => {
-				setUsersJoined(PLAYERS_IN_ROOM)
-			})
-
 			// socket.on("player_joined_msg", (data) => useNotify(data))
 		})
 
 		return (() => {
 			lobbyEnteredHandler()
 		})
-	}, [])
+	}, [lobbyEntered])
+
+	//Perform logic on backend and receive players in game data from backend
+	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setUsersJoined(PLAYERS_IN_ROOM))
 
 
 	//Use placeholder to pass data obj through to server later
@@ -78,15 +84,11 @@ const Lobby = (): JSX.Element => {
 		setGameStarted(!gameStarted)
 	}
 
-	if (error instanceof Error) {
-		return <p>'An error has occurred: {error.message}</p>;
+	if (lobbyError instanceof Error) {
+		return <p>'An error has occurred: {lobbyError.message}</p>;
 	}
 
-	if (isLoading) {
-		queryClient.invalidateQueries(['games']);
-	}
-
-	const playerNames = data ? data.map((player, index) => {
+	const playerNames = players ? players.map((player, index) => {
 		const item: listItem = {
 			id: index,
 			style: { display: `flex` },
@@ -101,9 +103,9 @@ const Lobby = (): JSX.Element => {
 
 	return (
 		<div>
-			<h1>{lobbyName}</h1>
-			{isLoading && (<p>Loading...</p>)}
-			{!isLoading && <List listItems={playerNames} />}
+			<h1>{gameData?.name}</h1>
+			{lobbyLoading && (<p>Loading...</p>)}
+			{!lobbyLoading && <List listItems={playerNames} />}
 
 			<GenericButton
 				onClick={() => gameStartSwitch()}
