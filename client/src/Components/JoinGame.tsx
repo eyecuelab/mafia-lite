@@ -8,6 +8,7 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import titleImg from "../assets/The Nameless Terror Images/Title.png";
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
 import GenericButton from './GenericButton';
+import JoinGameCSS from './JoinGame.module.css';
 
 type JoinGamePayload = {
 	gameCode: string
@@ -42,20 +43,31 @@ function JoinGame() {
 	}
 
 	return (
-		<div>
-			<form onSubmit={onSubmit}>
-				<input name="gameCode" placeholder="Enter Game Code" onChange={e => setGameCode(e.target.value)} />
-				<GenericButton
-					type={"submit"}
-					text={"Join"}
-					style={
-						{
-							background: `url("${buttonImg}")`
+		<>
+			<div className={JoinGameCSS		 ["join-game-title-wrapper"]}>
+				<img src={titleImg} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
+				<h5 className={JoinGameCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
+			</div>
+			<div>
+				<form onSubmit={onSubmit}>
+					<input 
+					className={JoinGameCSS["user-selection-input"]}
+					name="gameCode" 
+					placeholder="Enter game ID" 
+					onChange={e => setGameCode(e.target.value)} />
+					<GenericButton
+						className={JoinGameCSS["continue-game-btn"]} 
+						type={"submit"}
+						text={"CONTINUE"}
+						style={
+							{
+								backgroundImage: `url("${buttonImg}")`
+							}
 						}
-					}
-				/>
-			</form>
-		</div>
+					/>
+				</form>
+			</div>
+		</>
 	);
 }
 

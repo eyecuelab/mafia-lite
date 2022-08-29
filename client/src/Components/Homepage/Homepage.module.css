@@ -1,3 +1,6 @@
+@import url('http://fonts.cdnfonts.com/css/american-typewriter');
+@import url('http://fonts.cdnfonts.com/css/bebas-neue');
+
 .homepage-title-wrapper {
   display: grid;
   place-items: center;
@@ -7,11 +10,11 @@
 
 h5 {
   color: white;
-  font-family: "American Typewriter";
+  font-family: 'American Typewriter', sans-serif;
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   margin: 0;
-  margin-right: 30%;
+  margin-right: 42%;
   margin-top: -3%;
 }
 
@@ -31,13 +34,14 @@ h5 {
   flex-direction: column;
 }
 
-.user-selection-input, .form input{
+.user-selection-input{
   margin: 1%;
   height: 6vh;
   width: 33vw;
   background-size: cover;
   transform: scale(0.8);
-  font-size: 1.5em;
+  font-family: 'Bebas Neue';
+  font-size: 2em;
   font-weight: 600;
   color: white;
   text-align: center;
