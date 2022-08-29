@@ -1,5 +1,6 @@
 import app from "./app";
 import { getGameById } from "./Models/game";
+import { getPlayersByGameId } from "./Models/player";
 
 /*** Socket setup ***/
 const http = require('http');
@@ -16,17 +17,19 @@ const io = new Server(server, {
 io.on('connection', (socket: any) => {
 
   socket.on('disconnect', () => {
+    console.log('socket disconnected')
   })
 
-  socket.on("join_room", (roomId: string) => {
-    socket.join(roomId)
-    socket.to(roomId).emit('message', `player joined room ${roomId}`)
+  socket.on("join_room", async (gameId: number) => {
+    const playersInRoom = await getPlayersByGameId(gameId);
+    socket.join(gameId)
+    socket.to(gameId).emit("get_players_in_room", playersInRoom);
+    socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
   })
 
   //When client emits a "startGame", join a room, and emit to client the room.id
-  socket.on("new_game_clicked", ({ user, roomId, socketId }: { user: object, roomId: string, socketId: number }) => {
-    socket.emit("new_game_start", { user: user, roomId: roomId, socketId: socketId });
-    socket.join(roomId)
+  socket.on("new_game_clicked", ({ user, gameId, socketId }: { user: object, gameId: number, socketId: number }) => {
+    socket.emit("new_game_start", { user: user, gameId: gameId, socketId: socketId });
   })
 
 });

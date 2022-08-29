@@ -34,11 +34,11 @@ const setUniqueAvatarPath = async (gameId: number) => {
 
   while (avatarAlreadyAssigned(uniqueAvatarPath)) {
     uniqueAvatarPath = randomlyGenerateAvatar();
-    if (getPlayersInGame.length === maxNumOfPlayers && avatarAlreadyAssigned(uniqueAvatarPath)) {
-      console.log(`max number of photos and players reached`)
-      return uniqueAvatarPath = ""
-    } else if (!avatarAlreadyAssigned) {
+    if (!avatarAlreadyAssigned) {
       return uniqueAvatarPath;
+    } else if (avatarAlreadyAssigned(uniqueAvatarPath) && maxNumOfPlayers === getPlayersInGame.length) {
+      console.log(`no unique photos remaining, total players: ${getPlayersInGame.length}`)
+      return uniqueAvatarPath = '' //Hang-up occurs here, need to handle endless loop error
     }
   }
   return uniqueAvatarPath

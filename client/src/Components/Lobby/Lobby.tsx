@@ -43,8 +43,11 @@ const Lobby = (): JSX.Element => {
 		//Establish connection when component mounts
 		socket.on('connect', () => {
 
-			socket.on("player_joined_msg", (data) => notify("New player joined"))
-			//Listen for game start and dictate the data passed through the sockets
+			socket.emit("join_room", gameId)
+			socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => {
+				setUsersJoined(PLAYERS_IN_ROOM)
+			})
+			socket.on("player_joined_msg", (data) => notify(data))
 
 			socket.on("new_game_clicked", () => {
 				// console.log("New Game Button Clicked")
@@ -52,22 +55,18 @@ const Lobby = (): JSX.Element => {
 		})
 	}, [socket])
 
-	//Listen for the new game to start
-	socket.on("new_game_start", (arg) => {
-		setUsersJoined(arg)
-		notify("New Game Started!")
-	})
 
 	//Use placeholder to pass data obj through to server later
 	const userAndRoomDataPlaceholder = {
-		user: data, //To contain all users active in room
-		roomId: "123", //Placeholder for Game ID
+		players: usersJoined, //To contain all users active in room
+		roomId: gameId, //Placeholder for Game ID
 		socketId: socket.id
 	}
 
 	//Start the actual game
 	const gameStartSwitch = () => {
 		if (!gameStarted) {
+			console.log(`gameStartSwitch`, userAndRoomDataPlaceholder)
 			socket.emit("new_game_clicked", userAndRoomDataPlaceholder);
 		}
 		setGameStarted(!gameStarted)
@@ -84,8 +83,8 @@ const Lobby = (): JSX.Element => {
 	const playerNames = data ? data.map((player, index) => {
 		const item: listItem = {
 			id: index,
-			style: {display: `flex`},
-			data: 
+			style: { display: `flex` },
+			data:
 				<React.Fragment>
 					<img style={{ width: `20%` }} src={`${player.avatar}`} />
 					<h4>{player.name}</h4>
