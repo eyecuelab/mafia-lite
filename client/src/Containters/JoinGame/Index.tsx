@@ -1,14 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { Fragment, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
-import titleImg from "../assets/The Nameless Terror Images/Title.png";
-import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
-import GenericButton from './GenericButton';
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from './JoinGame.module.css';
+import MenuButton from '../../Components/MenuButton';
 
 type JoinGamePayload = {
 	gameCode: string
@@ -55,19 +52,13 @@ function JoinGame() {
 					name="gameCode" 
 					placeholder="Enter game ID" 
 					onChange={e => setGameCode(e.target.value)} />
-					<GenericButton
+					<MenuButton
 						className={JoinGameCSS["continue-game-btn"]} 
-						type={"submit"}
 						text={"CONTINUE"}
-						style={
-							{
-								backgroundImage: `url("${buttonImg}")`
-							}
-						}
 					/>
 				</form>
 			</div>
-			<GenericButton
+			<MenuButton
 				link = "/"
 				className={JoinGameCSS["cancel-join-btn"]}  
 				text={"CANCEL"}

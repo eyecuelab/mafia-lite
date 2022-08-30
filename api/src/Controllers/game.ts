@@ -9,6 +9,7 @@ const gameControllers = {
 	},
 
 	async getGames(req: any, res: any) {
+		console.log("COOKIE: " + req.session.playerId);
 		res.json(getGames());
 	},
 

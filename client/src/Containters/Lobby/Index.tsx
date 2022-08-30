@@ -1,16 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { Fragment, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import GenericButton from '../GenericButton';
-import List, { listItem } from "../List";
-import { useNotify } from '../useToastify';
 import styles from "./Lobby.module.css"
-import SubTitle from "../Titles/SubTitle"
+import SubTitle from "../../Components/Titles/SubTitle"
 import PlayerList from "./PlayerList"
-import PlayerCard from '../PlayerCard'
+import PlayerCard from './PlayerCard'
 
 type player = {
 	id: number
