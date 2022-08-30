@@ -1,0 +1,98 @@
+.lobbyContainer {
+    display: flex;
+    flex: row;
+    width: 100%;
+    margin: auto;
+}
+.playerStatus {
+    width: 50%;
+    max-height: 90vh;
+    margin: 5px;
+}
+.otherPlayers {
+    width: 50%;
+    margin-right: 10px;
+    max-height: 90vh;
+}
+.playerListContainer{
+    max-height: 60%;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.mainPlayerCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.playerCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    background-color: #0b1918;
+    border-radius: 5px;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+.mainPlayerCardImage {
+    width: 180px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    transform: rotate(-5.33deg);
+    margin-right: 10px;
+}
+.playerCardImage {
+    width: 100px;
+    margin-right: 10px;
+}
+.playerTraits {
+    font-weight: bold;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
+    margin: 0;
+}
+.playerTraitsMain {
+    font-weight: bold;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 35px;
+    margin: 0;
+}
+.playerName {
+    font-family: 'American Typewriter', sans-serif;
+    text-align: left;
+    margin-bottom: 3px;
+    font-size: 18px;
+}
+.playerNameMain {
+    font-family: 'American Typewriter', sans-serif;
+    text-align: left;
+    margin: 0;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+.lobbyName {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0;
+}
+.playerDetails {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.gameCodeInput {
+    background-color: #000000;
+    width: 70%;
+    margin: auto;
+    padding: 10px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 5px;
+}
+.gameCodeInput p {
+    /* font-family: 'American Typewriter', sans-serif; */
+    font-weight: 700;
+    width: 75%;
+    font-size: 20px;
+}
