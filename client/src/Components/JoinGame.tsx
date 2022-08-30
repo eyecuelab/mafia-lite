@@ -67,6 +67,11 @@ function JoinGame() {
 					/>
 				</form>
 			</div>
+			<GenericButton
+				link = "/"
+				className={JoinGameCSS["cancel-join-btn"]}  
+				text={"CANCEL"}
+			/>
 		</>
 	);
 }

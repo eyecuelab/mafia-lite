@@ -4,7 +4,9 @@ import { useMutation } from '@tanstack/react-query';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import { useLocation } from 'react-router-dom';
 import GenericButton from "./GenericButton";
+import titleImg from "../assets/The Nameless Terror Images/Title.png";
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
+import CreatePlayerCSS from './CreatePlayer.module.css';
 
 type PlayerCreateInput = {
 	gameId: number,
@@ -54,18 +56,37 @@ function CreatePlayer() {
 	};
 
 	return (
-		<form onSubmit={onSubmit}>
-			<input name="name" placeholder="Enter Character Name" onChange={e => setName(e.target.value)} />
-			<GenericButton
-				type={"submit"}
-				text={"Continue"}
-				style={
-					{
-						background: `url("${buttonImg}")`
+		<>
+			<div className={CreatePlayerCSS["join-game-title-wrapper"]}>
+				<img src={titleImg} className={CreatePlayerCSS.titleImage} alt="The Nameless Terror" />
+				<h5 className={CreatePlayerCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
+			</div>
+			<form onSubmit={onSubmit}>
+				<input
+				className={CreatePlayerCSS["user-selection-input"]} 
+				name="name" 
+				placeholder="Enter Character Name" 
+				onChange={e => setName(e.target.value)} 
+				/>
+				<GenericButton
+					className={CreatePlayerCSS["continue-game-btn"]}
+					type={"submit"}
+					text={"Continue"}
+					style={
+						{
+							backgroundImage: `url("${buttonImg}")`
+						}
 					}
-				}
+				/>
+			</form>
+			<GenericButton
+				onClick={()=> {
+					(isHost) ? navigate("/newgame") : navigate("/joingame")
+				}} 
+				className={CreatePlayerCSS["cancel-join-btn"]}  
+				text={"BACK"}
 			/>
-		</form>
+		</>
 	);
 }
 

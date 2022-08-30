@@ -1,7 +1,7 @@
 @import url('http://fonts.cdnfonts.com/css/american-typewriter');
 @import url('http://fonts.cdnfonts.com/css/bebas-neue');
 
-.create-lobby-title-wrapper{
+.join-game-title-wrapper{
   display: grid;
   place-items: center;
   margin: 2rem auto;
@@ -12,7 +12,7 @@
   width: 32vw;
 }
 
-h5 {
+.header {
   color: white;
   font-family: 'American Typewriter', sans-serif;  
   font-weight: 700;
@@ -38,7 +38,7 @@ h5 {
   border-radius: 15px;
 }
 
-.create-game-btn {
+.continue-game-btn {
   margin: 1%;
   height: 6vh;
   width: 33vw;
@@ -52,7 +52,7 @@ h5 {
   border-radius: 0;
 }
 
-.cancel-game-btn {
+.cancel-join-btn {
 
   height: 6vh;
   width: 33vw;
@@ -65,4 +65,3 @@ h5 {
   text-align: center;
   border-radius: 0;
 }
-

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useLinkClickHandler, useNavigate } from 'react-router-dom';
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import { useMutation } from '@tanstack/react-query';
 import GenericButton from './GenericButton';
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
 import titleImg from "../assets/The Nameless Terror Images/Title.png";
 import CreateLobbyCSS from './CreateLobby.module.css';
+import Homepage from "./Homepage/Homepage";
 
 type GameCreatePayload = {
 	name: string,
@@ -76,8 +77,15 @@ function CreateLobby() {
 							}
 						}
 					/>
+					
 				</form>
+					
 			</div>
+			<GenericButton
+				link = "/"
+				className={CreateLobbyCSS["cancel-game-btn"]}  
+				text={"CANCEL"}
+			/>
 		</>
 	);
 }

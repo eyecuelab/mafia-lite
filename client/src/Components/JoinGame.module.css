@@ -51,3 +51,17 @@
   text-align: center;
   border-radius: 0;
 }
+
+.cancel-join-btn {
+
+  height: 6vh;
+  width: 33vw;
+  background-color: transparent;
+  transform: scale(0.8);
+  font-family: 'Bebas Neue';
+  font-size: 2em;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  border-radius: 0;
+}
