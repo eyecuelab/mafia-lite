@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import './App.css';
+import "./App.css";
 import Lobby from "./Containters/Lobby/Index";
 import Homepage from "./Containters/Homepage/Index";
 import CreateLobby from "./Containters/CreateLobby/Index";

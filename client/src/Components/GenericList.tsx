@@ -22,10 +22,10 @@ const GenericList = (props: propTypes): JSX.Element => {
 							{ item.data }
 						</li>
 					</Fragment>
-				)
+				);
 			})}
 		</ul>
 	);
-}
+};
 
 export default GenericList;

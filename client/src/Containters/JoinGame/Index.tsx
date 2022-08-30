@@ -1,11 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
+import { useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
-import JoinGameCSS from './JoinGame.module.css';
-import MenuButton from '../../Components/MenuButton';
+import JoinGameCSS from "./JoinGame.module.css";
+import MenuButton from "../../Components/MenuButton";
 
 type JoinGamePayload = {
 	gameCode: string
@@ -15,7 +15,7 @@ const joinGame = async (joinGamePayload: JoinGamePayload) => {
 	const url = `${API_ENDPOINT}/game/join`;
 	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(joinGamePayload) });
 	return await handleResponse(response);
-}
+};
 
 function JoinGame() {
 	const [gameCode, setGameCode] = useState("");
@@ -36,8 +36,8 @@ function JoinGame() {
 		e.preventDefault(); 
 		await joinGameMutation.mutateAsync({
 			gameCode: gameCode
-		})
-	}
+		});
+	};
 
 	return (
 		<>
@@ -48,10 +48,10 @@ function JoinGame() {
 			<div>
 				<form onSubmit={onSubmit}>
 					<input 
-					className={JoinGameCSS["user-selection-input"]}
-					name="gameCode" 
-					placeholder="Enter game ID" 
-					onChange={e => setGameCode(e.target.value)} />
+						className={JoinGameCSS["user-selection-input"]}
+						name="gameCode" 
+						placeholder="Enter game ID" 
+						onChange={e => setGameCode(e.target.value)} />
 					<MenuButton
 						className={JoinGameCSS["continue-game-btn"]} 
 						text={"CONTINUE"}
