@@ -1,12 +1,19 @@
 import { getGames, getAllGameDetails, createNewGame, getGameByGameCode } from "../Models/game";
 import { getPlayerById, getPlayersByGameId, updatePlayerById } from "../Models/player";
 import io from "../server"
+
+const minLobbySize = 4;
+const maxLobbySize = 12;
+
 const gameControllers = {
 	async createGame(req: any, res: any) {
 		const { name, size } = req.body;
-		const newGame = await createNewGame(name, size);		
-		
-		res.status(201).json({ game: newGame });
+		if (size > maxLobbySize || size < minLobbySize) {
+			res.status(500).json({error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})`});
+		} else {
+			const newGame = await createNewGame(name, size);		
+			res.status(201).json({ game: newGame });
+		}
 	},
 
 	async getGames(req: any, res: any) {
@@ -26,7 +33,12 @@ const gameControllers = {
 	async joinGame(req: any, res: any) {
 		const { gameCode } = req.body;
 		const game = await getGameByGameCode(gameCode);
-		res.json({ game: game });
+
+		if (game.players.length >= game.size) {
+			res.status(500).json({error: "Unable to join, lobby is full"});
+		} else {
+			res.json({ game: game });
+		}
 	},
 
 	async startGame(req: any, res: any) {
