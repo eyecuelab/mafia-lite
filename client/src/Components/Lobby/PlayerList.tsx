@@ -1,25 +1,34 @@
-import React from 'react'
-import styles from './Lobby.module.css'
+import React, { useEffect, useRef } from 'react'
 import PlayerCard from '../PlayerCard'
+import styles from './Lobby.module.css'
+
 type player = {
-	id: number
-	name: string
-    isHost : boolean
-	avatar: string
+  id: number
+  name: string
+  isHost: boolean
+  avatar: string
 }
 type propTypes = {
-	players: Array<player>
+  players: Array<player>
 }
 const PlayerList = (props: propTypes) => {
-    const {players} = props;
+  const { players } = props;
+  const playerListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    playerListRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [players]);
+
   return (
     <ul className={styles.playerListContainer}>
-        {players?.map((player: player, index : number) => {
-            return (
-              <PlayerCard player={player} isMain={false} key={index} />
-            )
-        })}
-	</ul>
+      {players?.map((player: player, index: number) => {
+        return (
+          <PlayerCard player={player} isMain={false} key={index} />
+        )
+      })}
+      <div ref={playerListRef} />
+    </ul>
   )
 }
 

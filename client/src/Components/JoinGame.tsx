@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
 import titleImg from "../assets/The Nameless Terror Images/Title.png";
@@ -36,7 +34,7 @@ function JoinGame() {
 	});
 
 	const onSubmit = async (e: React.FormEvent) => {
-		e.preventDefault(); 
+		e.preventDefault();
 		await joinGameMutation.mutateAsync({
 			gameCode: gameCode
 		})
@@ -44,19 +42,19 @@ function JoinGame() {
 
 	return (
 		<>
-			<div className={JoinGameCSS		 ["join-game-title-wrapper"]}>
+			<div className={JoinGameCSS["join-game-title-wrapper"]}>
 				<img src={titleImg} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={JoinGameCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>
-					<input 
-					className={JoinGameCSS["user-selection-input"]}
-					name="gameCode" 
-					placeholder="Enter game ID" 
-					onChange={e => setGameCode(e.target.value)} />
+					<input
+						className={JoinGameCSS["user-selection-input"]}
+						name="gameCode"
+						placeholder="Enter game ID"
+						onChange={e => setGameCode(e.target.value)} />
 					<GenericButton
-						className={JoinGameCSS["continue-game-btn"]} 
+						className={JoinGameCSS["continue-game-btn"]}
 						type={"submit"}
 						text={"CONTINUE"}
 						style={
@@ -68,8 +66,8 @@ function JoinGame() {
 				</form>
 			</div>
 			<GenericButton
-				link = "/"
-				className={JoinGameCSS["cancel-join-btn"]}  
+				link="/"
+				className={JoinGameCSS["cancel-join-btn"]}
 				text={"CANCEL"}
 			/>
 		</>

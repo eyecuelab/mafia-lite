@@ -1,23 +1,25 @@
 import React from 'react'
 import styles from './Lobby/Lobby.module.css'
 type player = {
-	id: number
-	name: string
-	avatar: string
+  id: number
+  name: string
+  avatar: string
 }
 type propTypes = {
-	player: player
-    isMain: boolean
+  player: player
+  isMain: boolean
 }
-const PlayerCard = (props : any) => {
-    const {player, isMain } = props
+const PlayerCard = (props: any) => {
+  const { player, isMain } = props
+  const transitionAnimation = ` ${styles[`player-card-entrance`]}`
+
   return (
-    <div className={(isMain) ? styles.mainPlayerCard : styles.playerCard}>
-        <img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-        <div className={styles.playerDetails}>
-            <p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
-            <p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
-        </div>
+    <div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
+      <img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
+      <div className={styles.playerDetails}>
+        <p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
+        <p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
+      </div>
     </div>
   )
 }

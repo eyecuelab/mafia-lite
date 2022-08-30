@@ -1,16 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import GenericButton from '../GenericButton';
 import List, { listItem } from "../List";
-import { useNotify } from '../useToastify';
-import styles from "./Lobby.module.css"
-import SubTitle from "../Titles/SubTitle"
-import PlayerList from "./PlayerList"
-import PlayerCard from '../PlayerCard'
+import PlayerCard from '../PlayerCard';
+import SubTitle from "../Titles/SubTitle";
+import styles from "./Lobby.module.css";
+import PlayerList from "./PlayerList";
 
 type player = {
 	id: number
@@ -18,7 +16,7 @@ type player = {
 	name: string
 	avatar: string
 }
-interface gameData { 
+interface gameData {
 	id: number
 	players: Array<player>
 	gameCode: string
@@ -39,7 +37,7 @@ interface Game {
 	playerId: number
 	lobbyName: string
 }
-const getGameData = async (gameId: number) : Promise<gameData> => {
+const getGameData = async (gameId: number): Promise<gameData> => {
 	const url = `${API_ENDPOINT}/game/${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
@@ -65,22 +63,19 @@ const Lobby = (): JSX.Element => {
 	const [codeIsCopied, setCodeIsCopied] = useState(false)
 
 	useEffect(() => {
-		const lobbyEnteredHandler = () => setLobbyEntered(!lobbyEntered)
-
 		//Establish connection when component mounts
 		socket.on('connect', () => {
-			//Alert server we've joined room
-			socket.emit("join_room", gameId)
-			// socket.on("player_joined_msg", (data) => useNotify(data))
+			console.log(`socket connected`)
+			socket.on(`disconnect`, () => console.log(`socket disconnected`))
 		})
+
 		return (() => {
-			lobbyEnteredHandler()
+			socket.off('connect');
 		})
-	}, [lobbyEntered])
+	}, [])
 
 	//Perform logic on backend and receive players in game data from backend
 	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM))
-	console.log(playersInGame);
 
 
 	//Use placeholder to pass data obj through to server later
@@ -91,48 +86,50 @@ const Lobby = (): JSX.Element => {
 	}
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode
-		if(gameCode !== undefined) {
+		if (gameCode !== undefined) {
 			navigator.clipboard.writeText(gameCode);
 			setCodeIsCopied(true)
+			setTimeout(() => setCodeIsCopied(false), 600)
 		}
 	}
-	//Start the actual game
-	const gameStartSwitch = () => {
-		if (!gameStarted) {
-			console.log(`gameStartSwitch`, userAndRoomDataPlaceholder)
-			socket.emit("new_game_clicked", userAndRoomDataPlaceholder);
-		}
-		setGameStarted(!gameStarted)
-	}
+	// //Start the actual game
+	// const gameStartSwitch = () => {
+	// 	if (!gameStarted) {
+	// 		console.log(`gameStartSwitch`, userAndRoomDataPlaceholder)
+	// 		socket.emit("new_game_clicked", userAndRoomDataPlaceholder);
+	// 	}
+	// 	setGameStarted(!gameStarted)
+	// }
+
 	const players = data?.players.filter((player) => {
 		return player.id !== playerId
 	})
-	let content = 
-	<div className={styles.lobbyPageContainer}>
-		<h1 className={styles.lobbyName}>{data?.name}</h1>
-		<div className={styles.lobbyContainer}>
-			<div className={styles.playerStatus}>
-				<SubTitle title={"Your Character"} />
-				{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
-				<div className={styles.gameCodeInput}>
-					<p>Your game code: {data?.gameCode}</p>
-					<button onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+	let content =
+		<div className={styles.lobbyPageContainer}>
+			<h1 className={styles.lobbyName}>{data?.name}</h1>
+			<div className={styles.lobbyContainer}>
+				<div className={styles.playerStatus}>
+					<SubTitle title={"Your Character"} />
+					{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
+					<div className={styles.gameCodeInput}>
+						<p>Your game code: {data?.gameCode}</p>
+						<button onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+					</div>
+					{(playerData?.isHost) ?
+						<div className={styles.hostButtonGroup}>
+							<button>Start Game</button>
+							<button>Cancel Game</button>
+						</div> : null}
 				</div>
-				{(playerData?.isHost) ? 
-				<div className={styles.hostButtonGroup}>
-					<button>Start Game</button>
-					<button>Cancel Game</button>
-				</div> : null}
+				<div className={styles.otherPlayers}>
+					<SubTitle title={"Other Players"} />
+					{(players) ? <PlayerList players={players} /> : null}
+				</div>
 			</div>
-			<div className={styles.otherPlayers}>
-				<SubTitle title={"Other Players"} />
-				{(players) ? <PlayerList players={players} /> : null }
-			</div>
+
+			{/* <ToastContainer /> */}
 		</div>
-		
-		{/* <ToastContainer /> */}
-	</div>
-	if(isLoading || playerLoading) content = <p> Loading ....</p>
+	if (isLoading || playerLoading) content = <p> Loading ....</p>
 	return (
 		<div>
 			{content}
