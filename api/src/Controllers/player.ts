@@ -3,7 +3,7 @@ import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId } fro
 const playerControllers = {
 	async createPlayer(req: any, res: any) {
 		const { gameId, name, isHost } = req.body;
-		const newPlayer = await createPlayer(gameId,isHost, name);
+		const newPlayer = await createPlayer(gameId, isHost, name);
 
 		req.session.playerId = newPlayer.id;
 		res.status(201).json(newPlayer);
@@ -12,14 +12,14 @@ const playerControllers = {
 	async getSinglePlayer(req: any, res: any) {
 		const { id } = req.params;
 		try {
-			const player = await getPlayerById(id);	
+			const player = await getPlayerById(id);
 			res.json(player);
-		}  catch (error) {
+		} catch (error) {
 			return res.status(404).json({ error: "Player not found" });
 		}
 	},
 
-  async getPlayers(req: any, res: any) {
+	async getPlayers(req: any, res: any) {
 		const { gameId } = req.params;
 		const players = await getPlayersByGameId(gameId);
 		res.json(players);
