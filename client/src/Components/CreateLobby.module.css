@@ -52,6 +52,14 @@ h5 {
   border-radius: 0;
 }
 
+.create-game-btn:hover {
+  opacity: 0.65;
+  transform: scale(1);
+  color: black;
+  transition: ease-in 0.5s;
+  box-shadow: 2px 2px 7px 2px rgba(236, 236, 236, 0.5);
+}
+
 .cancel-game-btn {
 
   height: 6vh;
@@ -64,5 +72,10 @@ h5 {
   color: white;
   text-align: center;
   border-radius: 0;
+}
+
+.cancel-game-btn:hover {
+  transform: scale(1.2);
+  transition: ease-in 0.5s;
 }
 
