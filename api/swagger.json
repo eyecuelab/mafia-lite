@@ -1,0 +1,23 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Mafia Lite Api",
+      "description": "An api for mafia lite",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "Users of Mafia Lite"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+  }

@@ -68,7 +68,7 @@ const Lobby = (): JSX.Element => {
 		socket.on('connect', () => {
 			//Alert server we've joined room
 			socket.emit("join_room", gameId)
-			// socket.on("player_joined_msg", (data) => useNotify(data))
+			socket.on("player_joined_msg", (data) => useNotify(data))
 		})
 		return (() => {
 			lobbyEnteredHandler()
@@ -105,7 +105,7 @@ const Lobby = (): JSX.Element => {
 		return player.id !== playerId
 	})
 	let content = 
-	<div className={styles.lobbyPageContainer}>
+	<div>
 		<h1 className={styles.lobbyName}>{data?.name}</h1>
 		<div className={styles.lobbyContainer}>
 			<div className={styles.playerStatus}>
