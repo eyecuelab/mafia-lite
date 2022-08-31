@@ -3,11 +3,11 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import GenericButton from '../GenericButton';
-import List, { listItem } from "../List";
-import PlayerCard from '../PlayerCard';
-import SubTitle from "../Titles/SubTitle";
+import SubTitle from "../../Components/Titles/SubTitle";
+// import GenericButton from '../GenericButton';
+// import List, { listItem } from "../List";
 import styles from "./Lobby.module.css";
+import PlayerCard from './PlayerCard';
 import PlayerList from "./PlayerList";
 
 type player = {
@@ -41,26 +41,26 @@ const getGameData = async (gameId: number): Promise<gameData> => {
 	const url = `${API_ENDPOINT}/game/${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
-}
+};
 const getPlayerDetails = async (playerId: number): Promise<player> => {
 	const url = `${API_ENDPOINT}/player/${playerId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
-}
+};
 
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
-	const state = location.state as CustomizedState
+	const state = location.state as CustomizedState;
 	const queryClient = useQueryClient();
 	const { gameId, playerId } = state;
 
 	const { isLoading: playerLoading, error: playerError, data: playerData } = useQuery(["players"], () => getPlayerDetails(playerId));
 	const { isLoading, error, data } = useQuery(["game"], () => getGameData(gameId));
-	const [socket, setSocket] = useState(io(API_ENDPOINT))
-	const [lobbyEntered, setLobbyEntered] = useState(false)
-	const [gameStarted, setGameStarted] = useState(false)
-	const [playersInGame, setPlayersInGame] = useState([])
-	const [codeIsCopied, setCodeIsCopied] = useState(false)
+	const [socket, setSocket] = useState(io(API_ENDPOINT));
+	const [lobbyEntered, setLobbyEntered] = useState(false);
+	const [gameStarted, setGameStarted] = useState(false);
+	const [playersInGame, setPlayersInGame] = useState([]);
+	const [codeIsCopied, setCodeIsCopied] = useState(false);
 
 	useEffect(() => {
 		//Establish connection when component mounts
@@ -83,7 +83,7 @@ const Lobby = (): JSX.Element => {
 		players: playersInGame, //To contain all users active in room
 		roomId: gameId, //Placeholder for Game ID
 		socketId: socket.id
-	}
+	};
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode
 		if (gameCode !== undefined) {
@@ -92,6 +92,7 @@ const Lobby = (): JSX.Element => {
 			setTimeout(() => setCodeIsCopied(false), 600)
 		}
 	}
+
 	// //Start the actual game
 	// const gameStartSwitch = () => {
 	// 	if (!gameStarted) {
@@ -126,8 +127,6 @@ const Lobby = (): JSX.Element => {
 					{(players) ? <PlayerList players={players} /> : null}
 				</div>
 			</div>
-
-			{/* <ToastContainer /> */}
 		</div>
 	if (isLoading || playerLoading) content = <p> Loading ....</p>
 	return (
@@ -135,6 +134,6 @@ const Lobby = (): JSX.Element => {
 			{content}
 		</div >
 	);
-}
+};
 
 export default Lobby;

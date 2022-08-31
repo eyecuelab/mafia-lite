@@ -1,12 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { Fragment, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
-import titleImg from "../assets/The Nameless Terror Images/Title.png";
+
+
+import { useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import MenuButton from "../../Components/MenuButton";
 import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
-import GenericButton from './GenericButton';
-import JoinGameCSS from './JoinGame.module.css';
+// import GenericButton from './GenericButton';
+import JoinGameCSS from "./JoinGame.module.css";
 
 type JoinGamePayload = {
 	gameCode: string
@@ -16,7 +18,7 @@ const joinGame = async (joinGamePayload: JoinGamePayload) => {
 	const url = `${API_ENDPOINT}/game/join`;
 	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(joinGamePayload) });
 	return await handleResponse(response);
-}
+};
 
 function JoinGame() {
 	const [gameCode, setGameCode] = useState("");
@@ -37,8 +39,8 @@ function JoinGame() {
 		e.preventDefault();
 		await joinGameMutation.mutateAsync({
 			gameCode: gameCode
-		})
-	}
+		});
+	};
 
 	return (
 		<>
@@ -53,19 +55,13 @@ function JoinGame() {
 						name="gameCode"
 						placeholder="Enter game ID"
 						onChange={e => setGameCode(e.target.value)} />
-					<GenericButton
+					<MenuButton
 						className={JoinGameCSS["continue-game-btn"]}
-						type={"submit"}
 						text={"CONTINUE"}
-						style={
-							{
-								backgroundImage: `url("${buttonImg}")`
-							}
-						}
 					/>
-				</form>
-			</div>
-			<GenericButton
+				</form >
+			</div >
+			<MenuButton
 				link="/"
 				className={JoinGameCSS["cancel-join-btn"]}
 				text={"CANCEL"}

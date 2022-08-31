@@ -1,7 +1,5 @@
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
-import buttonImg from "../../assets/The Nameless Terror Images/UI/image\ 15.png";
-import GenericButton from '../GenericButton';
+import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
 
 function Homepage() {
@@ -13,26 +11,16 @@ function Homepage() {
 			</div>
 
 			<div className={HomepageCSS["hostOrJoinBtns-wrapper"]}>
-				<GenericButton
+				<MenuButton
 					link={"/newgame"}
 					className={HomepageCSS["user-selection-input"]}
 					text={"HOST A GAME"}
-					style={
-						{
-							backgroundImage: `url("${buttonImg}")`,
-						}
-					}
 				/>
 
-				<GenericButton
+				<MenuButton
 					link={"/joingame"}
 					className={HomepageCSS["user-selection-input"]}
 					text={"JOIN A GAME"}
-					style={
-						{
-							backgroundImage: `url("${buttonImg}")`,
-						}
-					}
 				/>
 			</div>
 		</div>

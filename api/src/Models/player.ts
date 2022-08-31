@@ -58,10 +58,11 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
 }
 
 
-const updatePlayerById = async (id: number, name: string) => {
-  return await prisma.player.update({
+const updatePlayerById = async (id: number, roleId: number) => {
+  await prisma.player.update({
     where: { id: id },
-    data: { name: name }
+    data: { 
+      roleId: roleId }
   })
 }
 

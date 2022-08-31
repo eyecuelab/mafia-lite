@@ -10,7 +10,7 @@ type propTypes = {
 	listItems: listItem[]
 }
 
-const List = (props: propTypes): JSX.Element => {
+const GenericList = (props: propTypes): JSX.Element => {
 	const { listItems } = props;
 
 	return (
@@ -22,10 +22,10 @@ const List = (props: propTypes): JSX.Element => {
 							{ item.data }
 						</li>
 					</Fragment>
-				)
+				);
 			})}
 		</ul>
 	);
-}
+};
 
-export default List;
+export default GenericList;

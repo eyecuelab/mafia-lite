@@ -36,6 +36,7 @@ io.on('connection', (socket: any) => {
   })
 
 });
+export default io;
 
 const port = 3000;
 server.listen(port, () =>

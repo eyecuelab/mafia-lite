@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import { useLocation } from 'react-router-dom';
-import GenericButton from "./GenericButton";
-import titleImg from "../assets/The Nameless Terror Images/Title.png";
-import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import CreatePlayerCSS from './CreatePlayer.module.css';
+import MenuButton from "../../Components/MenuButton";
 
 type PlayerCreateInput = {
 	gameId: number,
@@ -70,18 +69,12 @@ function CreatePlayer() {
 				placeholder="Enter Character Name" 
 				onChange={e => setName(e.target.value)} 
 				/>
-				<GenericButton
+				<MenuButton
 					className={CreatePlayerCSS["continue-game-btn"]}
-					type={"submit"}
 					text={"Continue"}
-					style={
-						{
-							backgroundImage: `url("${buttonImg}")`
-						}
-					}
 				/>
 			</form>
-			<GenericButton
+			<MenuButton
 				onClick={()=> {
 					(isHost) ? navigate("/newgame") : navigate("/joingame")
 				}} 

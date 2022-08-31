@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import './App.css';
-import Lobby from "./Components/Lobby/Lobby";
-import Homepage from './Components/Homepage/Homepage';
-import CreateLobby from "./Components/CreateLobby";
-import CreatePlayer from "./Components/CreatePlayer";
-import JoinGame from "./Components/JoinGame";
+import "./App.css";
+import Lobby from "./Containters/Lobby/Index";
+import Homepage from "./Containters/Homepage/Index";
+import CreateLobby from "./Containters/CreateLobby/Index";
+import JoinGame from "./Containters/JoinGame/Index";
+import CreatePlayer from "./Containters/CreatePlayer/Index";
 
 
 function App() {
@@ -20,4 +20,4 @@ function App() {
 	);
 }
 
-export default App
+export default App;

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { useLinkClickHandler, useNavigate } from 'react-router-dom';
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../ApiHelper";
+import { useNavigate } from 'react-router-dom';
+import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import { useMutation } from '@tanstack/react-query';
-import GenericButton from './GenericButton';
-import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
-import titleImg from "../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import CreateLobbyCSS from './CreateLobby.module.css';
-import Homepage from "./Homepage/Homepage";
+import MenuButton from "../../Components/MenuButton";
 
 type GameCreatePayload = {
 	name: string,
@@ -58,30 +56,23 @@ function CreateLobby() {
 			<div>
 				<form onSubmit={onSubmit}>
 					<input
-					className={CreateLobbyCSS["user-selection-input"]} 
-					name="name" 
-					placeholder="Enter game name" 
-					onChange={e => setLobbyName(e.target.value)} />
+						className={CreateLobbyCSS["user-selection-input"]} 
+						name="name" 
+						placeholder="Enter game name" 
+						onChange={e => setLobbyName(e.target.value)} />
 					<input
-					className={CreateLobbyCSS["user-selection-input"]}  
-					name="size" 
-					placeholder="Choose player count" 
-					type={"number"} 
-					onChange={e => setLobbySize(parseInt(e.target.value))} />
-					<GenericButton
+						className={CreateLobbyCSS["user-selection-input"]}  
+						name="size" 
+						placeholder="Choose player count" 
+						type={"number"} 
+						onChange={e => setLobbySize(parseInt(e.target.value))} />
+					<MenuButton
 						className={CreateLobbyCSS["create-game-btn"]}  
 						text={"CONTINUE"}
-						style={
-							{
-								backgroundImage: `url("${buttonImg}")`,
-							}
-						}
 					/>
-					
 				</form>
-					
 			</div>
-			<GenericButton
+			<MenuButton
 				link = "/"
 				className={CreateLobbyCSS["cancel-game-btn"]}  
 				text={"CANCEL"}
