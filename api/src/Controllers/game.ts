@@ -1,5 +1,6 @@
 import { getGames, getAllGameDetails, createNewGame, getGameByGameCode } from "../Models/game";
 import { getPlayerById, getPlayersByGameId, updatePlayerById } from "../Models/player";
+import Utility from "./Utility";
 import io from "../server"
 
 const minLobbySize = 4;
@@ -8,71 +9,74 @@ const maxLobbySize = 12;
 const gameControllers = {
 	async createGame(req: any, res: any) {
 		const { name, size } = req.body;
-		if (size > maxLobbySize || size < minLobbySize) {
-			res.status(500).json({error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})`});
-		} else {
-			const newGame = await createNewGame(name, size);		
-			res.status(201).json({ game: newGame });
+		if (Utility.validateInputs(res, "Invalid lobby name or size", name, size)) {
+			if (size > maxLobbySize || size < minLobbySize) {
+				res.status(500).json({error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})`});
+			} else {
+				const newGame = await createNewGame(name, size);		
+				res.status(201).json({ game: newGame });
+			}
 		}
 	},
 
 	async getGames(req: any, res: any) {
-		res.json(getGames());
+		const games = await getGames();
+		res.json(games);
 	},
 
 	async getSingleGame(req: any, res: any) {
-		const { id, code } = req.query;		
+		const { id, code } = req.query;
 		try {
 			let game;
 			if (id) {
-				game = await getAllGameDetails(id);
+				game = await getAllGameDetails(parseInt(id));
 			} else {
-				game = await getGameByGameCode(code);
+				game = await getGameByGameCode(code?.toUpperCase());
 			}
 			
-			res.json(game);
+			if(game) {
+				if (game.players.length >= game.size) {
+					res.status(500).json({error: "Unable to join, lobby is full"});
+				} else {
+					res.json({ game: game });
+				}
+			} else {
+				res.status(500).json({ error: "Unable to retreive game" });
+			}			
 		} catch (error) {
-			return res.status(404).json({ error: "Game not found" });
+			res.status(404).json({ error: "Game not found" });
 		}
 	},
-
-	// async joinGame(req: any, res: any) {
-	// 	const { gameCode } = req.body;
-	// 	const game = await getGameByGameCode(gameCode);
-
-	// 	if (game.players.length >= game.size) {
-	// 		res.status(500).json({error: "Unable to join, lobby is full"});
-	// 	} else {
-	// 		res.json({ game: game });
-	// 	}
-	// },
 
 	async startGame(req: any, res: any) {
 		const { gameId } = req.params
 		const playerId = req.session.playerId;
-		const player = await getPlayerById(playerId);
-		if(player.gameId !== gameId && !player.isHost)
-		{
-			return res.status(401).json({ error: "Your are not allowed to start the game" });
-		}
-		//Emit socket Message here
-		//This might break
-		io.on('connection', (socket: any) => {
-			socket.to(gameId).emit("game_has_started");
-		  });
-		//Assign out Roles
-		//May want to randomize players array before looping. 
-		const players = await getPlayersByGameId((gameId));
-		for (let i = 0; i < players.length; i++) {
-			if (i % 3) {
-				//assign cultist role
-				await updatePlayerById(players[i].id, 2)
-			} else {
-				// assign investigator
-				await updatePlayerById(players[i].id, 1)
+
+		if (Utility.validateInputs(res, "Invalid game or player id", gameId, playerId)) {
+			const player = await getPlayerById(playerId);
+			if(player.gameId !== gameId && !player.isHost)
+			{
+				return res.status(401).json({ error: "Your are not allowed to start the game" });
 			}
+			//Emit socket Message here
+			//This might break
+			io.on('connection', (socket: any) => {
+				socket.to(gameId).emit("game_has_started");
+				});
+			//Assign out Roles
+			//May want to randomize players array before looping. 
+			const players = await getPlayersByGameId((gameId));
+			for (let i = 0; i < players.length; i++) {
+				if (i % 3) {
+					//assign cultist role
+					await updatePlayerById(players[i].id, 2)
+				} else {
+					// assign investigator
+					await updatePlayerById(players[i].id, 1)
+				}
+			}
+			res.status(204).json();
 		}
-		return res.status(204).json();
 	},
 
 	// async dayStart(req: any, res: any) {

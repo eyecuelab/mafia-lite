@@ -1,10 +1,13 @@
 import { createRole, deleteRole, getRoleById, getRoles, updateRole } from "../Models/role";
+import Utility from "./Utility";
 
 const roleControllers ={
   async createRole(req: any, res: any) {
     const { name, type, roleDesc, nightTimePrompt } = req.body;
-    const role = await createRole(name, type, roleDesc, nightTimePrompt);
-    res.status(201).json(role);
+		if (Utility.validateInputs(res, "Invalid body parameters", name, type, roleDesc, nightTimePrompt)) {
+			const role = await createRole(name, type, roleDesc, nightTimePrompt);
+			res.status(201).json(role);
+		}
   },
 
   async getRoles(req: any, res: any) {
@@ -31,8 +34,11 @@ const roleControllers ={
 
   async deleteRole(req: any, res: any) {
     const id = req.params.id;
-    const deletedRole = await deleteRole(id);
-    res.json(deletedRole);
+
+		if (Utility.validateInputs(res, "Invalid id", id)) {
+			const deletedRole = await deleteRole(id);
+			res.json(deletedRole);
+		}
   },
 }
 

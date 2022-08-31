@@ -77,7 +77,7 @@ function CreatePlayer() {
 			</form>
 			<GenericButton
 				onClick={()=> {
-					(isHost) ? navigate("/newgame") : navigate("/joingame");
+					(isHost) ? navigate("/newgame") : navigate("/join")
 				}} 
 				className={CreatePlayerCSS["cancel-join-btn"]}  
 				text={"BACK"}

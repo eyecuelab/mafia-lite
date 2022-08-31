@@ -1,10 +1,14 @@
 import { getRoundByGameID, getRoundById } from "../Models/round";
+import Utility from "./Utility";
 
 const roundControllers = {
 	async getRounds(req: any, res: any) {
 		const { gameId } = req.params;
-		const rounds = await getRoundByGameID(gameId);
-		res.json(rounds);
+		
+		if (Utility.validateInputs(res, "Invalid id", gameId)) {
+			const rounds = await getRoundByGameID(gameId);
+			res.json(rounds);
+		}
 	},
 
 	async getSingleRound(req: any, res: any) {
