@@ -18,7 +18,7 @@ function Homepage() {
 				/>
 
 				<MenuButton
-					link={"/joingame"}
+					link={"/join"}
 					className={HomepageCSS["user-selection-input"]}
 					text={"JOIN A GAME"}
 				/>

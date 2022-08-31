@@ -1,22 +1,14 @@
-
-
-import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import MenuButton from "../../Components/MenuButton";
-import buttonImg from "../assets/The Nameless Terror Images/UI/image\ 15.png";
-// import GenericButton from './GenericButton';
 import JoinGameCSS from "./JoinGame.module.css";
 
-type JoinGamePayload = {
-	gameCode: string
-}
 
-const joinGame = async (joinGamePayload: JoinGamePayload) => {
-	const url = `${API_ENDPOINT}/game/join`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(joinGamePayload) });
+const getGameId = async (gameCode: string) => {
+	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
+	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
 	return await handleResponse(response);
 };
 
@@ -24,23 +16,12 @@ function JoinGame() {
 	const [gameCode, setGameCode] = useState("");
 	const navigate = useNavigate();
 
-	const joinGameMutation = useMutation(joinGame, {
-		onSuccess: (data) => {
-			navigate("/newplayer", { state: { gameId: data.game.id, isHost: false }, replace: true });
-		},
-		onError: (error) => {
-			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
-			}
-		}
-	});
-
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		await joinGameMutation.mutateAsync({
-			gameCode: gameCode
-		});
-	};
+
+		const game = await getGameId(gameCode);
+		navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
+	}
 
 	return (
 		<>
@@ -53,8 +34,9 @@ function JoinGame() {
 					<input
 						className={JoinGameCSS["user-selection-input"]}
 						name="gameCode"
-						placeholder="Enter game ID"
+						placeholder="Enter game code"
 						onChange={e => setGameCode(e.target.value)} />
+
 					<MenuButton
 						className={JoinGameCSS["continue-game-btn"]}
 						text={"CONTINUE"}

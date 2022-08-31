@@ -1,14 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { Fragment, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import SubTitle from "../../Components/Titles/SubTitle";
-// import GenericButton from '../GenericButton';
-// import List, { listItem } from "../List";
 import styles from "./Lobby.module.css";
 import PlayerCard from './PlayerCard';
 import PlayerList from "./PlayerList";
+
 
 type player = {
 	id: number
@@ -31,14 +30,8 @@ interface CustomizedState {
 	lobbyName: string
 }
 
-interface Game {
-	name: string
-	gameId: number,
-	playerId: number
-	lobbyName: string
-}
-const getGameData = async (gameId: number): Promise<gameData> => {
-	const url = `${API_ENDPOINT}/game/${gameId}`;
+const getGameData = async (gameId: number) : Promise<gameData> => {
+	const url = `${API_ENDPOINT}/game?id=${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
 };
@@ -51,14 +44,12 @@ const getPlayerDetails = async (playerId: number): Promise<player> => {
 const Lobby = (): JSX.Element => {
 	const location = useLocation();
 	const state = location.state as CustomizedState;
-	const queryClient = useQueryClient();
 	const { gameId, playerId } = state;
 
 	const { isLoading: playerLoading, error: playerError, data: playerData } = useQuery(["players"], () => getPlayerDetails(playerId));
 	const { isLoading, error, data } = useQuery(["game"], () => getGameData(gameId));
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
-	const [lobbyEntered, setLobbyEntered] = useState(false);
-	const [gameStarted, setGameStarted] = useState(false);
+
 	const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
 
@@ -77,13 +68,13 @@ const Lobby = (): JSX.Element => {
 	//Perform logic on backend and receive players in game data from backend
 	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM))
 
-
 	//Use placeholder to pass data obj through to server later
 	const userAndRoomDataPlaceholder = {
 		players: playersInGame, //To contain all users active in room
 		roomId: gameId, //Placeholder for Game ID
 		socketId: socket.id
 	};
+
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode
 		if (gameCode !== undefined) {
