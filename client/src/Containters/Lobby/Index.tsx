@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +9,9 @@ import styles from "./Lobby.module.css";
 import SubTitle from "../../Components/Titles/SubTitle";
 import PlayerList from "./PlayerList";
 import PlayerCard from "./PlayerCard";
+import GenericButton from "../../Components/GenericButton";
+import MenuButton from "../../Components/MenuButton";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 
 type player = {
 	id: number
@@ -60,7 +64,7 @@ const Lobby = (): JSX.Element => {
 	const [gameStarted, setGameStarted] = useState(false);
 	const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
-
+	const navigate = useNavigate();
 	// useEffect(() => {
 	// 	const lobbyEnteredHandler = () => setLobbyEntered(!lobbyEntered);
 
@@ -106,6 +110,7 @@ const Lobby = (): JSX.Element => {
 	});
 	let content = 
 	<div>
+		<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 		<h1 className={styles.lobbyName}>{data?.name}</h1>
 		<div className={styles.lobbyContainer}>
 			<div className={styles.playerStatus}>
@@ -117,12 +122,19 @@ const Lobby = (): JSX.Element => {
 				</div>
 				{(playerData?.isHost) ? 
 					<div className={styles.hostButtonGroup}>
-						<button>Start Game</button>
-						<button>Cancel Game</button>
+						<MenuButton
+							className={styles["start-game-btn"]}
+							text={"START GAME"}
+						/>
+						<GenericButton
+							onClick={() => (navigate("/newgame"))}
+							className={styles["cancel-game-btn"]}
+							text={"CANCEL GAME"}
+						/>
 					</div> : null}
 			</div>
 			<div className={styles.otherPlayers}>
-				<SubTitle title={"Other Players"} />
+				<SubTitle title={"JOINING GAME"} />
 				{(players) ? <PlayerList players={players} /> : null }
 			</div>
 		</div>

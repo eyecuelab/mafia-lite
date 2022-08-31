@@ -65,3 +65,8 @@
   text-align: center;
   border-radius: 0;
 }
+
+.cancel-join-btn:hover {
+  transform: scale(1.2);
+  transition: ease-in 0.5s;
+}

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import io from "socket.io-client";
 import HomepageCSS from "./Homepage.module.css";
 
+
 function Homepage() {
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
 

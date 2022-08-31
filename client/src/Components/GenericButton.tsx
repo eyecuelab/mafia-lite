@@ -5,9 +5,9 @@ const GenericButton = (props: any): JSX.Element => {
 
 	if (link) {
 		return (
-		<Link to={link}>
-			<button onClick={onClick} type={type} {...rest}>{text}</button>
-		</Link>
+			<Link to={link}>
+				<button onClick={onClick} type={type} {...rest}>{text}</button>
+			</Link>
 		);
 	} else {
 		return (
@@ -16,6 +16,6 @@ const GenericButton = (props: any): JSX.Element => {
 	}
 
 	
-}
+};
 
 export default GenericButton; 

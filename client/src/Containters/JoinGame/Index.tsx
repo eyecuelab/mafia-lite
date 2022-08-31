@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
+import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 
 type JoinGamePayload = {
@@ -58,7 +59,7 @@ function JoinGame() {
 					/>
 				</form>
 			</div>
-			<MenuButton
+			<GenericButton
 				link = "/"
 				className={JoinGameCSS["cancel-join-btn"]}  
 				text={"CANCEL"}

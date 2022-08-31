@@ -35,7 +35,28 @@ h5 {
   color: #5B5B5B;
   
   text-align: center;
+  border-radius: 15px; 
+   
+}
+
+.drop-selection-input {
+  margin: 1%;
+  height: 6vh;
+  width: 33vw;
+  background-color: #ffffff;
+  transform: scale(0.8);
+  font-family: 'American Typewriter', sans-serif;
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #5B5B5B;
+  
+  text-align: center;
   border-radius: 15px;
+  
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png") white no-repeat 98% !important;
 }
 
 .create-game-btn {

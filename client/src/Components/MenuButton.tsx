@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import buttonImg from "../assets/The Nameless Terror Images/UI/image/ 15.png";
+import buttonImg from "../assets/The Nameless Terror Images/UI/image 15.png";
 import GenericButton from "./GenericButton";
 
 type propTypes = {
