@@ -21,25 +21,31 @@ const gameControllers = {
 	},
 
 	async getSingleGame(req: any, res: any) {
-		const { id } = req.params;		
+		const { id, code } = req.query;		
 		try {
-			const game = await getAllGameDetails(id);
+			let game;
+			if (id) {
+				game = await getAllGameDetails(id);
+			} else {
+				game = await getGameByGameCode(code);
+			}
+			
 			res.json(game);
 		} catch (error) {
 			return res.status(404).json({ error: "Game not found" });
 		}
 	},
 
-	async joinGame(req: any, res: any) {
-		const { gameCode } = req.body;
-		const game = await getGameByGameCode(gameCode);
+	// async joinGame(req: any, res: any) {
+	// 	const { gameCode } = req.body;
+	// 	const game = await getGameByGameCode(gameCode);
 
-		if (game.players.length >= game.size) {
-			res.status(500).json({error: "Unable to join, lobby is full"});
-		} else {
-			res.json({ game: game });
-		}
-	},
+	// 	if (game.players.length >= game.size) {
+	// 		res.status(500).json({error: "Unable to join, lobby is full"});
+	// 	} else {
+	// 		res.json({ game: game });
+	// 	}
+	// },
 
 	async startGame(req: any, res: any) {
 		const { gameId } = req.params

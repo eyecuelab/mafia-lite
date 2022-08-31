@@ -1,27 +1,9 @@
-import { useState } from "react";
-import MenuButton from "../../Components/MenuButton";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
-import { API_ENDPOINT } from "../../ApiHelper";
-import { toast } from "react-toastify";
-import io from "socket.io-client";
+import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
 
 
 function Homepage() {
-	const [socket, setSocket] = useState(io(API_ENDPOINT));
-
-	/*** Socket Functions ***/
-
-	const notify = (content: string) => toast(content);
-
-	socket.on("message", data => notify(data));
-	const joinExistingGame = (IdOfGame: string) => {
-		const existingGameParams = {
-			roomId: IdOfGame
-		};
-		socket.emit("join_room", existingGameParams);
-	};
-
 	return (
 		<div>
 			<div className={HomepageCSS["homepage-title-wrapper"]}>
@@ -37,7 +19,7 @@ function Homepage() {
 				/>
 
 				<MenuButton
-					link={"/joingame"}
+					link={"/join"}
 					className={HomepageCSS["user-selection-input"]}
 					text={"JOIN A GAME"}
 				/>

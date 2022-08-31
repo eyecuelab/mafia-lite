@@ -5,6 +5,7 @@ import Homepage from "./Containters/Homepage/Index";
 import CreateLobby from "./Containters/CreateLobby/Index";
 import JoinGame from "./Containters/JoinGame/Index";
 import CreatePlayer from "./Containters/CreatePlayer/Index";
+import JoinURL from "./Containters/JoinGame/JoinURL";
 
 
 function App() {
@@ -13,9 +14,10 @@ function App() {
 		<Routes>
 			<Route path="/" element={<Homepage />} />
 			<Route path="/newgame" element={<CreateLobby />} />
-			<Route path="/joingame" element={<JoinGame />} />
+			<Route path="/join" element={<JoinGame />} />
 			<Route path="/newplayer" element={<CreatePlayer />} />
 			<Route path="/lobby" element={<Lobby />} />
+			<Route path="/join/:code" element={<JoinURL />} />
 		</Routes>
 	);
 }

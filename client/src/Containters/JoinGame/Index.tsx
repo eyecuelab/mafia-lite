@@ -1,20 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 
-type JoinGamePayload = {
-	gameCode: string
-}
 
-const joinGame = async (joinGamePayload: JoinGamePayload) => {
-	const url = `${API_ENDPOINT}/game/join`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(joinGamePayload) });
+
+const getGameId = async (gameCode: string) => {
+	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
+	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
 	return await handleResponse(response);
 };
 
@@ -22,46 +18,36 @@ function JoinGame() {
 	const [gameCode, setGameCode] = useState("");
 	const navigate = useNavigate();
 
-	const joinGameMutation = useMutation(joinGame, {
-		onSuccess: (data) => {
-			navigate("/newplayer", { state: { gameId: data.game.id, isHost: false }, replace: true });
-		},
-		onError: (error) => {
-			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
-			}
-		}
-	});
-
 	const onSubmit = async (e: React.FormEvent) => {
-		e.preventDefault(); 
-		await joinGameMutation.mutateAsync({
-			gameCode: gameCode
-		});
-	};
+		e.preventDefault();
+
+		const game = await getGameId(gameCode);
+		navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
+	}
 
 	return (
 		<>
-			<div className={JoinGameCSS		 ["join-game-title-wrapper"]}>
+			<div className={JoinGameCSS["join-game-title-wrapper"]}>
 				<img src={titleImg} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={JoinGameCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>
-					<input 
+					<input
 						className={JoinGameCSS["user-selection-input"]}
-						name="gameCode" 
-						placeholder="Enter game ID" 
+						name="gameCode"
+						placeholder="Enter game code"
 						onChange={e => setGameCode(e.target.value)} />
+
 					<MenuButton
-						className={JoinGameCSS["continue-game-btn"]} 
+						className={JoinGameCSS["continue-game-btn"]}
 						text={"CONTINUE"}
 					/>
-				</form>
-			</div>
-			<GenericButton
-				link = "/"
-				className={JoinGameCSS["cancel-join-btn"]}  
+				</form >
+			</div >
+			<MenuButton
+				link="/"
+				className={JoinGameCSS["cancel-join-btn"]}
 				text={"CANCEL"}
 			/>
 		</>

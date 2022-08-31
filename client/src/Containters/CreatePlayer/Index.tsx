@@ -30,22 +30,22 @@ const createPlayer = async (playerInput: PlayerCreateInput) => {
 function CreatePlayer() {
 	const location = useLocation();
 	const state = location.state as locationState;
-	const { gameId, lobbyName, isHost } = state;
+	const { gameId, isHost } = state;
 
 	const navigate = useNavigate();
 	const [name, setName] = useState("");
 	
 	const playerMutation = useMutation(createPlayer, {
-		onSuccess: (data) => {
-			console.log(data);
-			navigate("/lobby", { state: { gameId: gameId, lobbyName: lobbyName, playerId: data.id }, replace: true });
-		},
-		onError: (error) => {
-			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
-			}
-		}
-	});
+    onSuccess: (data) => {
+      navigate("/lobby", { state: { gameId: gameId, playerId: data.id }, replace: true });
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        alert(`Oops! ${error.message}`);
+      }
+    }
+  });
+
 
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();

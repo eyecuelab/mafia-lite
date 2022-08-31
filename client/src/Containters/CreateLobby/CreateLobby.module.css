@@ -23,6 +23,12 @@ h5 {
   margin-top: -3%;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+}
+
 .user-selection-input {
   margin: 1%;
   height: 6vh;

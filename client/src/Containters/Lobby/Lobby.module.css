@@ -1,5 +1,35 @@
+
 @import url('http://fonts.cdnfonts.com/css/american-typewriter');
 @import url('http://fonts.cdnfonts.com/css/bebas-neue');
+
+@keyframes moveInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-100px), scale(0.5);
+    }
+    50% {
+        filter:blur(2px)
+    }
+    80% {
+        transform: translateX(-30px);
+        opacity: 90%;
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0), scale(1);
+        filter: blur(0)
+    }
+}
+
+.player-card-entrance {
+    display: grid;
+    place-items: center;
+    margin: 2rem auto;
+    width: 30vw;
+    animation-name: moveInFromTop;
+    animation-duration: 700ms;
+}
+
 
 .lobbyContainer {
 	display: flex;
@@ -27,9 +57,9 @@
 	max-height: 90vh;
 }
 .playerListContainer{
-	max-height: 60%;
-	overflow: scroll;
-	overflow-x: hidden;
+    max-height: 60%;
+    overflow: auto;
+    overflow-x: hidden;
 }
 .mainPlayerCard {
 	display: flex;
