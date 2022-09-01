@@ -34,15 +34,15 @@ function CreatePlayer() {
 	const [name, setName] = useState("");
 	
 	const playerMutation = useMutation(createPlayer, {
-    onSuccess: (data) => {
-      navigate("/lobby", { state: { gameId: gameId, playerId: data.id }, replace: true });
-    },
-    onError: (error) => {
-      if (error instanceof Error) {
-        alert(`Oops! ${error.message}`);
-      }
-    }
-  });
+		onSuccess: (data) => {
+			navigate("/lobby", { state: { gameId: gameId, playerId: data.id }, replace: true });
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				alert(`Oops! ${error.message}`);
+			}
+		}
+	});
 
 
 	const onSubmit = (e: React.FormEvent) => {
@@ -75,7 +75,7 @@ function CreatePlayer() {
 			</form>
 			<GenericButton
 				onClick={()=> {
-					(isHost) ? navigate("/newgame") : navigate("/join")
+					(isHost) ? navigate("/newgame") : navigate("/join");
 				}} 
 				className={CreatePlayerCSS["cancel-join-btn"]}  
 				text={"BACK"}
