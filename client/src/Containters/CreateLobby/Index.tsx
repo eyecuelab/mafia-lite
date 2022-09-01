@@ -30,7 +30,7 @@ function CreateLobby() {
 	const navigate = useNavigate();
 	const gameMutation = useMutation(createGame, {
 		onSuccess: (data) => {
-			navigate("/newplayer", { state: { gameId: data.game.id, isHost: true }, replace: true });			
+			navigate("/newplayer", { state: { gameId: data.id, isHost: true }, replace: true });			
 		},
 		onError: (error) => {
 			if (error instanceof Error) {

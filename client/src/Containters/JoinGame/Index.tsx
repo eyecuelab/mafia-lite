@@ -4,6 +4,7 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
+import GenericButton from "../../Components/GenericButton";
 
 const getGameId = async (gameCode: string) => {
 	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
@@ -42,7 +43,7 @@ function JoinGame() {
 					/>
 				</form >
 			</div >
-			<MenuButton
+			<GenericButton
 				link="/"
 				className={JoinGameCSS["cancel-join-btn"]}
 				text={"CANCEL"}

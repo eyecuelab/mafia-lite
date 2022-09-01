@@ -7,6 +7,9 @@ import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
 import PlayerCard from './PlayerCard';
 import PlayerList from "./PlayerList";
+import GenericButton from "../../Components/GenericButton";
+import MenuButton from "../../Components/MenuButton";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 
 
 type player = {
@@ -102,7 +105,9 @@ const Lobby = (): JSX.Element => {
 		return player.id !== playerId;
 	});
 	let content =
+	
 		<div className={styles.lobbyPageContainer}>
+			<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 			<h1 className={styles.lobbyName}>{data?.name}</h1>
 			<div className={styles.lobbyContainer}>
 				<div className={styles.playerStatus}>
@@ -114,12 +119,19 @@ const Lobby = (): JSX.Element => {
 					</div>
 					{(playerData?.isHost) ?
 						<div className={styles.hostButtonGroup}>
-							<button>Start Game</button>
-							<button>Cancel Game</button>
+							<MenuButton
+							className={styles["start-game-btn"]}
+							text={"START GAME"}
+						/>
+						<GenericButton
+							onClick={() => (navigate("/newgame"))}
+							className={styles["cancel-game-btn"]}
+							text={"CANCEL GAME"}
+						/>
 						</div> : null}
 				</div>
 				<div className={styles.otherPlayers}>
-					<SubTitle title={"Other Players"} />
+					<SubTitle title={"JOINING GAME"} />
 					{(players) ? <PlayerList players={players} /> : null}
 				</div>
 			</div>
