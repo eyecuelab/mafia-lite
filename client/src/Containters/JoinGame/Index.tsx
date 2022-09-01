@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
-import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
-
-
 
 const getGameId = async (gameCode: string) => {
 	const url = `${API_ENDPOINT}/game?code=${gameCode}`;

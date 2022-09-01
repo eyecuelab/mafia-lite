@@ -4,6 +4,7 @@ import Utility from './Utility';
 const playerControllers = {
 	async createPlayer(req: any, res: any) {
 		const { gameId, name, isHost } = req.body;
+		console.log("🚀 ~ file: player.ts ~ line 7 ~ createPlayer ~ gameId, name, isHost", gameId, name, isHost)
 
 		if (Utility.validateInputs(res, "Invalid body parameters", gameId, name, isHost)) {
 			const newPlayer = await createPlayer(gameId, isHost, name);

@@ -14,7 +14,7 @@ const gameControllers = {
 				res.status(500).json({error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})`});
 			} else {
 				const newGame = await createNewGame(name, size);		
-				res.status(201).json({ game: newGame });
+				res.status(201).json(newGame);
 			}
 		}
 	},
@@ -38,7 +38,7 @@ const gameControllers = {
 				if (game.players.length >= game.size) {
 					res.status(500).json({error: "Unable to join, lobby is full"});
 				} else {
-					res.json({ game: game });
+					res.json(game);
 				}
 			} else {
 				res.status(500).json({ error: "Unable to retreive game" });
@@ -62,7 +62,7 @@ const gameControllers = {
 			//This might break
 			io.on('connection', (socket: any) => {
 				socket.to(gameId).emit("game_has_started");
-				});
+			});
 			//Assign out Roles
 			//May want to randomize players array before looping. 
 			const players = await getPlayersByGameId((gameId));
@@ -75,7 +75,7 @@ const gameControllers = {
 					await updatePlayerById(players[i].id, 1)
 				}
 			}
-			res.status(204).json();
+			res.status(204).send();
 		}
 	},
 

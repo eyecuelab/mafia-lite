@@ -8,10 +8,6 @@ import styles from "./Lobby.module.css";
 import PlayerCard from './PlayerCard';
 import PlayerList from "./PlayerList";
 
-import GenericButton from "../../Components/GenericButton";
-import MenuButton from "../../Components/MenuButton";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
-
 
 type player = {
 	id: number
@@ -39,6 +35,7 @@ const getGameData = async (gameId: number) : Promise<gameData> => {
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
 };
+
 const getPlayerDetails = async (playerId: number): Promise<player> => {
 	const url = `${API_ENDPOINT}/player/${playerId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });

@@ -16,9 +16,7 @@ type PlayerCreateInput = {
 
 interface locationState {
 	gameId: number,
-	isHost: boolean,
-	lobbyName: string
-	playerId: number
+	isHost: boolean
 }
 
 const createPlayer = async (playerInput: PlayerCreateInput) => {
