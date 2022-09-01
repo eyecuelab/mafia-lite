@@ -1,9 +1,11 @@
+const credentials: RequestCredentials = "include";
+
 export const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 export const BASE_HEADERS = {
 	headers: {
 		"Content-Type": "application/json"
 	},
-	credentials: "include"
+	credentials: credentials
 };
 
 export const handleResponse = async (response: Response) => {

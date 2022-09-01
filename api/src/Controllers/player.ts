@@ -19,7 +19,6 @@ const playerControllers = {
 		if (Utility.validateInputs(res, "Invalid id", id)) {
 			try {
 				const player = await getPlayerById(id);
-				console.log("TEST: " + req.session?.playerId);
 				res.json(player);
 			} catch (error) {
 				return res.status(404).json({ error: "Player not found" });

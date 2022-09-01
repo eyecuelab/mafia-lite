@@ -24,7 +24,6 @@ const gameControllers = {
 
 	async getSingleGame(req: any, res: any) {
 		const { id, code } = req.query;
-		console.log("TEST2: " + req.session?.playerId);
 		try {
 			let game;
 			if (id) {
