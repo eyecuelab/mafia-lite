@@ -4,7 +4,6 @@ import Utility from './Utility';
 const playerControllers = {
 	async createPlayer(req: any, res: any) {
 		const { gameId, name, isHost } = req.body;
-		console.log("🚀 ~ file: player.ts ~ line 7 ~ createPlayer ~ gameId, name, isHost", gameId, name, isHost)
 
 		if (Utility.validateInputs(res, "Invalid body parameters", gameId, name, isHost)) {
 			const newPlayer = await createPlayer(gameId, isHost, name);
@@ -20,6 +19,7 @@ const playerControllers = {
 		if (Utility.validateInputs(res, "Invalid id", id)) {
 			try {
 				const player = await getPlayerById(id);
+				console.log("TEST: " + req.session?.playerId);
 				res.json(player);
 			} catch (error) {
 				return res.status(404).json({ error: "Player not found" });

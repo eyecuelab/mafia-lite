@@ -3,6 +3,7 @@ export const BASE_HEADERS = {
 	headers: {
 		"Content-Type": "application/json"
 	},
+	credentials: "include"
 };
 
 export const handleResponse = async (response: Response) => {

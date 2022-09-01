@@ -1,11 +1,11 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
-import PlayerCard from './PlayerCard';
+import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
@@ -62,19 +62,19 @@ const Lobby = (): JSX.Element => {
 
 	useEffect(() => {
 		//Establish connection when component mounts
-		socket.on('connect', () => {
-			console.log(`socket connected`)
-			socket.on(`disconnect`, () => console.log(`socket disconnected`))
-		})
+		socket.on("connect", () => {
+			console.log("socket connected");
+			socket.on("disconnect", () => console.log("socket disconnected"));
+		});
 
 
 		return (() => {
-			socket.off('connect');
-		})
-	}, [])
+			socket.off("connect");
+		});
+	}, []);
 
 	//Perform logic on backend and receive players in game data from backend
-	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM))
+	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
 
 	//Use placeholder to pass data obj through to server later
 	const userAndRoomDataPlaceholder = {
@@ -84,13 +84,13 @@ const Lobby = (): JSX.Element => {
 	};
 
 	const copyToClipBoard = () => {
-		const gameCode = data?.gameCode
+		const gameCode = data?.gameCode;
 		if (gameCode !== undefined) {
 			navigator.clipboard.writeText(gameCode);
-			setCodeIsCopied(true)
-			setTimeout(() => setCodeIsCopied(false), 600)
+			setCodeIsCopied(true);
+			setTimeout(() => setCodeIsCopied(false), 600);
 		}
-	}
+	};
 
 	// //Start the actual game
 	// const gameStartSwitch = () => {
@@ -120,14 +120,14 @@ const Lobby = (): JSX.Element => {
 					{(playerData?.isHost) ?
 						<div className={styles.hostButtonGroup}>
 							<MenuButton
-							className={styles["start-game-btn"]}
-							text={"START GAME"}
-						/>
-						<GenericButton
-							onClick={() => (navigate("/newgame"))}
-							className={styles["cancel-game-btn"]}
-							text={"CANCEL GAME"}
-						/>
+								className={styles["start-game-btn"]}
+								text={"START GAME"}
+							/>
+							<GenericButton
+								onClick={() => (navigate("/newgame"))}
+								className={styles["cancel-game-btn"]}
+								text={"CANCEL GAME"}
+							/>
 						</div> : null}
 				</div>
 				<div className={styles.otherPlayers}>
@@ -135,8 +135,8 @@ const Lobby = (): JSX.Element => {
 					{(players) ? <PlayerList players={players} /> : null}
 				</div>
 			</div>
-		</div>
-	if (isLoading || playerLoading) content = <p> Loading ....</p>
+		</div>;
+	if (isLoading || playerLoading) content = <p> Loading ....</p>;
 	return (
 		<div>
 			{content}

@@ -21,7 +21,7 @@ interface locationState {
 
 const createPlayer = async (playerInput: PlayerCreateInput) => {
 	const url = `${API_ENDPOINT}/player`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(playerInput) });	
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(playerInput) });
 	return await handleResponse(response);
 };
 
