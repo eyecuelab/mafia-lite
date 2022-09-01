@@ -3,6 +3,7 @@ import express from 'express';
 import gameRouter from "./Routes/game";
 import playerRouter from "./Routes/player";
 import roundRouter from "./Routes/round";
+import logicRouter from "./Routes/logic";
 
 const session = require("express-session")
 
@@ -20,7 +21,6 @@ app.use(
 );
 
 app.use(express.json());
-app.use(gameRouter, roundRouter, playerRouter);
-
+app.use(gameRouter, roundRouter, playerRouter, logicRouter);
 
 export default app;
