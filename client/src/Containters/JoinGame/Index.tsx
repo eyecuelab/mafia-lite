@@ -9,7 +9,11 @@ import GenericButton from "../../Components/GenericButton";
 const getGameId = async (gameCode: string) => {
 	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
 	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
-	return await handleResponse(response);
+	if (!getGameId || response.status === 404) {
+		alert("Game not found");
+	} else {
+		return await handleResponse(response);
+	}
 };
 
 function JoinGame() {
@@ -21,7 +25,7 @@ function JoinGame() {
 
 		const game = await getGameId(gameCode);
 		navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
-	}
+	};
 
 	return (
 		<>
@@ -33,6 +37,7 @@ function JoinGame() {
 				<form onSubmit={onSubmit}>
 					<input
 						className={JoinGameCSS["user-selection-input"]}
+						required
 						name="gameCode"
 						placeholder="Enter game code"
 						onChange={e => setGameCode(e.target.value)} />

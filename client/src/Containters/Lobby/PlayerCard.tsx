@@ -1,4 +1,4 @@
-import styles from './Lobby.module.css'
+import styles from "./Lobby.module.css";
 
 type player = {
 	id: number
@@ -10,8 +10,8 @@ type propTypes = {
 	isMain: boolean
 }
 const PlayerCard = (props: any) => {
-	const { player, isMain } = props
-	const transitionAnimation = ` ${styles[`player-card-entrance`]}`
+	const { player, isMain } = props;
+	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	return (
 		<div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
@@ -21,7 +21,7 @@ const PlayerCard = (props: any) => {
 				<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default PlayerCard
+export default PlayerCard;

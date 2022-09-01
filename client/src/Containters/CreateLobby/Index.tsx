@@ -57,7 +57,8 @@ function CreateLobby() {
 			<div>
 				<form onSubmit={onSubmit}>
 					<input
-						className={CreateLobbyCSS["user-selection-input"]} 
+						className={CreateLobbyCSS["user-selection-input"]}
+						required 
 						name="name" 
 						placeholder="Enter game name" 
 						onChange={e => setLobbyName(e.target.value)} />
