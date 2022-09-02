@@ -5,23 +5,26 @@ import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
 import GenericButton from "../../Components/GenericButton";
+import { useModal } from "../../ModalContext";
 
 const getGameId = async (gameCode: string) => {
 	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
 	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
-	if (!getGameId || response.status === 404) {
-		alert("Game not found");
-	} else {
-		return await handleResponse(response);
-	}
+	return await handleResponse(response);
 };
 
 function JoinGame() {
+	const { callModal } = useModal();
 	const [gameCode, setGameCode] = useState("");
 	const navigate = useNavigate();
 
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+
+		if (!gameCode) {
+			callModal("Please input a game code!");
+			return;
+		}
 
 		const game = await getGameId(gameCode);
 		navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
