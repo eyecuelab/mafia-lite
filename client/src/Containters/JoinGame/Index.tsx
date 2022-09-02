@@ -26,8 +26,14 @@ function JoinGame() {
 			return;
 		}
 
-		const game = await getGameId(gameCode);
-		navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
+		try {
+			const game = await getGameId(gameCode);
+			navigate("/newplayer", { state: { gameId: game.id, isHost: false }, replace: true });
+		} catch (error) {
+			if (error instanceof Error) {
+				callModal(error.message);
+			}
+		}
 	};
 
 	return (
