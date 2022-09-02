@@ -1,5 +1,6 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { createPortal } from "react-dom";
+import { useModal } from "../ModalContext";
 // import styled from "styled-components";
 
 // const Wrapper = styled.div`
@@ -14,20 +15,21 @@ import { createPortal } from "react-dom";
 //   background-color: rgba(0, 0, 0, 0.1);
 // `;
 
-type Props = {
-  children: ReactNode;
-  modalOpen: boolean,
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  className: string;
-}
 
-export const Modal: React.FC<Props> = ({ modalOpen, children, setModalOpen, className}) => {
-	if (!modalOpen) return null;
+export const Modal: React.FC = () => {
+	const { content, isOpen, closeModal } = useModal();
+
+	if (!isOpen) {
+		return null;
+	}
+
+	const modalDomNode = document.getElementById("modal-root") as HTMLElement;
+
 	return createPortal(
-		<div className={className}>
-			<button onClick={() => setModalOpen(false)}>Close</button>
-			{children}
+		<div className="modal-container">
+			<button onClick={() => closeModal()}>Close</button>
+			<div>{content}</div>
 		</div>,
-		document.body
+		modalDomNode
 	);
 };
