@@ -60,6 +60,12 @@
     overflow: auto;
     overflow-x: hidden;
 }
+.playerListInnerWrap{
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
 .mainPlayerCard {
 	display: flex;
 	flex-direction: row;
@@ -74,6 +80,7 @@
 	width: 70%;
 	margin: auto;
 	margin-bottom: 10px;
+	z-index: 1;
 }
 .mainPlayerCardImage {
 	width: 180px;

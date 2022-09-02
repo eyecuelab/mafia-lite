@@ -18,6 +18,8 @@ const io = new Server(server, {
  *  .emit() is to emit data to all sockets listening with the same label
  **/
 
+let listOfAccused = <Array<number>>[]; //Mock storage
+
 io.on('connection', (socket: any) => {
 
   socket.on('disconnect', () => {
@@ -34,6 +36,16 @@ io.on('connection', (socket: any) => {
   socket.on("new_game_clicked", ({ user, gameId, socketId }: { user: object, gameId: number, socketId: number }) => {
     socket.emit("new_game_start", { user: user, gameId: gameId, socketId: socketId });
   })
+
+  socket.on("accuse_player", (accusation: number) => { //Emit client selection to server
+    console.log(accusation)
+    listOfAccused.push(accusation) //dev/test only, will change! Aggregate client selection on server
+
+    console.log(`listOfAcc`, listOfAccused)
+    socket.emit("update_accused_players", listOfAccused) //Broadcast accused player to client
+  })
+
+  //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
 
 });
 export default io;

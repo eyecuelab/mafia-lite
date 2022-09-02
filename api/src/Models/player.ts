@@ -39,7 +39,7 @@ const setUniqueAvatarPath = async (gameId: number) => {
       return uniqueAvatarPath;
     } else if (avatarAlreadyAssigned(uniqueAvatarPath) && maxNumOfPlayers === getPlayersInGame.length) {
       console.log(`no unique photos remaining, total players: ${getPlayersInGame.length}`)
-      return uniqueAvatarPath = '' //Hang-up occurs here, need to handle what happens when max number of avatars/photos reached
+      return uniqueAvatarPath = ''
     }
   }
   return uniqueAvatarPath
@@ -61,9 +61,11 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
 const updatePlayerById = async (id: number, roleId: number) => {
   await prisma.player.update({
     where: { id: id },
-    data: { 
-      roleId: roleId }
+    data: {
+      roleId: roleId
+    }
   })
 }
 
 export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById };
+

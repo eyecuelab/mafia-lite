@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import GenericButton from "../../Components/GenericButton";
+import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
 import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
-import GenericButton from "../../Components/GenericButton";
-import MenuButton from "../../Components/MenuButton";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 
 
 type player = {
@@ -33,7 +33,7 @@ interface CustomizedState {
 	lobbyName: string
 }
 
-const getGameData = async (gameId: number) : Promise<gameData> => {
+const getGameData = async (gameId: number): Promise<gameData> => {
 	const url = `${API_ENDPOINT}/game?id=${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
@@ -58,7 +58,6 @@ const Lobby = (): JSX.Element => {
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
 
 	const navigate = useNavigate();
-	
 
 	useEffect(() => {
 		//Establish connection when component mounts
@@ -66,10 +65,8 @@ const Lobby = (): JSX.Element => {
 			console.log("socket connected");
 			socket.on("disconnect", () => console.log("socket disconnected"));
 		});
-
-
 		return (() => {
-			socket.off("connect");
+			socket.off("connect"); //disconnect
 		});
 	}, []);
 
@@ -77,11 +74,11 @@ const Lobby = (): JSX.Element => {
 	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
 
 	//Use placeholder to pass data obj through to server later
-	const userAndRoomDataPlaceholder = {
-		players: playersInGame, //To contain all users active in room
-		roomId: gameId, //Placeholder for Game ID
-		socketId: socket.id
-	};
+	// const userAndRoomDataPlaceholder = {
+	// 	players: playersInGame, //To contain all users active in room
+	// 	roomId: gameId, //Placeholder for Game ID
+	// 	socketId: socket.id
+	// };
 
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode;
@@ -92,20 +89,11 @@ const Lobby = (): JSX.Element => {
 		}
 	};
 
-	// //Start the actual game
-	// const gameStartSwitch = () => {
-	// 	if (!gameStarted) {
-	// 		console.log(`gameStartSwitch`, userAndRoomDataPlaceholder)
-	// 		socket.emit("new_game_clicked", userAndRoomDataPlaceholder);
-	// 	}
-	// 	setGameStarted(!gameStarted)
-	// }
-
 	const players = data?.players.filter((player) => {
 		return player.id !== playerId;
 	});
 	let content =
-	
+
 		<div className={styles.lobbyPageContainer}>
 			<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 			<h1 className={styles.lobbyName}>{data?.name}</h1>
