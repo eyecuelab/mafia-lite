@@ -6,6 +6,7 @@ import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import CreateLobbyCSS from "./CreateLobby.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
+import { useModal } from "../../ModalContext";
 
 type GameCreatePayload = {
 	name: string,
@@ -35,7 +36,7 @@ function CreateLobby() {
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
+				callModal(error.message);
 			}
 		}
 	});
