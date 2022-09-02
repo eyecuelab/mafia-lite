@@ -25,8 +25,9 @@ const createGame = async (gameInput: GameCreatePayload) => {
 };
 
 function CreateLobby() {
+	const { callModal } = useModal();
 	const [lobbyName, setLobbyName] = useState("");
-	const [lobbySize, setLobbySize] = useState(1);
+	const [lobbySize, setLobbySize] = useState(0);
 	const navigate = useNavigate();
 	const gameMutation = useMutation(createGame, {
 		onSuccess: (data) => {
@@ -41,6 +42,24 @@ function CreateLobby() {
 
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+
+		const errors = [];
+
+		if (!lobbyName) {
+			errors.push("Needs a lobby name!");
+		}
+		if (!lobbySize) {
+			errors.push("Needs a lobby size!");
+		}
+
+		if (errors.length) {
+			callModal((
+				<ul>
+					{errors.map((error) => <li key={error}>{error}</li>)}
+				</ul>
+			));
+			return;
+		}
 
 		gameMutation.mutate({
 			name: lobbyName,
