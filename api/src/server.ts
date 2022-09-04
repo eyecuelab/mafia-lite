@@ -18,7 +18,8 @@ const io = new Server(server, {
  *  .emit() is to emit data to all sockets listening with the same label
  **/
 
-let listOfAccused = <Array<number>>[]; //Mock storage
+
+let listOfAccused = <Array<number>>[]; //Mock storage, need to replace with controller method later!
 
 io.on('connection', (socket: any) => {
 
@@ -42,10 +43,19 @@ io.on('connection', (socket: any) => {
     listOfAccused.push(accusation) //dev/test only, will change! Aggregate client selection on server
 
     console.log(`listOfAcc`, listOfAccused)
-    socket.emit("update_accused_players", listOfAccused) //Broadcast accused player to client
+    let counted = countVotes();
+
+    socket.emit("update_accused_players", { listOfAccused, counted }) //Broadcast accused player to client
+    //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
+
   })
 
-  //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
+  const countVotes = () => {
+    return listOfAccused.reduce((acc: any, cur: any) => {
+      cur in acc ? acc[cur] = acc[cur] + 1 : acc[cur] = 1
+      return acc
+    }, {});
+  }
 
 });
 export default io;

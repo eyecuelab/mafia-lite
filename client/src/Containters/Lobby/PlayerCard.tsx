@@ -4,7 +4,6 @@ import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
 import styles from "./Lobby.module.css";
 
-
 type player = {
 	id: number
 	name: string
@@ -18,15 +17,8 @@ type propTypes = {
 const PlayerCard = (props: any) => {
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
 	const { player, isMain, accusedPlayerStatus, jailedPlayer } = props;
-	const [voteCount, setVoteCount] = useState(io(API_ENDPOINT));
+	// const [voteCount, setVoteCount] = useState(io(API_ENDPOINT));
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
-
-	useEffect(() => {
-		socket.on("update_accused_players", (updates) => {
-			console.log(updates);
-			setVoteCount(updates);
-		});
-	}, [socket]);
 
 	/*
 		Player Status should be contained in the game or player object on the backend, in future.

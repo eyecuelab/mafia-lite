@@ -73,13 +73,6 @@ const Lobby = (): JSX.Element => {
 	//Perform logic on backend and receive players in game data from backend
 	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
 
-	//Use placeholder to pass data obj through to server later
-	// const userAndRoomDataPlaceholder = {
-	// 	players: playersInGame, //To contain all users active in room
-	// 	roomId: gameId, //Placeholder for Game ID
-	// 	socketId: socket.id
-	// };
-
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode;
 		if (gameCode !== undefined) {
