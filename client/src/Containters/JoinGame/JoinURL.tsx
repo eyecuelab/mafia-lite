@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import { useQuery } from '@tanstack/react-query';
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import styles from "./JoinGame.module.css";
 
@@ -32,7 +32,7 @@ function JoinURL(): JSX.Element {
 		<>
 			<div className={styles["join-game-title-wrapper"]}>
 				<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
-				<h5 className={  styles["header"]}>A Lovecraftian Inspired Mafia Game</h5>
+				<h5 className={styles["header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<p>...joining game</p>
 		</>

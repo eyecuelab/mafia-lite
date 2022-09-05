@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { QueryErrorResetBoundary, useMutation } from "@tanstack/react-query";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import { useLocation } from "react-router-dom";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import CreatePlayerCSS from "./CreatePlayer.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
+import { useModal } from "../../ModalContext";
 
 type PlayerCreateInput = {
 	gameId: number,
@@ -26,6 +27,7 @@ const createPlayer = async (playerInput: PlayerCreateInput) => {
 };
 
 function CreatePlayer() {
+	const { callModal } = useModal();
 	const location = useLocation();
 	const state = location.state as locationState;
 	const { gameId, isHost } = state;
@@ -39,14 +41,18 @@ function CreatePlayer() {
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
+				callModal(`Oops! ${error.message}`);
 			}
 		}
 	});
 
-
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		
+		if (!name) {
+			callModal("Please enter a character name");
+			return;
+		}
 
 		playerMutation.mutate({
 			gameId: gameId,
@@ -63,7 +69,7 @@ function CreatePlayer() {
 			</div>
 			<form onSubmit={onSubmit}>
 				<input
-					className={CreatePlayerCSS["user-selection-input"]} 
+					className={CreatePlayerCSS["user-selection-input"]}
 					name="name" 
 					placeholder="Enter Character Name" 
 					onChange={e => setName(e.target.value)} 

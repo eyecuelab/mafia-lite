@@ -87,5 +87,4 @@ const PlayerList = (props: propTypes) => {
 		</>
 	);
 };
-
 export default PlayerList;

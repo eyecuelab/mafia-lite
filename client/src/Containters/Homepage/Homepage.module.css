@@ -67,6 +67,7 @@ h5 {
   color: white;
   text-align: center;
   border-radius: 0;
+  border: 1px solid transparent;
 }
 
 .user-selection-input:hover {

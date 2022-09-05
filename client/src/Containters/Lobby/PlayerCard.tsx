@@ -42,5 +42,4 @@ const PlayerCard = (props: any) => {
 		</>
 	);
 };
-
 export default PlayerCard;

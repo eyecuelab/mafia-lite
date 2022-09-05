@@ -17,10 +17,22 @@
   font-family: 'American Typewriter', sans-serif;  
   font-weight: 700;
   font-style: normal;
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   margin: 0;
-  margin-right: 42%;
+  margin-right: 30%;
   margin-top: -3%;
+}
+
+.join-game-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vh;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .user-selection-input {
@@ -50,6 +62,7 @@
   color: white;
   text-align: center;
   border-radius: 0;
+  border: 1px solid transparent;
 }
 
 .continue-game-btn:hover {
@@ -71,6 +84,7 @@
   color: white;
   text-align: center;
   border-radius: 0;
+  border: 1px solid transparent;
 }
 
 .cancel-join-btn:hover {

@@ -6,6 +6,7 @@ import titleImg from "../../assets/The Nameless Terror Images/Title.png";
 import CreateLobbyCSS from "./CreateLobby.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
+import { useModal } from "../../ModalContext";
 
 type GameCreatePayload = {
 	name: string,
@@ -25,6 +26,7 @@ const createGame = async (gameInput: GameCreatePayload) => {
 };
 
 function CreateLobby() {
+	const { callModal } = useModal();
 	const [lobbyName, setLobbyName] = useState("");
 	const [lobbySize, setLobbySize] = useState(1);
 	const navigate = useNavigate();
@@ -34,7 +36,7 @@ function CreateLobby() {
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
-				alert(`Oops! ${error.message}`);
+				callModal(error.message);
 			}
 		}
 	});
@@ -42,6 +44,22 @@ function CreateLobby() {
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
+		const errors = [];
+
+		if (!lobbyName) {
+			errors.push("Please enter a lobby name");
+		} 
+		if (lobbySize < 4 || lobbySize > 12) {
+			errors.push("Please enter a valid lobby size");
+		}
+		if (errors.length) {
+			callModal((
+				<ul>
+					{errors.map((error) => <li key={error}>{error}</li>)}
+				</ul>
+			));
+			return;
+		}
 		gameMutation.mutate({
 			name: lobbyName,
 			size: lobbySize
@@ -57,7 +75,7 @@ function CreateLobby() {
 			<div>
 				<form onSubmit={onSubmit}>
 					<input
-						className={CreateLobbyCSS["user-selection-input"]} 
+						className={CreateLobbyCSS["user-selection-input"]}
 						name="name" 
 						placeholder="Enter game name" 
 						onChange={e => setLobbyName(e.target.value)} />
