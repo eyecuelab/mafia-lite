@@ -16,13 +16,14 @@ type propTypes = {
 
 const PlayerCard = (props: any) => {
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
-	const { player, isMain, accusedPlayerStatus, jailedPlayer } = props;
+	const { player, isMain, accusedPlayerStatus, playerStatusAtNight } = props;
 	// const [voteCount, setVoteCount] = useState(io(API_ENDPOINT));
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	/*
-		Player Status should be contained in the game or player object on the backend, in future.
-		For now we pass a hardcode string in the playerStatus prop below.
+		Player Status should be contained in the game or player object on the backend, to be read anywhere the player exists.
+		
+		For now we pass a hardcoded string in the playerStatus prop below.
 		DISABLE in game lobby, once game starts.
 		TESTING is done in game lobby until day/night phase UI is built. 9/1/22 Marcus
 	 */
@@ -32,7 +33,7 @@ const PlayerCard = (props: any) => {
 			<div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
 
 				<img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-				{!isMain ? <PlayerStatusOverlay isMain={isMain} playerStatus={accusedPlayerStatus} /> : <PlayerStatusOverlay isMain={isMain} playerStatus={""} />}
+				{!isMain ? <PlayerStatusOverlay isMain={isMain} playerStatus={accusedPlayerStatus} /> : <PlayerStatusOverlay isMain={isMain} playerStatus={playerStatusAtNight} />}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
 					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>

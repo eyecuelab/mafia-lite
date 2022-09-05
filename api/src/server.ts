@@ -38,16 +38,19 @@ io.on('connection', (socket: any) => {
     socket.emit("new_game_start", { user: user, gameId: gameId, socketId: socketId });
   })
 
-  socket.on("accuse_player", (accusation: number) => { //Emit client selection to server
+  socket.on("accuse_player", (accusation: number) => {
+    //Emit client selection to server
     console.log(accusation)
     listOfAccused.push(accusation) //dev/test only, will change! Aggregate client selection on server
-
     console.log(`listOfAcc`, listOfAccused)
     let counted = countVotes();
 
     socket.emit("update_accused_players", { listOfAccused, counted }) //Broadcast accused player to client
     //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
+  })
 
+  socket.on("all_votes_casted", () => {
+    console.log("ALL VOTES CASTED")
   })
 
   const countVotes = () => {

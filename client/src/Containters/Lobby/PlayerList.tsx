@@ -19,10 +19,13 @@ const PlayerList = (props: propTypes) => {
 	const [accusedPlayer, setAccusedPlayer] = useState<number | null>(null);
 	const [accusedPlayerStatus, setAccusedPlayerStatus] = useState<string>("");
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
-	const [jailedPlayer, setJailedPlayer] = useState<number | null>(null);
+	const [playerStatusAtNight, setPlayerStatusAtNight] = useState<string | null>(null);
 	const [voteIsCasted, setVoteIsCasted] = useState<boolean>(false);
-	const [numberOfVoters, setNumberOfVoters] = useState<number | null>(null);
+	const [numberOfVoters, setNumberOfVoters] = useState<number>(0);
 	const [voteCount, setVoteCount] = useState<object>({}); //use this to check results of voting
+
+	// Set to "true" to disable clickable events in Lobby screen, but "false" in Game screen
+	const [disableAccuse, setDisableAccuse] = useState<boolean>(false);
 
 	const numberOfPlayersInGame = players.length + 1;
 	// Add one to include the user, players reads only the other players not yourself
@@ -39,30 +42,29 @@ const PlayerList = (props: propTypes) => {
 		setNumberOfVoters(getTotalNumberOfVotesCasted);
 	}, [voteCount]);
 
-	//Listen for server updates on votes counted and broadcast them back to us in real-time
+
 	socket.on("update_accused_players", (updates) => {
-		console.log({ updates });
+		//Listen for server updates on votes counted and broadcast them back to us in real-time
 		setVoteCount(updates.counted);
 	});
 
 	const accuse = (playerId: number) => {
 		setAccusedPlayer(playerId);
 		setAccusedPlayerStatus("accused");
-		socket.emit("accuse_player", playerId);
 	};
 
 	const castVoteAndSetAccuse = (playerIdNum: number) => {
 		// disables ability to accuse once clicked
 		setVoteIsCasted(!voteIsCasted);
 		accuse(playerIdNum);
+		socket.emit("accuse_player", playerIdNum);
 	};
 
-	const putPlayerInJail = (playerInJail: number) => {
-		setJailedPlayer(playerInJail);
-	};
-
-	//check number of voters vs players in room, if ===, voting round is done.
-	console.log("num of voters", numberOfVoters, "players in room", numberOfPlayersInGame);
+	if (numberOfVoters >= numberOfPlayersInGame) {
+		//check number of voters vs players in room, if ===, voting round is done.
+		console.log("num of voters", numberOfVoters, "players in room", numberOfPlayersInGame);
+		socket.emit("all_votes_casted");
+	}
 
 	return (
 		<>
@@ -72,11 +74,11 @@ const PlayerList = (props: propTypes) => {
 						<>
 							<div id={`${player.id} `} className={styles.playerListInnerWrap}
 								onClick={
-									() => !voteIsCasted ? castVoteAndSetAccuse(player.id) : console.log("Click disabled, vote has already been casted!")} >
+									() => !voteIsCasted && !disableAccuse ? castVoteAndSetAccuse(player.id) : console.log("Click disabled, votes already casted, or disabled!")} >
 
 								{accusedPlayer === player.id ?
 									<PlayerCard player={player} accusedPlayerStatus={accusedPlayerStatus} isMain={false} key={player.id} /> :
-									<PlayerCard player={player} playerStatus={jailedPlayer} isMain={false} key={player.id} />
+									<PlayerCard player={player} playerStatus={playerStatusAtNight} isMain={false} key={player.id} />
 								}
 							</div>
 						</>
