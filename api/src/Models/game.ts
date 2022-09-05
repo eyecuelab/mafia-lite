@@ -12,7 +12,8 @@ const getGameById = async (id: number) => {
       where: { id: Number(id) },
     });
   } catch (error) {
-    throw "Game not found"
+    if (error instanceof Error)
+    throw (error.message)
   }
 }
 

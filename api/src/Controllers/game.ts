@@ -39,10 +39,10 @@ const gameControllers = {
 					res.json(game);
 				}
 			} else {
-				res.status(500).json({ error: "Unable to retreive game" });
+				res.status(500).json({ error: "Unable to retrieve game" });
 			}			
 		} catch (error) {
-			res.status(404).json({ error: "Game not found" });
+			res.status(404).json({ error: "Game not found, Please enter a valid game code" });
 		}
 	}
 }
