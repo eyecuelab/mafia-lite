@@ -115,7 +115,7 @@ const Lobby = (): JSX.Element => {
 					{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
 					<div className={styles.gameCodeInput}>
 						<p>Your game code: {data?.gameCode}</p>
-						<button onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+						<button className={styles.copyButton}onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
 					</div>
 					{(playerData?.isHost) ?
 						<div className={styles.hostButtonGroup}>

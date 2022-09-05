@@ -1,6 +1,7 @@
 @import url('http://fonts.cdnfonts.com/css/american-typewriter');
 @import url('http://fonts.cdnfonts.com/css/bebas-neue');
 
+
 @keyframes moveInFromTop {
     0% {
         opacity: 0;
@@ -21,14 +22,13 @@
 }
 
 .player-card-entrance {
-    display: grid;
-    place-items: center;
-    margin: 2rem auto;
-    width: 30vw;
-    animation-name: moveInFromTop;
-    animation-duration: 700ms;
+	display: grid;
+	place-items: center;
+	margin: 2rem auto;
+	width: 30vw;
+	animation-name: moveInFromTop;
+	animation-duration: 700ms;
 }
-
 
 .lobbyContainer {
 	display: flex;
@@ -88,23 +88,27 @@
 .playerTraits {
 	font-weight: bold;
 	font-family: 'Bebas Neue', sans-serif;
+	color: white;
 	font-size: 25px;
 	margin: 0;
 }
 .playerTraitsMain {
 	font-weight: bold;
 	font-family: 'Bebas Neue', sans-serif;
+	color: white;
 	font-size: 35px;
 	margin: 0;
 }
 .playerName {
 	font-family: 'American Typewriter', sans-serif;
+	color: white;
 	text-align: left;
 	margin-bottom: 3px;
 	font-size: 18px;
 }
 .playerNameMain {
 	font-family: 'American Typewriter', sans-serif;
+	color: white;
 	text-align: left;
 	margin: 0;
 	margin-bottom: 20px;
@@ -112,6 +116,7 @@
 }
 .lobbyName {
 	font-family: 'Bebas Neue', sans-serif;
+	color: white;
 	margin: 0;
 }
 .playerDetails {
@@ -130,14 +135,16 @@
 	flex-direction: row;
 	align-items: center;
 	border-radius: 5px;
-	/* opacity: 0.8; */
+	opacity: 0.8;
 }
 .gameCodeInput p {
     font-family: 'American Typewriter', sans-serif;
+		color: white;
     font-weight: 700;
     width: 75%;
     font-size: 25px;
 }
+
 
 .start-game-btn {
 	margin: 1%;
@@ -151,6 +158,7 @@
 	color: white;
 	text-align: center;
 	border-radius: 0;
+	border: 1px solid transparent;
 }
 
 .start-game-btn:hover {
@@ -172,6 +180,7 @@
 	color: white;
 	text-align: center;
 	border-radius: 0;
+	border: 1px solid transparent;
 }
 
 .cancel-game-btn:hover {

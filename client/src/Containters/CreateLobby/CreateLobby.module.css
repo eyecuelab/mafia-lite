@@ -42,7 +42,6 @@ form {
   
   text-align: center;
   border-radius: 15px; 
-   
 }
 
 .drop-selection-input {
@@ -77,6 +76,7 @@ form {
   color: white;
   text-align: center;
   border-radius: 0;
+  border: 1px solid transparent;
 }
 
 .create-game-btn:hover {
@@ -88,7 +88,6 @@ form {
 }
 
 .cancel-game-btn {
-
   height: 6vh;
   width: 33vw;
   background-color: transparent;
@@ -99,6 +98,7 @@ form {
   color: white;
   text-align: center;
   border-radius: 0;
+  border: 1px solid transparent;
 }
 
 .cancel-game-btn:hover {
