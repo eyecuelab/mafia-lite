@@ -63,7 +63,7 @@ io.on('connection', (socket: any) => {
 });
 export default io;
 
-const port = 3000;
-server.listen(port, () =>
-  console.log(`🚀 Server ready at: http://localhost:3000`)
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () =>
+  console.log(`🚀 Server ready at: http://localhost:${PORT}`)
 )

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Player, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const randomlyGenerateAvatar = () => {
@@ -29,7 +29,7 @@ const setUniqueAvatarPath = async (gameId: number) => {
   let uniqueAvatarPath = randomlyGenerateAvatar();
 
   const avatarAlreadyAssigned = (path: string) => {
-    return getPlayersInGame.some(player => player.avatar === path)
+    return getPlayersInGame.some((player: Player) => player.avatar === path)
   }
 
   while (avatarAlreadyAssigned(uniqueAvatarPath)) {
