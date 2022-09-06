@@ -49,3 +49,12 @@ model Round {
   died        Player[]
   endedAt     DateTime?
 }
+
+model Vote {
+  id          Int       @id @default(autoincrement())
+  gameId      Int       
+  roundNumber Int
+  voterId     Int   
+  candidateId  Int
+  phase       String
+}

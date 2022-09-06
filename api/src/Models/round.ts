@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { Player, PrismaClient } from '@prisma/client';
+import { getPlayerById } from './player';
 const prisma = new PrismaClient();
 
 const getRoundByGameID = async (gameId: number) => {
@@ -10,11 +11,33 @@ const getRoundByGameID = async (gameId: number) => {
 const getRoundById =async (id: number) => {
   try {
     return await prisma.round.findUniqueOrThrow ({
-      where: { id: Number(id)}
+      where: { id: Number(id)},
+      include: {
+        died: true
+      }
+      
     })
   } catch (error) {
     throw "Round not found";
   }
 }
+const killPlayer = async (votedPlayer : Player, roundId : number) => {
+  // const round = await getRoundById(roundId);
+  // round.died.push(player);
+  // await prisma.round.update({
+  //   where: { id: roundId },
+  //   data: {
+  //     died: round.died
+  //   }
+  // })
+}
+const endRound = async (roundId: number,) => {
+  await prisma.round.update({
+    where: { id: roundId },
+    data: { 
+      endedAt : new Date(),
+    }
+  })
+}
 
-export { getRoundByGameID, getRoundById}
+export { getRoundByGameID, getRoundById, endRound, killPlayer}
