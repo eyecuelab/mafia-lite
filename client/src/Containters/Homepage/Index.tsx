@@ -34,7 +34,7 @@ function Homepage() {
 						<ul>
 							<li>First Night:</li> 
 							<ul>
-								<li>The narrator begins at night by telling all players to close their eyes. “Mafia, wake up. See your fellow members,” she says. “Mafia, go to sleep.” In the first round, this is all that happens.</li>
+								<li>The narrator begins at night by telling all players to close their eyes. Cultist, wake up. See your fellow members,” she says. Cultist, go to sleep.” In the first round, this is all that happens.</li>
 							</ul>
 							<li>First Day:</li>
 							<ul>
@@ -42,20 +42,20 @@ function Homepage() {
 								<li>Who is talking a bit too much?</li> 
 								<li>Ask straight-forward questions about identities.</li> 
 								<li>Look people directly in the eye and ask them if they are in the mafia.</li> 
-								<li>Once a nomination to kill is made, someone must second it for the player to be seriously considered in the mafia. </li>
+								<li>Once a nomination to kill is made, someone must second it for the player to be seriously considered in the cultists. </li>
 								<li>If you have two solid nominations, all players then vote to kill, majority wins.</li> 
 								<li>You can have as many nominations as you want, but you need a majority to kill.</li> 
 								<li>When a player is killed, they are no longer allowed to speak and their identity is not revealed.</li>
 							</ul> 
 							<li>Second Night:</li> 
 							<ul>
-								<li>All players eyes are closed and the narrator awakens the mafia and asks who they want to kill. She then awakens the doctor for the first time and asks who they want to save. And then, she awakens the detective and asks who they want to know about.</li>
+								<li>All players eyes are closed and the narrator awakens the cultists and asks who they want to kill. She then awakens the doctor for the first time and asks who they want to save. And then, she awakens the detective and asks who they want to know about.</li>
 							</ul>
 							
 
 							<li>Third Day:</li> 
 							<ul>
-								<li>The narrator awakens all players and someone has been killed, unless the doctor has figured out who the mafia had their sights on and saved this player. The game continues in these phases, day and night, day and night, until civilians kill all mafia members or mafia outnumber civilians.</li>
+								<li>The narrator awakens all players and someone has been killed, unless the doctor has figured out who the cultists had their sights on and saved this player. The game continues in these phases, day and night, day and night, until investigators kill all cultists members or cultists outnumber investigators.</li>
 							</ul>
 							
 

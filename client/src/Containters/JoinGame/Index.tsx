@@ -1,4 +1,4 @@
-import React, { Children, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import titleImg from "../../assets/The Nameless Terror Images/Title.png";

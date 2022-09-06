@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
@@ -13,16 +13,20 @@ import PlayerList from "./PlayerList";
 import questionMark from "../../assets/The Nameless Terror Images/questionMark.png";
 import { useModal } from "../../ModalContext";
 
+type NewGamePayload = {
+	gameId: number
+}
 
-type player = {
+type Player = {
 	id: number
 	isHost: boolean
 	name: string
 	avatar: string
 }
-interface gameData {
+
+interface GameData {
 	id: number
-	players: Array<player>
+	players: Array<Player>
 	gameCode: string
 	name: string
 	size: number
@@ -31,25 +35,28 @@ interface gameData {
 interface CustomizedState {
 	gameId: number
 	playerId: number
-	isHost: boolean
-	lobbyName: string
 }
 
-const getGameData = async (gameId: number): Promise<gameData> => {
+const getGameData = async (gameId: number) : Promise<GameData> => {
 	const url = `${API_ENDPOINT}/game?id=${gameId}`;
 	const response = await fetch(url, { ...BASE_HEADERS });
 	return await handleResponse(response);
 };
 
-const getPlayerDetails = async (playerId: number): Promise<player> => {
-	const url = `${API_ENDPOINT}/player/${playerId}`;
-	const response = await fetch(url, { ...BASE_HEADERS });
+const getPlayerDetails = async (id: number): Promise<Player> => {
+	const url = `${API_ENDPOINT}/player?id=${id}`;
+	const response = await fetch(url, { ...BASE_HEADERS , method: "GET" });
+	return await handleResponse(response);
+};
+
+const startNewGame = async (newGame: NewGamePayload) => {
+	const url = `${API_ENDPOINT}/start`;
+	const response = await fetch(url, { ...BASE_HEADERS , method: "POST", body: JSON.stringify(newGame) });
 	return await handleResponse(response);
 };
 
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
-
 	const location = useLocation();
 	const state = location.state as CustomizedState;
 	const { gameId, playerId } = state;
@@ -89,35 +96,54 @@ const Lobby = (): JSX.Element => {
 	const players = data?.players.filter((player) => {
 		return player.id !== playerId;
 	});
-	let content =
 
-		<div className={styles.lobbyPageContainer}>
-			<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
-			<h1 className={styles.lobbyName}>{data?.name}</h1>
-			<div className={styles.lobbyContainer}>
-				<div className={styles.playerStatus}>
-					<SubTitle title={"Your Character"} />
-					{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
-					<div className={styles.gameCodeInput}>
-						<p>Your game code: {data?.gameCode}</p>
-						<button className={styles.copyButton} onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+	const newGameMutation = useMutation(startNewGame, {
+		onSuccess: () => {
+			navigate("/game", { state: { gameId: gameId }, replace: true });
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				console.log("TEST " + error);
+				callModal(error.message);
+			}
+		}
+	});
+
+	const newGameData: NewGamePayload = { gameId: gameId }; 
+
+	if (isLoading || playerLoading) return (<p> Loading ....</p>);
+
+	return (
+		<div>
+			<div className={styles.lobbyPageContainer}>
+				<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
+				<h1 className={styles.lobbyName}>{data?.name}</h1>
+				<div className={styles.lobbyContainer}>
+					<div className={styles.playerStatus}>
+						<SubTitle title={"Your Character"} />
+						{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
+						<div className={styles.gameCodeInput}>
+							<p>Your game code: {data?.gameCode}</p>
+							<button className={styles.copyButton} onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+						</div>
+						{(playerData?.isHost) ?
+							<div className={styles.hostButtonGroup}>
+								<MenuButton
+									onClick={() => newGameMutation.mutate( newGameData )}
+									className={styles["start-game-btn"]}
+									text={"START GAME"}
+								/>
+								<GenericButton
+									onClick={() => (navigate("/newgame"))}
+									className={styles["cancel-game-btn"]}
+									text={"CANCEL GAME"}
+								/>
+							</div> : null}
 					</div>
-					{(playerData?.isHost) ?
-						<div className={styles.hostButtonGroup}>
-							<MenuButton
-								className={styles["start-game-btn"]}
-								text={"START GAME"}
-							/>
-							<GenericButton
-								onClick={() => (navigate("/newgame"))}
-								className={styles["cancel-game-btn"]}
-								text={"CANCEL GAME"}
-							/>
-						</div> : null}
-				</div>
-				<div className={styles.otherPlayers}>
-					<SubTitle title={"JOINING GAME"} />
-					{(players) ? <PlayerList players={players} /> : null}
+					<div className={styles.otherPlayers}>
+						<SubTitle title={"JOINING GAME"} />
+						{(players) ? <PlayerList players={players} /> : null}
+					</div>
 				</div>
 			</div>
 			<div className={styles.homepageFooter}>
@@ -160,11 +186,6 @@ const Lobby = (): JSX.Element => {
 					</div>
 				)} className={styles.questionMark} alt="The Nameless Terror" />
 			</div>
-		</div>;
-	if (isLoading || playerLoading) content = <p> Loading ....</p>;
-	return (
-		<div>
-			{content}
 		</div >
 	);
 };

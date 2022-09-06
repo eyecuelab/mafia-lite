@@ -12,7 +12,7 @@ const getGameId = async (gameCode: string | undefined): Promise<Game> => {
 	const url = `${API_ENDPOINT}/game?code=${gameCode ? gameCode : ""}`;
 	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
 	return await handleResponse(response);
-}
+};
 
 function JoinURL(): JSX.Element {
 	const { code } = useParams();
@@ -21,7 +21,7 @@ function JoinURL(): JSX.Element {
 	const navigate = useNavigate();
 
 	if (error instanceof Error) {
-		return <p>An error has occurred: {error.message}</p>
+		return <p>An error has occurred: {error.message}</p>;
 	}
 
 	if (game) {
@@ -36,7 +36,7 @@ function JoinURL(): JSX.Element {
 			</div>
 			<p>...joining game</p>
 		</>
-	)
+	);
 }
 
 export default JoinURL;
