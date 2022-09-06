@@ -10,10 +10,10 @@ export type ModalContextType = {
 
 // create context sets the default value to null
 export const ModalContext = createContext<ModalContextType>({
-  content: null,
-  isOpen: false,
-  callModal: () => null,
-  closeModal: () => null,
+	content: null,
+	isOpen: false,
+	callModal: () => null,
+	closeModal: () => null,
 });
 
 export const useModal = () => useContext(ModalContext);

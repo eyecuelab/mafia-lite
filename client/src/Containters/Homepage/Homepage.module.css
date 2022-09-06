@@ -83,3 +83,27 @@ h5 {
   margin: 0;
   box-shadow: inset 1px 0px 5px 3px rgba(0, 0, 0, 0.4);
 }
+
+.homepage-footer{
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  margin: 0 auto;
+  margin-top: 2%;
+  font-family: 'American Typewriter', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.questionMark {
+  flex-direction: right;
+  width: 2vw;
+  margin-left: 1%;
+  color: white;
+  cursor: pointer;
+}
+
+.questionMark:hover {
+	transform: scale(1.2);
+	transition: ease-in 0.5s;
+}
