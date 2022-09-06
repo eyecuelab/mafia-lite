@@ -7,7 +7,7 @@ const randomlyGenerateAvatar = () => {
   return avatarBasePath;
 }
 
-const getPlayerById = async (id: number) => {
+const getPlayerById = async (id: number) => {	
   try {
     return await prisma.player.findUniqueOrThrow({
       where: { id: Number(id) },
@@ -56,7 +56,6 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
     }
   });
 }
-
 
 const updatePlayerById = async (id: number, roleId: number) => {
   await prisma.player.update({

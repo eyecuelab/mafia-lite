@@ -4,7 +4,8 @@ import express from "express";
 const router = express.Router();
 
 router.get('/players/:gameId', playerControllers.getPlayers);
-router.get('/player/:id', playerControllers.getSinglePlayer);
+router.get('/player/game', playerControllers.getPlayerGame);
+router.get('/player', playerControllers.getSinglePlayer);
 
 router.post('/player', playerControllers.createPlayer);
 

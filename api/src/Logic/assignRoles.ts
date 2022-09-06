@@ -5,7 +5,9 @@ const investCultRatio = 3;
 
 async function assignRoles(numPlayers: number): Promise<number[]> {
 	const cultRoles = await getRolesbyType("cultist");
+	console.log("🚀 ~ file: assignRoles.ts ~ line 8 ~ assignRoles ~ cultRoles", cultRoles)
 	const investRoles = await getRolesbyType("investigator");
+	console.log("🚀 ~ file: assignRoles.ts ~ line 10 ~ assignRoles ~ investRoles", investRoles)
 
 	let roleAssignments: number[] = [];
 	for (let i = 0; i < numPlayers; i++) {
@@ -15,6 +17,8 @@ async function assignRoles(numPlayers: number): Promise<number[]> {
 			roleAssignments.push(getRandomRole(investRoles).id);
 		}
 	}
+
+				console.log("🚀 ~ file: assignRoles.ts ~ line 18 ~ assignRoles ~ roleAssignments", roleAssignments)
 
 	return Utility.shuffleArray(roleAssignments);
 }

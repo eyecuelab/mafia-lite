@@ -5,8 +5,10 @@ import io from "../server";
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
-		const { gameId } = req.params
+		const { gameId } = req.body;
+		console.log("🚀 ~ file: logic.ts ~ line 9 ~ startGame ~ gameId", gameId)
 		const playerId = req.session.playerId;
+		console.log("🚀 ~ file: logic.ts ~ line 11 ~ startGame ~ playerId", playerId)
 
 		if (Utility.validateInputs(res, "Invalid game or player id", gameId, playerId)) {
 			const player = await getPlayerById(playerId);
@@ -25,7 +27,8 @@ const logicControllers = {
 			for (let i = 0; i < players.length; i++) {
 				updatePlayerById(players[i].id, roles[i]);
 			}
-			res.status(204).send();
+
+			res.json({ players: (await getPlayersByGameId(gameId)) });
 		}
 	},
 

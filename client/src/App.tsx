@@ -9,6 +9,7 @@ import CreatePlayer from "./Containters/CreatePlayer/Index";
 import JoinURL from "./Containters/JoinGame/JoinURL";
 import { ModalContext } from "./ModalContext";
 import { Modal } from "./Components/Modal/Modal";
+import Game from "./Containters/Game/Index";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
 				<Route path="/newplayer" element={<CreatePlayer />} />
 				<Route path="/lobby" element={<Lobby />} />
 				<Route path="/join/:code" element={<JoinURL />} />
+				<Route path="/game" element={<Game />} />
 			</Routes>
 		</ModalContext.Provider>
 	);

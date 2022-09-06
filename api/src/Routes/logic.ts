@@ -3,7 +3,7 @@ import logicControllers from "../Controllers/logic";
 
 const router = express.Router();
 
-//router.get("", logicControllers.startGame);
+router.post("/start", logicControllers.startGame);
 
 
 export default router;

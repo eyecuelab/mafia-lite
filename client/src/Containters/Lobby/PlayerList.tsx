@@ -31,7 +31,6 @@ const PlayerList = (props: propTypes) => {
 	// Add one to include the user, players reads only the other players not yourself
 
 	useEffect(() => {
-		// 👇️ scroll to bottom every time players change
 		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [players]);
 
@@ -89,4 +88,5 @@ const PlayerList = (props: propTypes) => {
 		</>
 	);
 };
+
 export default PlayerList;
