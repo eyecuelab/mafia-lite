@@ -2,6 +2,15 @@ import { Player, PrismaClient } from '@prisma/client';
 import { getPlayerById } from './player';
 const prisma = new PrismaClient();
 
+const createNewRound = async (roundNumber: number, gameId: number) => {
+	return await prisma.round.create({
+		data: {
+			gameId,
+			roundNumber
+		}
+	});
+}
+
 const getRoundByGameID = async (gameId: number) => {
   return await prisma.round.findMany({
     where: { gameId: Number(gameId)}
@@ -40,4 +49,4 @@ const endRound = async (roundId: number,) => {
   })
 }
 
-export { getRoundByGameID, getRoundById, endRound, killPlayer}
+export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound }

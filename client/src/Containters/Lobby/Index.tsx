@@ -24,12 +24,17 @@ type Player = {
 	avatar: string
 }
 
+type Round = {
+	id: number
+}
+
 interface GameData {
 	id: number
 	players: Array<Player>
 	gameCode: string
 	name: string
-	size: number
+	size: number,
+	rounds: Round[]
 }
 
 interface CustomizedState {
@@ -63,26 +68,34 @@ const Lobby = (): JSX.Element => {
 
 	const { isLoading: playerLoading, error: playerError, data: playerData } = useQuery(["players"], () => getPlayerDetails(playerId));
 	const { isLoading, error, data } = useQuery(["game"], () => getGameData(gameId));
-	const [socket, setSocket] = useState(io(API_ENDPOINT));
 
-	const [playersInGame, setPlayersInGame] = useState([]);
+	// const [socket, setSocket] = useState(io(API_ENDPOINT));
+
+	// const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
 
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		//Establish connection when component mounts
-		socket.on("connect", () => {
-			console.log("socket connected");
-			socket.on("disconnect", () => console.log("socket disconnected"));
-		});
-		return (() => {
-			socket.off("connect"); //disconnect
-		});
-	}, []);
+	if (data?.rounds.length && data?.rounds.length > 0) {
+		navigate("/game");
+	}
+
+	// useEffect(() => {
+	// 	//Establish connection when component mounts
+	// 	socket.on("connect", () => {
+	// 		console.log("socket connected");
+	// 		socket.on("disconnect", () => console.log("socket disconnected"));
+	// 	});
+	// 	return (() => {
+	// 		socket.off("connect"); //disconnect
+	// 	});
+	// }, []);
 
 	//Perform logic on backend and receive players in game data from backend
-	socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
+	// socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
+
+	// console.log("TEST2");
+	// socket.on("game_has_started", (emitValidation) => { console.log(emitValidation); navigate("/game"); });
 
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode;
@@ -99,7 +112,7 @@ const Lobby = (): JSX.Element => {
 
 	const newGameMutation = useMutation(startNewGame, {
 		onSuccess: () => {
-			navigate("/game", { state: { gameId: gameId }, replace: true });
+			navigate("/game");
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
