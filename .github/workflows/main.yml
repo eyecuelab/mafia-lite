@@ -19,15 +19,18 @@ jobs:
       env:
         VITE_API_ENDPOINT: "https://nameless-terror-api.fly.dev/"
       steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          cache: 'npm'
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Install dependencies
-        run: cd client && npm ci --production
-      - name: Build
-        run: cd client && npm run build
-      - name: Deploy
-      - run: cd client && flyctl deploy --remote-only
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 18.x
+            cache: 'npm'
+
+        - name: Install dependencies
+          run: cd client && npm ci --production
+
+        - name: Build
+          run: cd client && npm run build
+
+        - name: Deploy
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: cd api && flyctl deploy --remote-only
