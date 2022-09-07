@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors({ origin: [
   'http://localhost:5173',
-  'https://nameless-terror-client.fly.dev/'
+  'https://nameless-terror-client.fly.dev'
 ], credentials: true }));
 
 app.use(
