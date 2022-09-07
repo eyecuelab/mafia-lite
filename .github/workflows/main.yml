@@ -24,6 +24,6 @@ jobs:
           with:
             node-version: 18.x
             cache: 'npm'
-        - run: cd client && npm ci --production && npm run build;
+        - run: cd client && npm i && npm run build;
         - uses: superfly/flyctl-actions/setup-flyctl@master
         - run: cd client && flyctl deploy --remote-only
