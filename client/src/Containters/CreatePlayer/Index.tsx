@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { QueryErrorResetBoundary, useMutation } from "@tanstack/react-query";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import { useLocation } from "react-router-dom";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/images/Title.png";
 import CreatePlayerCSS from "./CreatePlayer.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";

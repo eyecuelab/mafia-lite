@@ -7,10 +7,10 @@ const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string, i
 
 		//Placeholder for now, get array of paths correlated by index
 		const arrayOfImages = [
-			"assets/The Nameless Terror Images/UI/image\ 104.png",
-			"assets/The Nameless Terror Images/UI/image\ 35.png",
-			"assets/The Nameless Terror Images/UI/image\ 105.png",
-			"assets/The Nameless Terror Images/UI/image\ 180.png"
+			"assets/images/ui/image_104.png",
+			"assets/images/ui/image_35.png",
+			"assets/images/ui/image_105.png",
+			"assets/images/ui/image_180.png"
 		];
 
 		//return image by assigned index

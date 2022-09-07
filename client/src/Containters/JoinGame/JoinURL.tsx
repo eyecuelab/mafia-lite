@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/images/Title.png";
 import styles from "./JoinGame.module.css";
 
 interface Game {

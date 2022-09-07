@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/images/Title.png";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
 import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
-import questionMark from "../../assets/The Nameless Terror Images/questionMark.png";
+import questionMark from "../../assets/images/questionMark.png";
 import { useModal } from "../../ModalContext";
 
 type NewGamePayload = {

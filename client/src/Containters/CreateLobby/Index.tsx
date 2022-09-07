@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import { useMutation } from "@tanstack/react-query";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/images/Title.png";
 import CreateLobbyCSS from "./CreateLobby.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";

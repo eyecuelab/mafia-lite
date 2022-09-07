@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const randomlyGenerateAvatar = () => {
   let randomImageNumber = Math.floor(Math.random() * (193 - 181) + 181);
-  const avatarBasePath = `./src/assets/The Nameless Terror Images/Portraits/image\ ${randomImageNumber}.png`;
+  const avatarBasePath = `./src/assets/images/assets/portraits/image_${randomImageNumber}.png`;
   return avatarBasePath;
 }
 

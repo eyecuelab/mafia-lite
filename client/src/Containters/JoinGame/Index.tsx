@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
-import titleImg from "../../assets/The Nameless Terror Images/Title.png";
+import titleImg from "../../assets/images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
 import GenericButton from "../../Components/GenericButton";
