@@ -13,14 +13,18 @@ jobs:
         - uses: actions/checkout@v3
         - uses: superfly/flyctl-actions/setup-flyctl@master
         - run: cd api && flyctl deploy --remote-only
+
   deploy-client:
       name: Deploy Client App
       runs-on: ubuntu-latest
       env:
         VITE_API_ENDPOINT: "https://nameless-terror-api.fly.dev/"
       steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-node@v3
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Set up Node
+          uses: actions/setup-node@v3
           with:
             node-version: 18.x
             cache: 'npm'
@@ -32,5 +36,5 @@ jobs:
           run: cd client && npm run build
 
         - name: Deploy
-        - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: cd api && flyctl deploy --remote-only
+          uses: superfly/flyctl-actions/setup-flyctl@master
+          run: cd api && flyctl deploy --remote-only
