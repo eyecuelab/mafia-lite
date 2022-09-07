@@ -17,7 +17,7 @@ jobs:
       name: Deploy Client App
       runs-on: ubuntu-latest
       env:
-        VITE_API_ENDPOINT: "https://nameless-terror-api.fly.dev/"
+        VITE_API_ENDPOINT: "https://nameless-terror-api.fly.dev"
       steps:
         - uses: actions/checkout@v3
         - uses: actions/setup-node@v3
