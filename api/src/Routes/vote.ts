@@ -1,9 +1,9 @@
 import votingControllers from "../Controllers/voting";
 import express from "express";
 
-const router = express.Router();
+const voterRouter = express.Router();
 
-router.post('/vote', votingControllers.castVote);
+voterRouter.post('/vote', votingControllers.castVote);
 
 
-export default router;
+export default voterRouter;

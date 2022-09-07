@@ -155,7 +155,7 @@ const Lobby = (): JSX.Element => {
 					</div>
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />
-						{(players) ? <PlayerList players={players} /> : null}
+						{(players) ? <PlayerList players={players} setVote={(number: number) => {console.log(number);}} /> : null}
 					</div>
 				</div>
 			</div>

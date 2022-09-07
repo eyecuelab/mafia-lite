@@ -1,7 +1,7 @@
 import { getAllGameDetails } from "../Models/game";
 import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import {createVote, getAllVotes} from "../Models/vote";
-import { getRoundByGameID, killPlayer } from "../Models/round";
+import { getRoundByGameID, getCurrentRoundByGameId } from "../Models/round";
 
 
 const votingControllers = {
@@ -12,8 +12,8 @@ const votingControllers = {
             res.status(401).json({error : "Not allowed to vote on this game"})
         }
         //Need to create a way to get the current round.
-        const currentRound = 1;
-        const vote = createVote(gameId, phase, candidateId, player.id, currentRound);
+        const currentRound = await getCurrentRoundByGameId(gameId);
+        const vote = await createVote(gameId, phase, candidateId, player.id, currentRound.roundNumber);
 
         res.status(201).json({vote})
 	},

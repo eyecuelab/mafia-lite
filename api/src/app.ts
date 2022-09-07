@@ -4,6 +4,7 @@ import gameRouter from "./Routes/game";
 import playerRouter from "./Routes/player";
 import roundRouter from "./Routes/round";
 import logicRouter from "./Routes/logic";
+import voterRouter from './Routes/vote';
 
 const session = require("express-session")
 
@@ -24,6 +25,6 @@ app.use(
 );
 
 app.use(express.json());
-app.use(gameRouter, roundRouter, playerRouter, logicRouter);
+app.use(gameRouter, roundRouter, playerRouter, logicRouter, voterRouter);
 
 export default app;

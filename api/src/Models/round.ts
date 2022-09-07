@@ -41,7 +41,7 @@ const killPlayer = async (votedPlayer : Player, roundId : number) => {
   // })
 }
 const endRound = async (roundId: number,) => {
-  await prisma.round.update({
+  return await prisma.round.update({
     where: { id: roundId },
     data: { 
       endedAt : new Date(),
@@ -49,4 +49,13 @@ const endRound = async (roundId: number,) => {
   })
 }
 
-export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound }
+const getCurrentRoundByGameId = async (gameId: number) => {
+	const rounds = await prisma.round.findMany({
+		where: { gameId },
+		orderBy: { roundNumber: "desc" }
+	});
+
+	return rounds[0];
+}
+
+export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound, getCurrentRoundByGameId }

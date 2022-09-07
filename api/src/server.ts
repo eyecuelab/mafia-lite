@@ -34,10 +34,6 @@ io.on('connection', (socket: any) => {
     socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
   })
 
-  socket.on("new_game_clicked", ({ user, gameId, socketId }: { user: object, gameId: number, socketId: number }) => {
-    socket.emit("new_game_start", { user: user, gameId: gameId, socketId: socketId });
-  })
-
   socket.on("accuse_player", (accusation: number) => {
     //Emit client selection to server
     console.log(accusation)
@@ -48,6 +44,8 @@ io.on('connection', (socket: any) => {
     socket.emit("update_accused_players", { listOfAccused, counted }) //Broadcast accused player to client
     //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
   })
+
+  // socket.emit("emit_voting_tally", countVotes(listOfAccused );
 
   socket.on("all_votes_casted", () => {
     console.log("ALL VOTES CASTED")

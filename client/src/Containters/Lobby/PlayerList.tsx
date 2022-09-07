@@ -11,10 +11,11 @@ type player = {
 	avatar: string
 }
 type propTypes = {
-	players: Array<player>
+	players: player[],
+	setVote: (playerId: number) => void
 }
 const PlayerList = (props: propTypes) => {
-	const { players } = props;
+	const { players, setVote } = props;
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [accusedPlayer, setAccusedPlayer] = useState<number | null>(null);
 	const [accusedPlayerStatus, setAccusedPlayerStatus] = useState<string>("");
@@ -48,6 +49,7 @@ const PlayerList = (props: propTypes) => {
 	});
 
 	const accuse = (playerId: number) => {
+		setVote(playerId);
 		setAccusedPlayer(playerId);
 		setAccusedPlayerStatus("accused");
 	};
