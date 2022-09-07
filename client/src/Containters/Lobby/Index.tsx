@@ -10,7 +10,7 @@ import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
 import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
-import questionMark from "../../assets/images/questionMark.png";
+import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
 
 type NewGamePayload = {

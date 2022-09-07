@@ -1,7 +1,7 @@
 import titleImg from "../../assets/images/Title.png";
 import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
-import questionMark from "../../assets/images/questionMark.png";
+import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
 
 
