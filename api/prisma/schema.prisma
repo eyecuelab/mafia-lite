@@ -37,6 +37,7 @@ model Player {
   gameId      Int
   roundDied   Round?  @relation(fields: [roundDiedId], references: [id])
   roundDiedId Int?
+	status			String  @default("alive")
   avatar      String
 }
 
@@ -55,6 +56,6 @@ model Vote {
   gameId      Int       
   roundNumber Int
   voterId     Int   
-  candidateId  Int
+  candidateId Int
   phase       String
 }
