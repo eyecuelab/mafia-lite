@@ -1,4 +1,4 @@
-# <a href="https://fontmeme.com/bevel-effect/"><img src="https://fontmeme.com/permalink/220818/e900d2b5d35ee518552ff7fbacb016b4.png" alt="bevel-effect" border="0"></a>
+# ![Title Header](../mafia-lite/client/src/assets/images/image132.png)
 
 ## Summer Internship 2022
 
@@ -20,7 +20,7 @@
   - [Installation](#installation)
   - [Required Files](#required-files)
   - [Running The App Locally](#running-the-app-locally)
-- [The Mafia API Reference](#the-mafia-api-reference)
+- [The Nameless Terror API Reference](#the-mafia-api-reference)
 - [Bugs](#bugs)
 - [License](#license)
 
@@ -68,6 +68,8 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - _[ExpressJs](https://expressjs.com/)_
 - _[Express-Session](https://www.npmjs.com/package/express-session/v/1.17.3)_
 - _[ViteJS](https://vitejs.dev/)_
+- _[Nodemon](https://www.npmjs.com/package/nodemon)_
+- _[Fly.IO](https://fly.io/)_
 - _[Swagger](https://swagger.io/tools/swaggerhub/?&utm_source=aw&utm_medium=ppcg&utm_campaign=SEM_SwaggerHub_PR_NA_ENG_EXT_Prospecting&utm_term=swagger&utm_content=511173019809&gclid=Cj0KCQjwxveXBhDDARIsAI0Q0x3e0_geAzYA0RbSN9shkknno3LoLnkL-Znnr435LWs-hu7fQ3xct5IaArBmEALw_wcB&gclsrc=aw.ds)_
 
 ## ⚙️ Installation, Setup, and Running The App <a id="installation-setup-and-running-the-app"></a>
@@ -94,9 +96,9 @@ _This is a web application that will allow a group of users to play a lovecrafti
 
 - Split your terminal into two separate consoles
 - Navigate one terminal into the `/api` directory and run `npm run dev`
-- Navigate the second terminal into the `/client` directory and run `npm run dev` as well. If your browser does not automatically load, type `http://127.0.0.1:5173/` manually in the browser
+- Navigate the second terminal into the `/client` directory and run `npm run dev` as well. If your browser does not automatically load, type `http://localhost:5173/` manually in the browser
 
-## The Mafia API Reference <a id="the-mafia-api-reference"></a>
+## The Nameless Terror API Reference <a id="the-mafia-api-reference"></a>
 Everything you need to interact with our API.
 ### Making Requests
 - In progress

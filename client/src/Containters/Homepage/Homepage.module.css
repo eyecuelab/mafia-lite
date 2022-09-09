@@ -1,5 +1,5 @@
-@import url('http://fonts.cdnfonts.com/css/american-typewriter');
-@import url('http://fonts.cdnfonts.com/css/bebas-neue');
+@import url('https://fonts.cdnfonts.com/css/american-typewriter');
+@import url('https://fonts.cdnfonts.com/css/bebas-neue');
 
 @keyframes moveInFromLeft {
   0% {
@@ -106,4 +106,13 @@ h5 {
 .questionMark:hover {
 	transform: scale(1.2);
 	transition: ease-in 0.5s;
+}
+
+.headerTwo {
+  color: rgba(104, 12, 12, 0.8);
+} 
+
+.listHeader {
+  font-size: 20px;
+  font-weight: 400;
 }
