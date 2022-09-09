@@ -9,4 +9,6 @@ router.get('/player', playerControllers.getSinglePlayer);
 
 router.post('/player', playerControllers.createPlayer);
 
+router.put('/player', playerControllers.updatePlayer);
+
 export default router; 

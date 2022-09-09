@@ -17,7 +17,7 @@ const getRoundByGameID = async (gameId: number) => {
   });
 }
 
-const getRoundById =async (id: number) => {
+const getRoundById = async (id: number) => {
   try {
     return await prisma.round.findUniqueOrThrow ({
       where: { id: Number(id)},
@@ -30,15 +30,8 @@ const getRoundById =async (id: number) => {
     throw "Round not found";
   }
 }
-const killPlayer = async (votedPlayer : Player, roundId : number) => {
-  // const round = await getRoundById(roundId);
-  // round.died.push(player);
-  // await prisma.round.update({
-  //   where: { id: roundId },
-  //   data: {
-  //     died: round.died
-  //   }
-  // })
+const killPlayer = async (votedPlayer: Player, roundId: number) => {
+	//return await prisma.
 }
 const endRound = async (roundId: number,) => {
   return await prisma.round.update({

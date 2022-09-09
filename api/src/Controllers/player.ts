@@ -1,7 +1,7 @@
 import { Player } from '@prisma/client';
 import { getGameById } from '../Models/game';
-import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId } from '../Models/player';
-import { getRoleById } from '../Models/role';
+import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
+import { getRoleById, getRoleByName } from '../Models/role';
 import Utility from './Utility';
 
 type filteredPlayer = {
@@ -52,12 +52,21 @@ const playerControllers = {
 	},
 
 	async updatePlayer(req: any, res: any) {
-		const { id, name } = req.body;
-
-		if (Utility.validateInputs(res, "Invalid body parameters", id, name)) {
-			const player = await updatePlayerById(id, name);
-			res.json(player);
+		const { id, newRoleName, newStatus } = req.body;
+		if (newRoleName) {
+			const newRole = await getRoleByName(newRoleName);
+			if (newRole) {
+				await updatePlayerById(id, newRole?.id);
+			} else {
+				res.status(500).json({ error: "Unable to find role" });
+			}
 		}
+
+		if (newStatus) {
+			await updatePlayerStatus(id, newStatus);
+		}
+
+		res.json({ message: "Updated" });
 	},
 
 	async getPlayerGame(req: any, res: any) {

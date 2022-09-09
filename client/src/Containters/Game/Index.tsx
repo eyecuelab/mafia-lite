@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
@@ -19,10 +19,16 @@ type VotePayload = {
 	phase: string
 }
 
+type finishRoundPayload ={
+	gameId: number,
+	phase: string
+}
+
 type Player = {
 	id: number
 	isHost: boolean
 	name: string
+	gameId: number
 	avatar: string
 }
 
@@ -55,12 +61,28 @@ const sendVote = async (vote: VotePayload): Promise<VoteResult> => {
 	return await handleResponse(response);
 };
 
-function Game() {
+const finishRound = async (roundData: finishRoundPayload): Promise<string> => {
+	const url = `${API_ENDPOINT}/tallyVote`;
+	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(roundData) });
+	return await handleResponse(response);
+
+};
+
+function Game(): JSX.Element {
 	const { callModal } = useModal();
 
-	const { isLoading: gameQueryLoading, error: gameQueryError, data: gameData } = useQuery(["game"], getUserGameState);
-	const [vote, setVote] = useState(-1);
+	const { isLoading: gameQueryLoading, error: gameQueryError, data: gameData } = useQuery(["games"], getUserGameState);
 	const [socket, setSocket] = useState(io(API_ENDPOINT));
+
+
+	useEffect(() => {
+		socket.on("connection", (socket: any) => {
+			console.log(`gameData: ${gameData ? Object.keys(gameData) : ""}\nloading: ${gameQueryLoading}`);
+			socket.emit("join_room", gameData?.game.id);
+			console.log("game joined", socket.id);
+		});
+	},[gameQueryLoading]);
+
 
 	const voteMutation = useMutation(sendVote, {
 		onSuccess: (data) => {
@@ -74,22 +96,42 @@ function Game() {
 		}
 	});
 
-	const finishVote = () => {
+	const finishVote = (candidateId: number) => {
 		if (gameData?.game.id) {
 			voteMutation.mutate({
 				gameId: gameData.game.id,
-				candidateId: vote,
+				candidateId: candidateId,
 				phase: "day"
 			});
 		}
 	};
 
-	//socket.emit("accuse_player", )
+	const finishRoundMutation = useMutation(finishRound, {
+		onSuccess: (data) => {
+			// move to show verdict
+			console.log("Verdict: " + data);
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				callModal(error.message);
+			}
+		}
+	});
+
+	const endRound = () => {
+		if (gameData?.game.id) {
+			finishRoundMutation.mutate({
+				gameId: gameData?.game.id,
+				phase: "day"
+			});
+		}
+	};
 
 	return (
 		<React.Fragment>
-			{ gameData != undefined ? <PlayerList players={gameData.players} setVote={setVote} /> : <p>...loading</p> }
-			<GenericButton text="End Voting" onClick={finishVote} />
+			{ gameData != undefined ? <PlayerList players={gameData.players} castVote={finishVote} /> : <p>...loading</p> }
+			{/* <GenericButton text="End Voting" onClick={finishVote} /> */}
+			<GenericButton text="End Round" onClick={endRound} />
 		</React.Fragment>
 	);
 }

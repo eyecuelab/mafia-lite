@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const randomlyGenerateAvatar = () => {
   let randomImageNumber = Math.floor(Math.random() * (193 - 181) + 181);
-  const avatarBasePath = `./src/assets/images/assets/portraits/image_${randomImageNumber}.png`;
+  const avatarBasePath = `./src/assets/images/portraits/image_${randomImageNumber}.png`;
   return avatarBasePath;
 }
 
@@ -58,13 +58,20 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
 }
 
 const updatePlayerById = async (id: number, roleId: number) => {
-  await prisma.player.update({
+  return await prisma.player.update({
     where: { id: id },
     data: {
       roleId: roleId
     }
-  })
+  });
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById };
+const updatePlayerStatus = async (id: number, newStatus: string) => {
+	return await prisma.player.update({
+		where: { id },
+		data: { status: newStatus }
+	});
+}
+
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus };
 

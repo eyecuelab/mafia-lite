@@ -21,6 +21,42 @@ const io = new Server(server, {
 
 let listOfAccused = <Array<number>>[]; //Mock storage, need to replace with controller method later!
 
+/*
+	let voteMap = new Map<number, number>();
+	listOfAccused.forEach((candidateId) => {
+		if (voteMap.has(candidateId)) {
+			voteMap.set(candidateId, voteMap.get(candidateId) + 1);
+		} else {
+			voteMap.set(candidateId, 1);
+		}
+	});
+
+	return voteMap;
+*/
+
+const countVotes = () => {
+  // return listOfAccused.reduce((acc: any, cur: any) => {
+  //   cur in acc ? acc[cur] = acc[cur] + 1 : acc[cur] = 1
+  //   return acc
+  // }, new Map);
+  
+  let voteMap = new Map<number, number>();
+	listOfAccused.forEach((candidateId) => {
+		if (voteMap.has(candidateId)) {
+			let voteCount = voteMap.get(candidateId);
+			if (!voteCount) {
+				voteCount = 0;
+			}
+
+			voteMap.set(candidateId, voteCount + 1);
+		} else {
+			voteMap.set(candidateId, 1);
+		}
+	});
+
+	return voteMap;
+}
+
 io.on('connection', (socket: any) => {
 
   socket.on('disconnect', () => {
@@ -29,19 +65,19 @@ io.on('connection', (socket: any) => {
 
   socket.on("join_room", async (gameId: number) => {
     const playersInRoom = await getPlayersByGameId(gameId);
-    socket.join(gameId)
-    socket.to(gameId).emit("get_players_in_room", playersInRoom) //sends players in room data to front
-    socket.to(gameId).emit("player_joined_msg", `player joined room ${gameId}`)
+    socket.join(`${gameId}`);
+    console.log(`end of join_room`, gameId)
   })
 
-  socket.on("accuse_player", (accusation: number) => {
-    //Emit client selection to server
-    console.log(accusation)
+  socket.on("accuse_player", (accusation: number, gameIdNum: number) => {
+
     listOfAccused.push(accusation) //dev/test only, will change! Aggregate client selection on server
     console.log(`listOfAcc`, listOfAccused)
-    let counted = countVotes();
 
-    socket.emit("update_accused_players", { listOfAccused, counted }) //Broadcast accused player to client
+    let counted: Map<number, number> = countVotes();
+    console.log(counted, "gameId", gameIdNum);
+    socket.emit("update_accused_players", counted ) //Broadcast accused player to client
+
     //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
   })
 
@@ -50,13 +86,6 @@ io.on('connection', (socket: any) => {
   socket.on("all_votes_casted", () => {
     console.log("ALL VOTES CASTED")
   })
-
-  const countVotes = () => {
-    return listOfAccused.reduce((acc: any, cur: any) => {
-      cur in acc ? acc[cur] = acc[cur] + 1 : acc[cur] = 1
-      return acc
-    }, {});
-  }
 
 });
 export default io;

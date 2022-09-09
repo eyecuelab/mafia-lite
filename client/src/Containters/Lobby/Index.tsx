@@ -21,6 +21,7 @@ type Player = {
 	id: number
 	isHost: boolean
 	name: string
+	gameId: number
 	avatar: string
 }
 
@@ -69,12 +70,13 @@ const Lobby = (): JSX.Element => {
 	const { isLoading: playerLoading, error: playerError, data: playerData } = useQuery(["players"], () => getPlayerDetails(playerId));
 	const { isLoading, error, data } = useQuery(["game"], () => getGameData(gameId));
 
-	// const [socket, setSocket] = useState(io(API_ENDPOINT));
+	const [socket, setSocket] = useState(io(API_ENDPOINT));
 
 	// const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
 
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	if (data?.rounds.length && data?.rounds.length > 0) {
 		navigate("/game");
@@ -90,12 +92,6 @@ const Lobby = (): JSX.Element => {
 	// 		socket.off("connect"); //disconnect
 	// 	});
 	// }, []);
-
-	//Perform logic on backend and receive players in game data from backend
-	// socket.on("get_players_in_room", (PLAYERS_IN_ROOM) => setPlayersInGame(PLAYERS_IN_ROOM));
-
-	// console.log("TEST2");
-	// socket.on("game_has_started", (emitValidation) => { console.log(emitValidation); navigate("/game"); });
 
 	const copyToClipBoard = () => {
 		const gameCode = data?.gameCode;
@@ -142,7 +138,10 @@ const Lobby = (): JSX.Element => {
 						{(playerData?.isHost) ?
 							<div className={styles.hostButtonGroup}>
 								<MenuButton
-									onClick={() => newGameMutation.mutate( newGameData )}
+									onClick={() => {
+										newGameMutation.mutate( newGameData );
+										// socket.emit("join_room", newGameData);
+									}}
 									className={styles["start-game-btn"]}
 									text={"START GAME"}
 								/>
@@ -155,7 +154,7 @@ const Lobby = (): JSX.Element => {
 					</div>
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />
-						{(players) ? <PlayerList players={players} setVote={(number: number) => {console.log(number);}} /> : null}
+						{(players) ? <PlayerList players={players} /> : null}
 					</div>
 				</div>
 			</div>
