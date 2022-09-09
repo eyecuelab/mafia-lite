@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import io, { Socket } from "socket.io-client";
-import { API_ENDPOINT } from "../../ApiHelper";
+import { Socket } from "socket.io-client";
 import styles from "./Lobby.module.css";
 import Player from "./Player";
 
-const socket: Socket = io(API_ENDPOINT);
+
 
 export type PlayerType = {
 	id: number
@@ -18,6 +17,7 @@ type PlayerListProps = {
 	players: PlayerType[],
   isLobby: boolean,
 	castVote?: (candidateId: number) => void,
+	socket?: Socket
 }
 
 type PlayerVotes = {
@@ -25,7 +25,7 @@ type PlayerVotes = {
   votes: number
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, socket }) => {
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [voteCast, setVoteCast] = useState<boolean>(false);
 	const initialVotes = players.map((player) => ({ playerId: player.id, votes: 0 }));
@@ -38,25 +38,27 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby }) =
 	}, [players]);
 
 	useEffect(() => {
-		socket.on("vote_cast", (playerId, newTotal) => {
-			setVoteTally((previousTally) => {
-				return previousTally.map((voteTally) => {
-					if (voteTally.playerId === playerId) {
-						return {
-							...voteTally,
-							votes: newTotal
-						};
-					} else {
-						return voteTally;
-					}
+		if (socket) {
+			socket.on("vote_cast", (playerId, newTotal) => {
+				setVoteTally((previousTally) => {
+					return previousTally.map((voteTally) => {
+						if (voteTally.playerId === playerId) {
+							return {
+								...voteTally,
+								votes: newTotal
+							};
+						} else {
+							return voteTally;
+						}
+					});
 				});
 			});
-		});
-  
-		return () => {
-			socket.off("vote_cast");
-		};
-	}, []);
+		
+			return () => {
+				socket.off("vote_cast");
+			};
+		}
+	}, [socket]);
 
 	const handleCastVote = (playerId: number) => {
 		setVoteCast(true);

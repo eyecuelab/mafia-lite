@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import app from "./app";
 import { getGameById } from "./Models/game";
 import { getPlayersByGameId } from "./Models/player";
@@ -19,7 +20,7 @@ const io = new Server(server, {
  **/
 
 
-let listOfAccused = <Array<number>>[]; //Mock storage, need to replace with controller method later!
+// let listOfAccused = <Array<number>>[]; //Mock storage, need to replace with controller method later!
 
 /*
 	let voteMap = new Map<number, number>();
@@ -34,45 +35,49 @@ let listOfAccused = <Array<number>>[]; //Mock storage, need to replace with cont
 	return voteMap;
 */
 
-const countVotes = () => {
-  // return listOfAccused.reduce((acc: any, cur: any) => {
-  //   cur in acc ? acc[cur] = acc[cur] + 1 : acc[cur] = 1
-  //   return acc
-  // }, new Map);
+// const countVotes = () => {
+//   // return listOfAccused.reduce((acc: any, cur: any) => {
+//   //   cur in acc ? acc[cur] = acc[cur] + 1 : acc[cur] = 1
+//   //   return acc
+//   // }, new Map);
   
-  let voteMap = new Map<number, number>();
-	listOfAccused.forEach((candidateId) => {
-		if (voteMap.has(candidateId)) {
-			let voteCount = voteMap.get(candidateId);
-			if (!voteCount) {
-				voteCount = 0;
-			}
+//   let voteMap = new Map<number, number>();
+// 	listOfAccused.forEach((candidateId) => {
+// 		if (voteMap.has(candidateId)) {
+// 			let voteCount = voteMap.get(candidateId);
+// 			if (!voteCount) {
+// 				voteCount = 0;
+// 			}
 
-			voteMap.set(candidateId, voteCount + 1);
-		} else {
-			voteMap.set(candidateId, 1);
-		}
-	});
+// 			voteMap.set(candidateId, voteCount + 1);
+// 		} else {
+// 			voteMap.set(candidateId, 1);
+// 		}
+// 	});
 
-	return voteMap;
-}
+// 	return voteMap;
+// }
 
-io.on('connection', (socket: any) => {
+io.sockets.on('connection', (socket: Socket) => {
+  // socket.on('disconnect', () => {
+  //   console.log(socket.id + ' socket disconnected');
+  // })
 
-  socket.on('disconnect', () => {
-    console.log('socket disconnected')
-  })
-
-  socket.on("join_room", async (gameId: number) => {
-    socket.join(`${gameId}`);
-    console.log(`end of join_room`, gameId)
-  })
+  // socket.on("join_room", async (gameId: number) => {
+  //   socket.join(`${gameId}`);
+  //   console.log(`end of join_room`, gameId)
+  // })
 
   // socket.emit("emit_voting_tally", countVotes(listOfAccused );
 
-  socket.on("all_votes_casted", () => {
-    console.log("ALL VOTES CASTED")
-  })
+  // socket.on("all_votes_casted", () => {
+  //   console.log("ALL VOTES CAST")
+  // })
+
+	socket.on("join", (gameId: number) => {
+		socket.join(gameId.toString());
+		console.log(socket.id + " joined " + gameId);
+	});
 
 });
 export default io;

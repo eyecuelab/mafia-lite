@@ -2,6 +2,7 @@
 @import url('http://fonts.cdnfonts.com/css/bebas-neue');
 
 .modal-container {
+	z-index: 10;
   position: absolute;
   left: 50%;
   top: 51.5%;

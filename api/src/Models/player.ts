@@ -1,4 +1,6 @@
 import { Player, PrismaClient } from '@prisma/client';
+import { getGameById } from './game';
+import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
 const randomlyGenerateAvatar = () => {
@@ -73,5 +75,14 @@ const updatePlayerStatus = async (id: number, newStatus: string) => {
 	});
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus };
+const getJailedPlayer = async (gameId: number) => {
+	return await prisma.player.findFirst({
+		where: {
+			gameId,
+			status: "jailed"
+		}
+	});
+}
+
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer };
 

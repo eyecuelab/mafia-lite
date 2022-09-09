@@ -12,7 +12,7 @@ import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
 import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
-
+export const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 type NewGamePayload = {
 	gameId: number
 }
@@ -74,6 +74,7 @@ const Lobby = (): JSX.Element => {
 
 	// const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
+	const [linkIsCopied, setLinkIsCopied] = useState(false);
 
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -99,6 +100,15 @@ const Lobby = (): JSX.Element => {
 			navigator.clipboard.writeText(gameCode);
 			setCodeIsCopied(true);
 			setTimeout(() => setCodeIsCopied(false), 600);
+		}
+	};
+
+	const copyLinkToClipBoard = () => {
+		const link = `${CLIENT_ENDPOINT}/join/${data?.gameCode}`;
+		if (data?.gameCode !== undefined) {
+			navigator.clipboard.writeText(link);
+			setLinkIsCopied(true);
+			setTimeout(() => setLinkIsCopied(false), 600);
 		}
 	};
 
@@ -134,6 +144,7 @@ const Lobby = (): JSX.Element => {
 						<div className={styles.gameCodeInput}>
 							<p>Your game code: {data?.gameCode}</p>
 							<button className={styles.copyButton} onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+							<button className={styles.copyButton} onClick={() => copyLinkToClipBoard()}>{(linkIsCopied) ? "Copied Link" : "Copy Link"} </button>
 						</div>
 						{(playerData?.isHost) ?
 							<div className={styles.hostButtonGroup}>

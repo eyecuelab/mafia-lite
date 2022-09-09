@@ -23,7 +23,8 @@ const createVote = async (gameId: number, phase: string, candidateId: number, vo
     });
 
     if (voteTally) {
-      io.emit('vote_cast', candidateId, voteTally);
+			console.log(`casting vote -> ${candidateId}, total: ${voteTally}`);
+      io.in(gameId.toString()).emit('vote_cast', candidateId, voteTally);
     }
 
     return vote;

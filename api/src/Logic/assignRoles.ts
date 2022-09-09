@@ -18,8 +18,6 @@ async function assignRoles(numPlayers: number): Promise<number[]> {
 		}
 	}
 
-				console.log("🚀 ~ file: assignRoles.ts ~ line 18 ~ assignRoles ~ roleAssignments", roleAssignments)
-
 	return Utility.shuffleArray(roleAssignments);
 }
 

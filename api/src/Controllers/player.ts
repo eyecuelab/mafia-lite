@@ -11,6 +11,7 @@ type filteredPlayer = {
 	team?: string,
 	gameId: number,
 	roundDiedId: number | null,
+	status: string,
 	avatar: string
 }
 
@@ -107,7 +108,7 @@ const filterPlayerData = async (playerId: number | undefined, player: Player): P
 		}
 	}
 	
-	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, avatar: player.avatar };
+	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, avatar: player.avatar };
 }
 
 export default playerControllers;
