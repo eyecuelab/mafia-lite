@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import io, { Socket } from "socket.io-client";
+import { API_ENDPOINT } from "../../ApiHelper";
 import styles from "./Lobby.module.css";
-import PlayerCard from "./PlayerCard";
+import Player from "./Player";
 
-type player = {
+const socket: Socket = io(API_ENDPOINT);
+
+export type PlayerType = {
 	id: number
 	name: string
 	isHost: boolean
@@ -12,85 +14,79 @@ type player = {
 	avatar: string
 }
 
-type propTypes = {
-	players: player[],
-	castVote?: (candidateId: number) => void
+type PlayerListProps = {
+	players: PlayerType[],
+  isLobby: boolean,
+	castVote?: (candidateId: number) => void,
 }
-const PlayerList = (props: propTypes) => {
-	const { players, castVote } = props;
+
+type PlayerVotes = {
+  playerId: number,
+  votes: number
+}
+
+const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby }) => {
 	const playerListRef = useRef<HTMLDivElement>(null);
-	const [accusedPlayer, setAccusedPlayer] = useState<number | null>(null);
-	const [accusedPlayerStatus, setAccusedPlayerStatus] = useState<string>("");
-	const [socket] = useState(io(API_ENDPOINT));
-	const [playerStatusAtNight, setPlayerStatusAtNight] = useState<string | null>(null);
-	const [voteIsCasted, setVoteIsCasted] = useState<boolean>(false);
-	const [totalNumberOfVotes, setTotalNumberOfVotes] = useState<number>(0);
-	const [voteTally, setVoteTally] = useState(new Map<number, number>()); //use this to check results of voting
-
-	// Set to "true" to disable clickable events in Lobby screen, but "false" in Game screen
-	const [disableAccuse, setDisableAccuse] = useState<boolean>(false);
+	const [voteCast, setVoteCast] = useState<boolean>(false);
+	const initialVotes = players.map((player) => ({ playerId: player.id, votes: 0 }));
+	const [voteTally, setVoteTally] = useState<Array<PlayerVotes>>(initialVotes);
 	// Add one to include the user, players reads only the other players not yourself
-	const numberOfPlayersInGame = players.length + 1;
-
+	// const numberOfPlayersInGame = players.length + 1;
 
 	useEffect(() => {
 		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [players]);
 
+	useEffect(() => {
+		socket.on("vote_cast", (playerId, newTotal) => {
+			setVoteTally((previousTally) => {
+				return previousTally.map((voteTally) => {
+					if (voteTally.playerId === playerId) {
+						return {
+							...voteTally,
+							votes: newTotal
+						};
+					} else {
+						return voteTally;
+					}
+				});
+			});
+		});
+  
+		return () => {
+			socket.off("vote_cast");
+		};
+	}, []);
 
-	socket.on("update_accused_players", (counted: Map<number, number>) => {
-		console.log(Object.keys(counted));
-		//Listen for server updates on vote tally, and broadcast them back to us in real-time
-		setVoteTally(counted);
-	});
-
-	// console.log(voteTally.keys().next());
-
-	const accuse = (playerId: number) => {
-		if (castVote) {
-			setAccusedPlayer(playerId);
-			setAccusedPlayerStatus("accused");
-			castVote(playerId);
-		}
+	const handleCastVote = (playerId: number) => {
+		setVoteCast(true);
+		castVote?.(playerId);
 	};
 
-	const castVoteAndSetAccuse = (playerIdNum: number) => {
-		// disables ability to accuse once clicked
-		setVoteIsCasted(!voteIsCasted);
-		accuse(playerIdNum);
-		console.log(players[0].gameId);
-		socket.emit("accuse_player", playerIdNum, players[0].gameId);
+	const getPlayerVotes = (playerId: number): number => {
+		const voteTotal = voteTally.find((tally: PlayerVotes) => tally.playerId === playerId)?.votes;
+		return voteTotal ?? 0;
 	};
-
-	if (totalNumberOfVotes >= numberOfPlayersInGame) {
-		//check number of voters vs players in room, if ===, voting round is done.
-		console.log("num of votes", totalNumberOfVotes, "players in room", numberOfPlayersInGame);
-		socket.emit("all_votes_casted");
-	}
 
 	return (
-		<>
-			<ul className={styles.playerListContainer}>
-				{players?.map((player: player, index: number) => {
+		<ul className={styles.playerListContainer}>
+			<>
+				{players?.map((player: PlayerType) => {
+					const numberOfVotes = getPlayerVotes(player.id);
 					return (
-						<>
-							<div id={`${player.id} `} className={styles.playerListInnerWrap}
-								onClick={
-									() => !voteIsCasted && !disableAccuse ? castVoteAndSetAccuse(player.id) : console.log("Click disabled, votes already casted, or disabled!")} >
-
-								{accusedPlayer === player.id ?
-									<PlayerCard player={player} accusedPlayerStatus={accusedPlayerStatus} isMain={false} key={player.id} /> :
-									<PlayerCard player={player} playerStatus={playerStatusAtNight} isMain={false} key={player.id} />
-								}
-								<h5>Votes: {voteTally.get(player.id)}</h5>
-								{/*voteTally[`${player.id}`] 				 */}
-							</div>
-						</>
+						<Player
+							key={player.id}
+							player={player}
+							isLobby={isLobby}
+							handleCastVote={handleCastVote}
+							voteCast={voteCast}
+							numberOfVotes={numberOfVotes}
+						/>
 					);
 				})}
 				<div ref={playerListRef} />
-			</ul>
-		</>
+			</>
+		</ul>
 	);
 };
 

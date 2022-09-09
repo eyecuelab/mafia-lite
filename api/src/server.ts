@@ -64,21 +64,8 @@ io.on('connection', (socket: any) => {
   })
 
   socket.on("join_room", async (gameId: number) => {
-    const playersInRoom = await getPlayersByGameId(gameId);
     socket.join(`${gameId}`);
     console.log(`end of join_room`, gameId)
-  })
-
-  socket.on("accuse_player", (accusation: number, gameIdNum: number) => {
-
-    listOfAccused.push(accusation) //dev/test only, will change! Aggregate client selection on server
-    console.log(`listOfAcc`, listOfAccused)
-
-    let counted: Map<number, number> = countVotes();
-    console.log(counted, "gameId", gameIdNum);
-    socket.emit("update_accused_players", counted ) //Broadcast accused player to client
-
-    //socket.on(`end_of_day`, () => accusedPlayers.splice(0); )
   })
 
   // socket.emit("emit_voting_tally", countVotes(listOfAccused );

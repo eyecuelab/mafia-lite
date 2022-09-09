@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useEffect } from "react";
+import io, { Socket } from "socket.io-client";
 import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import PlayerList from "../Lobby/PlayerList";
@@ -68,20 +68,23 @@ const finishRound = async (roundData: finishRoundPayload): Promise<string> => {
 
 };
 
+const socket: Socket = io(API_ENDPOINT);
+
 function Game(): JSX.Element {
 	const { callModal } = useModal();
 
-	const { isLoading: gameQueryLoading, error: gameQueryError, data: gameData } = useQuery(["games"], getUserGameState);
-	const [socket, setSocket] = useState(io(API_ENDPOINT));
-
+	const { data: gameData } = useQuery(["games"], getUserGameState);
 
 	useEffect(() => {
-		socket.on("connection", (socket: any) => {
-			console.log(`gameData: ${gameData ? Object.keys(gameData) : ""}\nloading: ${gameQueryLoading}`);
+		socket.on("connection", (socket: Socket) => {
 			socket.emit("join_room", gameData?.game.id);
 			console.log("game joined", socket.id);
 		});
-	},[gameQueryLoading]);
+
+		return () => {
+			socket.off("connection");
+		};
+	}, [gameData]);
 
 
 	const voteMutation = useMutation(sendVote, {
@@ -129,7 +132,7 @@ function Game(): JSX.Element {
 
 	return (
 		<React.Fragment>
-			{ gameData != undefined ? <PlayerList players={gameData.players} castVote={finishVote} /> : <p>...loading</p> }
+			{ gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} /> : <p>...loading</p> }
 			{/* <GenericButton text="End Voting" onClick={finishVote} /> */}
 			<GenericButton text="End Round" onClick={endRound} />
 		</React.Fragment>

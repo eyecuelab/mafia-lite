@@ -1,17 +1,32 @@
 import { PrismaClient } from '@prisma/client';
+import io from '../server';
 import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
 const createVote = async (gameId: number, phase: string, candidateId: number, voterId: number, roundNumber: number) => {
-    return await prisma.vote.create({
+    const vote = await prisma.vote.create({
       data: {
-              gameId : gameId,
-              voterId: voterId,
-              candidateId: candidateId,
-              roundNumber: roundNumber,
-              phase: phase
-          }
+        gameId : gameId,
+        voterId: voterId,
+        candidateId: candidateId,
+        roundNumber: roundNumber,
+        phase: phase
+      }
     });
+
+    const voteTally = await prisma.vote.count({
+      where: {
+        gameId: gameId,
+        candidateId: candidateId,
+        roundNumber: roundNumber,
+      }
+    });
+
+    if (voteTally) {
+      io.emit('vote_cast', candidateId, voteTally);
+    }
+
+    return vote;
   }
 const getAllVotes = async (gameId: number, roundId: number, phase: string) => {
     const round = await getRoundById(roundId)
