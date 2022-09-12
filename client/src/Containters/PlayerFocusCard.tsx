@@ -13,10 +13,10 @@ type propTypes = {
 const PlayerFocusCard = (props: propTypes) => {
 	const { player } = props;
 	return (
-    <div className={styles.playerFocusCardContainer}>
-        <img src={player.avatar} className={styles.playerFocusImage}/>
-        <p className={styles.playerFocusStatus}>{player.status}</p>
-        <p className={styles.playerFocusName}>{player.name} is selected</p>
-    </div>);
+		<div className={styles.playerFocusCardContainer}>
+			<img src={player.avatar} className={styles.playerFocusImage}/>
+			<p className={styles.playerFocusStatus}>{player.status}</p>
+			<p className={styles.playerFocusName}>{player.name} is selected</p>
+		</div>);
 };
 export default PlayerFocusCard;
