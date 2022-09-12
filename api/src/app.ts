@@ -6,9 +6,12 @@ import roundRouter from "./Routes/round";
 import logicRouter from "./Routes/logic";
 import voterRouter from './Routes/vote';
 
+
 const session = require("express-session")
 
 const app = express();
+
+const environment = app.get('env')
 
 app.use(cors({ origin: [
   'http://localhost:5173',
@@ -17,10 +20,13 @@ app.use(cors({ origin: [
 
 app.use(
   session({
-    secret: "123sDareweq123a1q",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { 
+      secure: environment === 'development' ? false : true,
+      // secure: process.env.SESSION_SECURE === "false" ? false : true,
+    },
   })
 );
 
