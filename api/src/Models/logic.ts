@@ -3,7 +3,7 @@ import io from '../server';
 
 const prisma = new PrismaClient();
 
-const emitStartNight = async(gameId: number) => {
+const emitStartNight = (gameId: number) => {
     io.in(gameId.toString()).emit('start_night')
 }
 

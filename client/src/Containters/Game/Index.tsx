@@ -139,6 +139,7 @@ function Game(): JSX.Element {
 		if (socket) {
 			socket.on("vote_results_tie", () => {
 				setHasResult(true);
+				alert("Tie");
 			});
 		
 			return () => {
