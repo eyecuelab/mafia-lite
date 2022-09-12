@@ -1,7 +1,7 @@
 import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
-import { updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
+import { unjailPrevJailedPlayer, updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
 
 type voteResult = {
   id: number
@@ -56,15 +56,16 @@ const votingControllers = {
     if(voteResults.length === 1 || voteResults[0].count !== voteResults[1].count) {
       const player = await getPlayerById(voteResults[0].id);
 			try {
-        await emitVoteResult(voteResults[0].id, gameId)
 				res.status(200).json((await updateEndOfRoundStatus(gameId, player)));
+				await emitVoteResult(voteResults[0].id, gameId);
 			} catch (error) {
 				res.status(500).json({ error });
 			}
     }
     else {
-      await emitVoteResult(0, gameId)
+			await unjailPrevJailedPlayer(gameId);
       res.status(200).json({ sentence: "Tie" });
+			await emitVoteResult(0, gameId);
     }
   
     // res.status(500).json({error : "Something went wrong"}) 

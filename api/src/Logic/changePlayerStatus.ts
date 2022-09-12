@@ -16,10 +16,7 @@ const getSentence = async (player: Player) => {
 };
 
 const updateEndOfRoundStatus = async (gameId: number, accused: Player) => {
-	const prevJailedPlayer = await getJailedPlayer(gameId);
-	if (prevJailedPlayer) {
-		updatePlayerStatus(prevJailedPlayer.id, "alive");
-	}
+	await unjailPrevJailedPlayer(gameId);
 	
 	const sentence = await getSentence(accused);
 	const player = await updatePlayerStatus(accused.id, (sentence));
@@ -27,4 +24,11 @@ const updateEndOfRoundStatus = async (gameId: number, accused: Player) => {
 	return { player, sentence };
 }
 
-export { updateEndOfRoundStatus };
+const unjailPrevJailedPlayer = async (gameId: number) => {
+	const prevJailedPlayer = await getJailedPlayer(gameId);
+	if (prevJailedPlayer) {
+		updatePlayerStatus(prevJailedPlayer.id, "alive");
+	}
+}
+
+export { updateEndOfRoundStatus, unjailPrevJailedPlayer };
