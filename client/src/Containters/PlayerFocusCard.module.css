@@ -1,0 +1,12 @@
+.playerFocusCardContainer {
+    width: 300px;
+    margin: auto;
+}
+.playerFocusImage {
+    width: 200px;
+}
+.playerFocusName { 
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 5px;
+    font-size: 24px;
+}

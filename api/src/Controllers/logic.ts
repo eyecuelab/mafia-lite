@@ -3,6 +3,7 @@ import { getPlayerById, getPlayersByGameId, updatePlayerById } from "../Models/p
 import assignRoles from "../Logic/assignRoles";
 import io from "../server";
 import { createNewRound } from "../Models/round";
+import { emitStartNight } from "../Models/logic";
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
@@ -26,6 +27,26 @@ const logicControllers = {
 			}
 
 			res.json({ players: (await getPlayersByGameId(gameId)) });
+		}
+	},
+
+	async startNight(req: any, res: any) {
+		const { gameId } = req.body;
+		const playerId = req.session.playerId;
+
+		if (Utility.validateInputs(res, "Invalid game or player id", gameId, playerId)) {
+			const player = await getPlayerById(playerId);
+			if(player.gameId !== gameId || !player.isHost) {
+				return res.status(401).json({ error: "Your are not allowed to start the night" });
+			}
+			console.log("Night Starting ...")
+
+			//Update Round Object
+
+			//Update Other Player Clients Night is starting
+			emitStartNight(gameId);
+			
+			res.status(200);
 		}
 	},
 

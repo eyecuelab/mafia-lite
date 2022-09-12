@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import io from '../server';
+import { getPlayerById } from './player';
 import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
@@ -29,6 +30,15 @@ const createVote = async (gameId: number, phase: string, candidateId: number, vo
 
     return vote;
   }
+
+const emitVoteResult = async(playerId: number, gameId: number) => {
+  if(playerId === 0) {
+    io.in(gameId.toString()).emit('vote_results_tie')
+  }else {
+    const player = await getPlayerById(playerId)
+    io.in(gameId.toString()).emit('vote_results', player)
+  }
+}
 const getAllVotes = async (gameId: number, roundId: number, phase: string) => {
     const round = await getRoundById(roundId)
     return await prisma.vote.findMany({
@@ -39,4 +49,4 @@ const getAllVotes = async (gameId: number, roundId: number, phase: string) => {
         }
     })
 }
-export {createVote, getAllVotes}
+export {createVote, getAllVotes, emitVoteResult}

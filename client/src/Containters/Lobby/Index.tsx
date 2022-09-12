@@ -80,7 +80,7 @@ const Lobby = (): JSX.Element => {
 	const queryClient = useQueryClient();
 
 	if (data?.rounds.length && data?.rounds.length > 0) {
-		navigate("/game");
+		navigate("/game",  { state: { isHost : playerData?.isHost}, replace: true });
 	}
 
 	// useEffect(() => {
@@ -118,7 +118,7 @@ const Lobby = (): JSX.Element => {
 
 	const newGameMutation = useMutation(startNewGame, {
 		onSuccess: () => {
-			navigate("/game");
+			navigate("/game", { state: { isHost : playerData?.isHost}, replace: true });
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
