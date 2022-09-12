@@ -46,6 +46,7 @@ model Round {
   game        Game      @relation(fields: [gameId], references: [id])
   gameId      Int       @unique
   roundNumber Int
+  currentPhase String
   createdAt   DateTime  @default(now())
   died        Player[]
   endedAt     DateTime?

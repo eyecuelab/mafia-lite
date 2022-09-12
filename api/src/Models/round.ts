@@ -3,10 +3,12 @@ import { getPlayerById } from './player';
 const prisma = new PrismaClient();
 
 const createNewRound = async (roundNumber: number, gameId: number) => {
+  const currentPhase = "DAY"
 	return await prisma.round.create({
 		data: {
 			gameId,
-			roundNumber
+			roundNumber,
+      currentPhase, 
 		}
 	});
 }
@@ -51,4 +53,13 @@ const getCurrentRoundByGameId = async (gameId: number) => {
 	return rounds[0];
 }
 
-export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound, getCurrentRoundByGameId }
+const updateToNightPhase = async (currentRoundId: number) => {
+  return await prisma.round.update({
+    where: { id: currentRoundId },
+    data: {
+      currentPhase : "NIGHT"
+    }
+  });
+}
+
+export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound, getCurrentRoundByGameId, updateToNightPhase }
