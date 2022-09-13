@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { QueryErrorResetBoundary, useMutation } from "@tanstack/react-query";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../ApiHelper";
 import { useLocation } from "react-router-dom";
 import titleImg from "../../assets/images/Title.png";
 import CreatePlayerCSS from "./CreatePlayer.module.css";
@@ -20,11 +20,7 @@ interface locationState {
 	isHost: boolean
 }
 
-const createPlayer = async (playerInput: PlayerCreateInput) => {
-	const url = `${API_ENDPOINT}/player`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(playerInput) });
-	return await handleResponse(response);
-};
+const createPlayer = async (playerInput: PlayerCreateInput) => postData("/player", playerInput);
 
 function CreatePlayer() {
 	const { callModal } = useModal();
@@ -36,8 +32,8 @@ function CreatePlayer() {
 	const [name, setName] = useState("");
 	
 	const playerMutation = useMutation(createPlayer, {
-		onSuccess: (data) => {
-			navigate("/lobby", { state: { gameId: gameId, playerId: data.id }, replace: true });
+		onSuccess: () => {
+			navigate("/lobby");
 		},
 		onError: (error) => {
 			if (error instanceof Error) {

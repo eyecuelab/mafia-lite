@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import { getData } from "../../ApiHelper";
 import titleImg from "../../assets/images/Title.png";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
 import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
 
-
-const getGameId = async (gameCode: string) => {
-	const url = `${API_ENDPOINT}/game?code=${gameCode}`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
-	return await handleResponse(response);
-};
+const getGameId = async (gameCode: string) => getData(`/game?code=${gameCode}`);
 
 function JoinGame() {
 	const { callModal } = useModal();

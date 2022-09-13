@@ -1,20 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "./Lobby.module.css";
-import Player from "./Player";
+import PlayerCardWrapper from "./Player";
+import { Player } from "../../Types/Types";
 
-
-
-export type PlayerType = {
-	id: number
-	name: string
-	isHost: boolean
-	gameId: number
-	avatar: string
-}
 
 type PlayerListProps = {
-	players: PlayerType[],
+	players: Player[],
   isLobby: boolean,
 	castVote?: (candidateId: number) => void,
 	socket?: Socket
@@ -73,10 +65,10 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, soc
 	return (
 		<ul className={styles.playerListContainer}>
 			<>
-				{players?.map((player: PlayerType) => {
+				{players?.map((player: Player) => {
 					const numberOfVotes = getPlayerVotes(player.id);
 					return (
-						<Player
+						<PlayerCardWrapper
 							key={player.id}
 							player={player}
 							isLobby={isLobby}

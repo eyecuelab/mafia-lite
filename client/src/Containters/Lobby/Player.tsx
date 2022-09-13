@@ -1,17 +1,17 @@
 import { useState } from "react";
 import PlayerCard from "./PlayerCard";
-import { PlayerType } from "./PlayerList";
+import { Player } from "../../Types/Types";
 import styles from "./Lobby.module.css";
 
 type PlayerProps = {
-  player: PlayerType;
+  player: Player;
   isLobby: boolean;
   voteCast: boolean;
   numberOfVotes: number;
   handleCastVote: (playerId: number) => void,
 }
 
-const Player: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes }) => {
+const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes }) => {
 	const [isAccused, setIsAccused] = useState(false);  
 
 	const handleAccusePlayer = () => {
@@ -32,8 +32,8 @@ const Player: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCa
 					handleAccusePlayer();
 				}} >
 				{isAccused ?
-					<PlayerCard player={player} accusedPlayerStatus="accused" isMain={false} /> :
-					<PlayerCard player={player} playerStatus={""} isMain={false} />
+					<PlayerCard player={player} playerStatus={"accused"} isMain={false} /> :
+					<PlayerCard player={player} playerStatus={"alive"} isMain={false} />
 				}
 				{!!numberOfVotes && (
 					<h5>Votes: {numberOfVotes}</h5>
@@ -43,4 +43,4 @@ const Player: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCa
 	);
 };
 
-export default Player;
+export default PlayerCardWrapper;

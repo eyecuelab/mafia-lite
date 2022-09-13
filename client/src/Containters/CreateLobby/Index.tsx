@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import { postData } from "../../ApiHelper";
 import { useMutation } from "@tanstack/react-query";
 import titleImg from "../../assets/images/Title.png";
 import CreateLobbyCSS from "./CreateLobby.module.css";
@@ -8,22 +8,12 @@ import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import { useModal } from "../../ModalContext";
 
-type GameCreatePayload = {
+type GameCreateInput = {
 	name: string,
 	size: number
 }
 
-interface Game extends GameCreatePayload {
-	id: string;
-	createdAt: string;
-	endedAt?: string;
-}
-
-const createGame = async (gameInput: GameCreatePayload) => {
-	const url = `${API_ENDPOINT}/game`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "POST", body: JSON.stringify(gameInput) });
-	return await handleResponse(response);
-};
+const createGame = async (gameInput: GameCreateInput) => postData("/game", gameInput);
 
 function CreateLobby() {
 	const { callModal } = useModal();

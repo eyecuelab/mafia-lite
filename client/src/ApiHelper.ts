@@ -1,14 +1,14 @@
 const credentials: RequestCredentials = "include";
 
 export const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-export const BASE_HEADERS = {
+const BASE_HEADERS = {
 	headers: {
 		"Content-Type": "application/json"
 	},
 	credentials: credentials
 };
 
-export const handleResponse = async (response: Response) => {
+const handleResponse = async (response: Response) => {
 	const json = await response.json();
 
 	if (!response.ok) {
@@ -16,4 +16,16 @@ export const handleResponse = async (response: Response) => {
 	} else {
 		return json;
 	}
+};
+
+export const getData = async (endpoint: string) => {
+	const url = `${API_ENDPOINT}${endpoint}`;
+	const response = await fetch(url, { ...BASE_HEADERS , method: "GET" });
+	return await handleResponse(response);
+};
+
+export const postData = async (endpoint: string, payload: unknown) => {
+	const url = `${API_ENDPOINT}${endpoint}`;
+	const response = await fetch(url, { ...BASE_HEADERS , method: "POST", body: JSON.stringify(payload) });
+	return await handleResponse(response);
 };

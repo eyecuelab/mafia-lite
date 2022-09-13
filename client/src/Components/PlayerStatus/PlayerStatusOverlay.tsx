@@ -22,7 +22,7 @@ const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string, i
 		switch (status) {
 		case "murdered":
 			return setImgPath(arrayOfImages[0]);
-		case "accused": //save image
+		case "accused":
 			return setImgPath(arrayOfImages[1]);
 		case "jailed":
 			return setImgPath(arrayOfImages[2]);

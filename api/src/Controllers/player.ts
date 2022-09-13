@@ -82,7 +82,7 @@ const playerControllers = {
 			const players = await getPlayersByGameId(gameId);
 			const filteredPlayers = await filterPlayersData(playerId, players);
 
-			res.json({game, players: filteredPlayers});
+			res.json({game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player))});
 		}
 	}
 }
@@ -97,7 +97,7 @@ const filterPlayersData = async (playerId: number, players: Player[]) => {
 	return filteredPlayers;
 }
 
-const filterPlayerData = async (playerId: number | undefined, player: Player): Promise<filteredPlayer> => {
+const filterPlayerData = async (playerId: number, player: Player): Promise<filteredPlayer> => {
 	let role = undefined;
 	if (playerId) {
 		const requester = await getPlayerById(playerId);

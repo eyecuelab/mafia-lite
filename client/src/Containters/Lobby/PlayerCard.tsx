@@ -1,43 +1,30 @@
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
 import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
 import styles from "./Lobby.module.css";
+import { Player } from "../../Types/Types";
 
-type player = {
-	id: number
-	name: string
-	avatar: string
-}
 type propTypes = {
-	player: player
+	player: Player
 	isMain: boolean
+	playerStatus?: string
 }
 
-const PlayerCard = (props: any) => {
-	const [socket, setSocket] = useState(io(API_ENDPOINT));
-	const { player, isMain, accusedPlayerStatus, playerStatusAtNight } = props;
-	// const [voteCount, setVoteCount] = useState(io(API_ENDPOINT));
+const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus }) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	/*
 		Player Status should be contained in the game or player object on the backend, to be read anywhere the player exists.
 		
-		For now we pass a hardcoded string in the playerStatus prop below.
-		DISABLE in game lobby, once game starts.
-		TESTING is done in game lobby until day/night phase UI is built. 9/1/22 Marcus
-	 */
+		DISABLE in game lobby, once game starts. 9/1/22 Marcus
+	*/
 
 	return (
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
-
 				<img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-				{!isMain ? <PlayerStatusOverlay isMain={isMain} playerStatus={accusedPlayerStatus} /> : <PlayerStatusOverlay isMain={isMain} playerStatus={playerStatusAtNight} />}
+				<PlayerStatusOverlay isMain={isMain} playerStatus={playerStatus ? playerStatus : "alive"} />
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
 					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
-
 				</div>
 			</div>
 		</>

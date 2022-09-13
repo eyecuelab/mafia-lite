@@ -1,18 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import { getData } from "../../ApiHelper";
+import { Game } from "../../Types/Types";
 import titleImg from "../../assets/images/Title.png";
 import styles from "./JoinGame.module.css";
 
-interface Game {
-	id: number
-}
-
-const getGameId = async (gameCode: string | undefined): Promise<Game> => {
-	const url = `${API_ENDPOINT}/game?code=${gameCode ? gameCode : ""}`;
-	const response = await fetch(url, { ...BASE_HEADERS, method: "GET" });
-	return await handleResponse(response);
-};
+const getGameId = async (gameCode: string | undefined): Promise<Game> => getData(`/game?code=${gameCode ? gameCode : ""}`);
 
 function JoinURL(): JSX.Element {
 	const { code } = useParams();
