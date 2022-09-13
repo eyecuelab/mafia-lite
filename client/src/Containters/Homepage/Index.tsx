@@ -30,7 +30,7 @@ function Homepage() {
 			<div className={HomepageCSS["homepage-footer"]}>
 				<p>HOW TO PLAY</p>
 				<img src={questionMark} onClick={() => callModal(
-					<div>
+					<div className={HomepageCSS["modalContent"]}>
 						<h2 className={HomepageCSS["headerTwo"]}>How to play The Nameless Terror</h2>
 						<h4>First Night:</h4> 
 						<ul>

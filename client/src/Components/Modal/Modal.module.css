@@ -31,6 +31,7 @@
   padding: 15px;
   background: black;
   border-radius: 10px;
+  scroll-behavior: auto;
 }
 
 .modal-button {
@@ -42,7 +43,7 @@
   font-weight:600;
   font-size: 20px;
   background: transparent;
-  background-color: rgba(104, 12, 12, 0.8);
+  background-color: rgba(104, 12, 12);
 }
 
 .modal-button:hover {

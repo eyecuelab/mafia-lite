@@ -72,10 +72,11 @@ h5 {
 
 .user-selection-input:hover {
   opacity: 0.65;
-  transform: scale(1);
   color: black;
-  transition: ease-in 0.5s;
+  transition: ease-in-out 0.5s;
+  transition-timing-function: ease-in-out .8s;
   box-shadow: 2px 2px 7px 2px rgba(236, 236, 236, 0.5);
+  cursor: pointer;
 }
 
 .form input {
@@ -108,8 +109,29 @@ h5 {
 	transition: ease-in 0.5s;
 }
 
+.modalContent {
+  align-items: center;
+  height: 70vh;
+  width: 40vw;
+  border-radius: 10px;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: auto;
+}
+
+.modalContent::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+.modalContent::-webkit-scrollbar-track {
+  background: rgb(0, 0, 0);        /* color of the tracking area */
+}
+.modalContent::-webkit-scrollbar-thumb {
+  background-color: rgba(104, 12, 12);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  /* border: 3px solid rgb(255, 255, 255);  creates padding around scroll thumb */
+}
+
 .headerTwo {
-  color: rgba(104, 12, 12, 0.8);
+  color: rgba(104, 12, 12);
 } 
 
 .listHeader {
