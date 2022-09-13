@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import io from "socket.io-client";
-import { API_ENDPOINT, BASE_HEADERS, handleResponse } from "../../ApiHelper";
+import { useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { postData } from "../../ApiHelper";
 import titleImg from "../../assets/images/Title.png";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
@@ -12,147 +11,85 @@ import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
 import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
-export const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
-type NewGamePayload = {
-	gameId: number
-}
+//import io, { Socket } from "socket.io-client";
+import useGameStateQuery from "../../Hooks/GameDataHook";
+import socket from "../../Hooks/WebsocketHook";
 
-type Player = {
-	id: number
-	isHost: boolean
-	name: string
-	gameId: number
-	avatar: string
-}
+const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
+const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
 
-type Round = {
-	id: number
-}
-
-interface GameData {
-	id: number
-	players: Array<Player>
-	gameCode: string
-	name: string
-	size: number,
-	rounds: Round[]
-}
-
-interface CustomizedState {
-	gameId: number
-	playerId: number
-}
-
-const getGameData = async (gameId: number) : Promise<GameData> => {
-	const url = `${API_ENDPOINT}/game?id=${gameId}`;
-	const response = await fetch(url, { ...BASE_HEADERS });
-	return await handleResponse(response);
-};
-
-const getPlayerDetails = async (id: number): Promise<Player> => {
-	const url = `${API_ENDPOINT}/player?id=${id}`;
-	const response = await fetch(url, { ...BASE_HEADERS , method: "GET" });
-	return await handleResponse(response);
-};
-
-const startNewGame = async (newGame: NewGamePayload) => {
-	const url = `${API_ENDPOINT}/start`;
-	const response = await fetch(url, { ...BASE_HEADERS , method: "POST", body: JSON.stringify(newGame) });
-	return await handleResponse(response);
-};
+//const socket: Socket = io(API_ENDPOINT);
 
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
-	const location = useLocation();
-	const state = location.state as CustomizedState;
-	const { gameId, playerId } = state;
+	const navigate = useNavigate();
 
-	const { isLoading: playerLoading, error: playerError, data: playerData } = useQuery(["players"], () => getPlayerDetails(playerId));
-	const { isLoading, error, data } = useQuery(["game"], () => getGameData(gameId));
+	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 
-	const [socket, setSocket] = useState(io(API_ENDPOINT));
-
-	// const [playersInGame, setPlayersInGame] = useState([]);
 	const [codeIsCopied, setCodeIsCopied] = useState(false);
 	const [linkIsCopied, setLinkIsCopied] = useState(false);
 
-	const navigate = useNavigate();
-	const queryClient = useQueryClient();
-
-	if (data?.rounds.length && data?.rounds.length > 0) {
-		navigate("/game",  { state: { isHost : playerData?.isHost}, replace: true });
-	}
-
-	// useEffect(() => {
-	// 	//Establish connection when component mounts
-	// 	socket.on("connect", () => {
-	// 		console.log("socket connected");
-	// 		socket.on("disconnect", () => console.log("socket disconnected"));
-	// 	});
-	// 	return (() => {
-	// 		socket.off("connect"); //disconnect
-	// 	});
-	// }, []);
-
-	const copyToClipBoard = () => {
-		const gameCode = data?.gameCode;
-		if (gameCode !== undefined) {
-			navigator.clipboard.writeText(gameCode);
-			setCodeIsCopied(true);
-			setTimeout(() => setCodeIsCopied(false), 600);
+	useEffect(() => {
+		if (gameData) {
+			socket.emit("join", gameData.game.id);
 		}
-	};
+	}, [gameData?.game.id]);
 
-	const copyLinkToClipBoard = () => {
-		const link = `${CLIENT_ENDPOINT}/join/${data?.gameCode}`;
-		if (data?.gameCode !== undefined) {
-			navigator.clipboard.writeText(link);
-			setLinkIsCopied(true);
-			setTimeout(() => setLinkIsCopied(false), 600);
-		}
-	};
+	useEffect(() => {
+		socket.on("game_start", () => {
+			navigate("/game");
+		});
 
-	const players = data?.players.filter((player) => {
-		return player.id !== playerId;
+		return () => { socket.off("game_start"); };
 	});
+
+	const copyToClipBoard = (gameCode: string) => {
+		navigator.clipboard.writeText(gameCode);
+		setCodeIsCopied(true);
+		setTimeout(() => setCodeIsCopied(false), 600);
+	};
+
+	const copyLinkToClipBoard = (gameCode: string) => {
+		navigator.clipboard.writeText(`${CLIENT_ENDPOINT}/join/${gameCode}`);
+		setLinkIsCopied(true);
+		setTimeout(() => setLinkIsCopied(false), 600);
+	};
 
 	const newGameMutation = useMutation(startNewGame, {
 		onSuccess: () => {
-			navigate("/game", { state: { isHost : playerData?.isHost}, replace: true });
+			socket.emit("start_new_game");
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
-				console.log("TEST " + error);
 				callModal(error.message);
 			}
 		}
 	});
 
-	const newGameData: NewGamePayload = { gameId: gameId }; 
+	if (gameQueryIsLoading) return <p>Loading ....</p>;
 
-	if (isLoading || playerLoading) return (<p> Loading ....</p>);
+	if (gameQueryError instanceof Error) {
+		callModal(gameQueryError.message);
+	}
 
 	return (
 		<div>
 			<div className={styles.lobbyPageContainer}>
 				<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
-				<h1 className={styles.lobbyName}>{data?.name}</h1>
+				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
 				<div className={styles.lobbyContainer}>
-					<div className={styles.playerStatus}>
+					{(gameData) ? <div className={styles.playerStatus}>
 						<SubTitle title={"Your Character"} />
-						{(playerData) ? <PlayerCard player={playerData} isMain={true} /> : null}
+						<PlayerCard player={gameData.thisPlayer} isMain={true} />
 						<div className={styles.gameCodeInput}>
-							<p>Your game code: {data?.gameCode}</p>
-							<button className={styles.copyButton} onClick={() => copyToClipBoard()}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
-							<button className={styles.copyButton} onClick={() => copyLinkToClipBoard()}>{(linkIsCopied) ? "Copied Link" : "Copy Link"} </button>
+							<p>Your game code: {gameData.game.gameCode}</p>
+							<button className={styles.copyButton} onClick={() => copyToClipBoard(gameData.game.gameCode)}>{(codeIsCopied) ? "Copied" : "Copy"} </button>
+							<button className={styles.copyButton} onClick={() => copyLinkToClipBoard(gameData.game.gameCode)}>{(linkIsCopied) ? "Copied Link" : "Copy Link"} </button>
 						</div>
-						{(playerData?.isHost) ?
+						{(gameData.thisPlayer.isHost) ?
 							<div className={styles.hostButtonGroup}>
 								<MenuButton
-									onClick={() => {
-										newGameMutation.mutate( newGameData );
-										// socket.emit("join_room", newGameData);
-									}}
+									onClick={() => { newGameMutation.mutate({ gameId: gameData.game.id }); }}
 									className={styles["start-game-btn"]}
 									text={"START GAME"}
 								/>
@@ -162,10 +99,18 @@ const Lobby = (): JSX.Element => {
 									text={"CANCEL GAME"}
 								/>
 							</div> : null}
-					</div>
+					</div> : null}
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />
-						{!!(players?.length) && <PlayerList players={players} isLobby={true} />}
+						{!!(gameData?.players.length) && 
+						<PlayerList 
+							players={
+								gameData.players.filter((player) => {
+									return player.id !== gameData.thisPlayer.id;
+								})
+							}
+							isLobby={true} 
+						/>}
 					</div>
 				</div>
 			</div>
