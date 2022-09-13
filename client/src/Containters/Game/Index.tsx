@@ -8,6 +8,7 @@ import PlayerFocusCard from "../PlayerFocusCard";
 import { Player } from "../../Types/Types";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
+import style from "./Game.module.css";
 
 type VotePayload = {
 	gameId: number,
@@ -127,11 +128,14 @@ function Game(): JSX.Element {
 		setHasResult(false);
 		console.log("Starting night");
 	};
+
+	const team = gameData?.thisPlayer.team ? gameData.thisPlayer.team : "";
 	
 	return (
 		<React.Fragment>
 			{gameData ? 
 				<React.Fragment>
+					<p className={`${style["team"]} ${style[team]}`}>{gameData.thisPlayer.team}</p>
 					{!gameQueryIsLoading ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} /> : <p>...loading</p> }
 					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} /> : null}
 					{hasResult ? <GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}

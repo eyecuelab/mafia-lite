@@ -1,0 +1,21 @@
+@import url('https://fonts.cdnfonts.com/css/bebas-neue');
+
+.team {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 1em;
+	font-family: 'Bebas Neue', sans-serif;
+	font-weight: bold;
+	font-size: 25px;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.cultist {
+	background-color: rgb(208, 0, 9, 0.7);
+}
+
+.investigator {
+	background-color: rgb(0, 130, 209, 0.7);
+}

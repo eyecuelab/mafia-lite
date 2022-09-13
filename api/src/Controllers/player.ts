@@ -99,13 +99,11 @@ const filterPlayersData = async (playerId: number, players: Player[]) => {
 
 const filterPlayerData = async (playerId: number, player: Player): Promise<filteredPlayer> => {
 	let role = undefined;
-	if (playerId) {
-		const requester = await getPlayerById(playerId);
-		const requesterTeam = (await getRoleById(requester.roleId))?.type;
+	const requester = await getPlayerById(playerId);
+	const requesterTeam = (await getRoleById(requester.roleId))?.type;
 
-		if (requesterTeam === "cultist") {
-			role = await getRoleById(player.roleId);
-		}
+	if (requesterTeam === "cultist" || playerId === player.id) {
+		role = await getRoleById(player.roleId);
 	}
 	
 	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, avatar: player.avatar };

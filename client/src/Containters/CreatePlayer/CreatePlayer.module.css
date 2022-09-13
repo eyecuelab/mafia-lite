@@ -1,7 +1,7 @@
 @import url('https://fonts.cdnfonts.com/css/american-typewriter');
 @import url('https://fonts.cdnfonts.com/css/bebas-neue');
 
-.join-game-title-wrapper{
+.join-game-title-wrapper {
   display: grid;
   place-items: center;
   margin: 2rem auto;

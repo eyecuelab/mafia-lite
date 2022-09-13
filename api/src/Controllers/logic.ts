@@ -33,12 +33,13 @@ const logicControllers = {
 	},
 
 	async startNight(req: any, res: any) {
-		const { gameId } = req.body;
 		const playerId = req.session.playerId;
 
-		if (Utility.validateInputs(res, "Invalid game or player id", gameId, playerId)) {
+		if (Utility.validateInputs(res, "Invalid player id", playerId)) {
 			const player = await getPlayerById(playerId);
-			if(player.gameId !== gameId || !player.isHost) {
+			const gameId = player.gameId;
+
+			if(player.gameId !== gameId) {
 				return res.status(401).json({ error: "Your are not allowed to start the night" });
 			}
 			console.log("Night Starting ...")
