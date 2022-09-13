@@ -5,7 +5,8 @@ import playerRouter from "./Routes/player";
 import roundRouter from "./Routes/round";
 import logicRouter from "./Routes/logic";
 import voterRouter from './Routes/vote';
-
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { PrismaClient } from '@prisma/client';
 
 const session = require("express-session")
 
@@ -18,6 +19,7 @@ app.use(cors({ origin: [
   'https://nameless-terror-client.fly.dev'
 ], credentials: true }));
 
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -27,6 +29,14 @@ app.use(
       secure: environment === 'development' ? false : true,
       // secure: process.env.SESSION_SECURE === "false" ? false : true,
     },
+    store: new PrismaSessionStore(
+      new PrismaClient(),
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    )
   })
 );
 
