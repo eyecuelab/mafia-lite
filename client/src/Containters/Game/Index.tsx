@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import PlayerList from "../Lobby/PlayerList";
 import { postData } from "../../ApiHelper";
-import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
-import PlayerFocusCard from "../PlayerFocusCard";
 import { Player } from "../../Types/Types";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
+import DayTime from "./DayTime";
+import NightTime from "./NightTime";
 import style from "./Game.module.css";
+
 
 type VotePayload = {
 	gameId: number,
@@ -23,7 +23,8 @@ type FinishRoundPayload = {
 
 type Verdict = {
 	player: Player,
-	sentence: string
+	sentence: string,
+	nextPhase: string
 }
 
 interface VoteResult {
@@ -32,14 +33,15 @@ interface VoteResult {
 
 const sendVote = async (vote: VotePayload): Promise<VoteResult> => postData("/vote", vote);
 const finishRound = async (roundData: FinishRoundPayload): Promise<Verdict> => postData("/tallyVote", roundData);
-const beginNight = async (gameId : number): Promise<void> => postData("/startNight", { gameId });
+
 
 function Game(): JSX.Element {
 	const { callModal } = useModal();
 	const [hasResult, setHasResult] = useState(false);
 	const [votingResults, setVotingResults] = useState();
+	const [isDay, setIsDay] = useState(true);
 
-	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
+	const { gameQueryError, gameData } = useGameStateQuery();
 	const queryClient = useQueryClient();
 
 	if (gameQueryError instanceof Error) {
@@ -60,13 +62,21 @@ function Game(): JSX.Element {
 
 			socket.on("start_night", () => {
 				setHasResult(false);
+				setIsDay(false);
 				alert("Starting Night");
+			});
+
+			socket.on("start_day", () => {
+				setHasResult(false);
+				setIsDay(true);
+				alert("Starting Day");
 			});
 		
 			return () => {
 				socket.off("vote_results");
 				socket.off("vote_results_tie");
 				socket.off("start_night");
+				socket.off("start_day");
 			};
 		}
 		
@@ -85,7 +95,7 @@ function Game(): JSX.Element {
 			voteMutation.mutate({
 				gameId: gameData.game.id,
 				candidateId: candidateId,
-				phase: "day"
+				phase: isDay ? "day" : "night"
 			});
 		}
 	};
@@ -105,41 +115,22 @@ function Game(): JSX.Element {
 		if (gameData?.game.id) {
 			finishRoundMutation.mutate({
 				gameId: gameData?.game.id,
-				phase: "day"
+				phase: isDay ? "day" : "night"
 			});
 		}
-	};
-
-	const startNightMutation = useMutation(beginNight, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(["games"]);
-		},
-		onError: (error) => {
-			if (error instanceof Error) {
-				callModal(error.message);
-			}
-		}
-	});
-
-	const startNight = (gameId: number) => {
-		if (gameId) {
-			startNightMutation.mutate(gameId);
-		}
-		setHasResult(false);
-		console.log("Starting night");
 	};
 
 	const team = gameData?.thisPlayer.team ? gameData.thisPlayer.team : "";
 	
 	return (
 		<React.Fragment>
-			{gameData ? 
-				<React.Fragment>
-					<p className={`${style["team"]} ${style[team]}`}>{gameData.thisPlayer.team}</p>
-					{!gameQueryIsLoading ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} /> : <p>...loading</p> }
-					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} /> : null}
-					{hasResult ? <GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
-				</React.Fragment> : <p>...loading</p>}
+			<h1>{isDay ? "Day" : "Night"}</h1>
+			<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
+			{gameData ?  (
+				(
+					(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />)
+				)
+			) : <p>...loading</p>}
 		</React.Fragment>
 	);
 }
