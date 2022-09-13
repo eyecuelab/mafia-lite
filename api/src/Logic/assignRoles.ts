@@ -9,7 +9,7 @@ async function assignRoles(numPlayers: number): Promise<number[]> {
 
 	let roleAssignments: number[] = [];
 	for (let i = 0; i < numPlayers; i++) {
-		if (i % investCultRatio === 0) {
+		if (i % investCultRatio === 0 && i !== 0) {
 			roleAssignments.push(getRandomRole(cultRoles).id);
 		} else {
 			roleAssignments.push(getRandomRole(investRoles).id);
