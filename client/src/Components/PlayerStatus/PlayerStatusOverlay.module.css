@@ -9,7 +9,6 @@
 }
 
 .player-status-overlay {
-  display: flex;
   position: absolute;
   width: 70%;
   height: 100%;
@@ -29,12 +28,8 @@
 }
 
 .player-card-badge {
-  display: flex;
   position: relative;
-  margin: 0 auto;
-  justify-content: center;
-  align-items: center;
-  left: 10%;
-  /* top: 0%; */
-  transform: scale(0.8);
+  left: -5%;
+  top: 30%;
+  max-width: 200px;
 }

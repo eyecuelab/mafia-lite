@@ -63,7 +63,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, soc
 	};
 
 	return (
-		<ul className={styles.playerListContainer}>
+		<ul className={isLobby ? styles.playerListContainer : styles.playerListGameContainer}>
 			<>
 				{players?.map((player: Player) => {
 					const numberOfVotes = getPlayerVotes(player.id);

@@ -1,5 +1,5 @@
 import styles from "./PlayerStatusOverlay.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const arrayOfImages = [
 	"assets/images/ui/image_104.png",
@@ -27,8 +27,13 @@ const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string | 
 	const [ renderBadge, setRenderBadge ] = useState(false);
 	const [ badgeImagePath, setBadgeImagePath ] = useState(getBadgeImage(playerStatus));
 
+	useEffect(() => {
+		setBadgeImagePath(getBadgeImage(playerStatus));
+	}, [playerStatus]);
+
 	const cursorHovering = (entered: boolean) => {
-		if (!playerStatus) {
+		if (!playerStatus || playerStatus === "alive") {
+			console.log(playerStatus);
 			if (entered) {
 				setRenderBadge(true);
 				setBadgeImagePath(getBadgeImage("accused"));
@@ -36,14 +41,15 @@ const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string | 
 				setRenderBadge(false);
 			}
 		}
+		
 	};
-	
+
 	const cardStyle = isMain ? styles["main-player-status-overlay"] : styles["player-status-overlay"];
 	const imageStyle = isMain ? styles["main-player-card-badge"] : styles["player-card-badge"];
 
 	return (
 		<div className={cardStyle} onMouseEnter={() => cursorHovering(true)} onMouseLeave={() => cursorHovering(false)}>
-			{renderBadge && <img className={imageStyle} src={`./src/${badgeImagePath}`} alt={"Player Status Badge"} />}
+			{renderBadge || playerStatus !== "alive" ? <img className={imageStyle} src={`./src/${badgeImagePath}`} alt={"Player Status Badge"} /> : null}
 		</div>
 	);
 };
