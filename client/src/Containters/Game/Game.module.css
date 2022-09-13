@@ -1,3 +1,4 @@
+
 @import url('https://fonts.cdnfonts.com/css/bebas-neue');
 
 .team {
@@ -18,4 +19,40 @@
 
 .investigator {
 	background-color: rgb(0, 130, 209, 0.7);
+}
+.gameScreenContainer {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+.titleImage {
+	width: 25vw;
+    display: block;
+    float: left;
+    margin-left: 1vw;
+    margin-bottom: 2vh;
+}
+.playerContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    height: 100%;
+}
+.gameScreenImage {
+    background: url(../../assets/images/image_16.png);
+    background-size: cover;
+}
+.gameScreen {
+    width: 55%;
+    margin: 0; 
+}
+.voteResults {
+    background: url(../../assets/images/image_23.png);
+    background-size: cover; 
+    width: 50%;
+    display: flex;
+    height: 100%;
+    margin: auto;
+
 }

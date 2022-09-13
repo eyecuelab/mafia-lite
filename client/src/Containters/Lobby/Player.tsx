@@ -11,6 +11,7 @@ type PlayerProps = {
   handleCastVote: (playerId: number) => void,
 }
 
+
 const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes }) => {
 	const [isAccused, setIsAccused] = useState(false);  
 
@@ -31,12 +32,12 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 					}
 					handleAccusePlayer();
 				}} >
-				{isAccused ?
-					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> :
-					<PlayerCard player={player} isLobby={isLobby} />
-				}
+				{/* {isAccused ?
+					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> : */}
+				<PlayerCard player={player} isLobby={isLobby}/>
+				{/* } */}
 				{!!numberOfVotes && (
-					<h5>Votes: {numberOfVotes}</h5>
+					<h5 className={styles.voteCounter}>Votes: {numberOfVotes}</h5>
 				)}
 			</div>
 		</>

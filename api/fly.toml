@@ -42,4 +42,4 @@ processes = []
     timeout = "2s"
 
   [deploy]
-    release_command = "npx prisma migrate deploy"
+    release_command = "npx prisma migrate reset --force"

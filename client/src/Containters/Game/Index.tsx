@@ -10,6 +10,7 @@ import NightTime from "./NightTime";
 import style from "./Game.module.css";
 
 
+
 type VotePayload = {
 	gameId: number,
 	candidateId: number,
@@ -124,7 +125,6 @@ function Game(): JSX.Element {
 	
 	return (
 		<React.Fragment>
-			<h1>{isDay ? "Day" : "Night"}</h1>
 			<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
 			{gameData ?  (
 				(
@@ -132,6 +132,7 @@ function Game(): JSX.Element {
 				)
 			) : <p>...loading</p>}
 		</React.Fragment>
+
 	);
 }
 

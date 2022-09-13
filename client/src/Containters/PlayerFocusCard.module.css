@@ -12,6 +12,12 @@
 
 .playerFocusImage {
 	width: 200px;
+    width: 250px;
+   position: relative;
+}
+.playerFocusAvatar {
+    position: relative;
+
 }
 
 .playerFocusName { 
@@ -23,4 +29,26 @@
 	font-size: 36px;
 	font-weight: bold;
 	font-family: 'Bebas Neue', sans-serif;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: 300;
+    margin: 0;
+}
+.playerFocusStatus {
+    width: 190px;
+    position: absolute;
+    left: 18%;
+    bottom: 0px;
+}
+.playerFocusDetails {
+    padding: 12px 3px;
+    font-size: 26px;
+    font-family: 'Bebas Neue';
+    font-weight: bold;
+    margin: 0;
+}
+.playerFocusTextContainer {
+    margin-top: 1.5vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 5px;
 }

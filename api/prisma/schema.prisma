@@ -8,14 +8,14 @@ datasource db {
 }
 
 model Game {
-  id        Int           @id @default(autoincrement())
-  createdAt DateTime      @default(now())
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
   players   Player[]
   rounds    Round[]
   endedAt   DateTime?
-  gameCode  String        @unique
-	name      String
-	size      Int
+  gameCode  String    @unique
+  name      String
+  size      Int
 }
 
 model Role {
@@ -37,26 +37,33 @@ model Player {
   gameId      Int
   roundDied   Round?  @relation(fields: [roundDiedId], references: [id])
   roundDiedId Int?
-	status			String  @default("alive")
+  status      String  @default("alive")
   avatar      String
 }
 
 model Round {
-  id          Int       @id @default(autoincrement())
-  game        Game      @relation(fields: [gameId], references: [id])
-  gameId      Int       @unique
-  roundNumber Int
-  currentPhase String
-  createdAt   DateTime  @default(now())
-  died        Player[]
-  endedAt     DateTime?
+  id           Int       @id @default(autoincrement())
+  game         Game      @relation(fields: [gameId], references: [id])
+  gameId       Int       @unique
+  roundNumber  Int
+  currentPhase String    @default("day")
+  createdAt    DateTime  @default(now())
+  died         Player[]
+  endedAt      DateTime?
 }
 
 model Vote {
-  id          Int       @id @default(autoincrement())
-  gameId      Int       
+  id          Int    @id @default(autoincrement())
+  gameId      Int
   roundNumber Int
-  voterId     Int   
+  voterId     Int
   candidateId Int
   phase       String
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }

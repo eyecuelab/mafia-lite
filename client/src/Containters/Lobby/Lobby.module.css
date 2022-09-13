@@ -60,9 +60,19 @@
     overflow: auto;
     overflow-x: hidden;
 }
+.playerListGameContainer {
+	display: grid;
+	gap: 30px 10px;
+	grid-template-columns: 1fr 1fr;
+	width: 100%;
+	padding: 0;
+}
 .playerListInnerWrap{
 	display: flex;
 	flex-direction: column;
+	justify-content: left;
+	margin: 0;
+	padding: 0;
 	position: relative;
 }
 
@@ -127,9 +137,9 @@
 	margin: 0;
 }
 .playerDetails {
-	margin-top: 10px;
 	display: flex;
 	flex-direction: column;
+	height: 100%;
 }
 .gameCodeInput {
 	background-color: #000000;
@@ -270,6 +280,25 @@
 .listHeader {
   font-size: 20px;
   font-weight: 400;
+}
+
+.voteCounter {
+	position: absolute;
+	/* right: -13%; */
+	bottom: -20%;
+	font-size: 25px;
+	width: 90%;
+	margin: auto;
+	font-family: 'American Typewriter', sans-serif;
+	color: #0083D1;
+	font-weight: 700;
+}
+
+.playerStatusOverlayImage {
+	position: absolute;
+	left: 20%;
+	top: 30%;
+	max-width: 200px;
 }
 
   
