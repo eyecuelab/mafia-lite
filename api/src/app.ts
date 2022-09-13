@@ -17,7 +17,6 @@ const environment = app.get('env')
 app.use(cors({ origin: [
   'http://localhost:5173',
   'https://nameless-terror-client.fly.dev',
-  'https://nameless-terror-api.fly.dev/',
 ], credentials: true }));
 
 
