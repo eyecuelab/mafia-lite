@@ -1,44 +1,50 @@
 import styles from "./PlayerStatusOverlay.module.css";
+import { useState } from "react";
 
-const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string, isMain: boolean | null }) => {
+const arrayOfImages = [
+	"assets/images/ui/image_104.png",
+	"assets/images/ui/image_35.png",
+	"assets/images/ui/image_105.png",
+	"assets/images/ui/image_180.png"
+];
 
-	//Pass string to tell which badge to render
-	const updatePlayerStatusBadge = (status: string | null) => {
+const getBadgeImage = (status: string | undefined) => {
+	switch (status) {
+	case "murdered":
+		return arrayOfImages[0];
+	case "accused":
+		return arrayOfImages[1];
+	case "jailed":
+		return arrayOfImages[2];
+	case "terminated":
+		return arrayOfImages[3];
+	default:
+		return "";
+	}
+};
 
-		//Placeholder for now, get array of paths correlated by index
-		const arrayOfImages = [
-			"assets/images/ui/image_104.png",
-			"assets/images/ui/image_35.png",
-			"assets/images/ui/image_105.png",
-			"assets/images/ui/image_180.png"
-		];
+const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string | undefined, isMain: boolean | null }) => {
+	const [ renderBadge, setRenderBadge ] = useState(false);
+	const [ badgeImagePath, setBadgeImagePath ] = useState(getBadgeImage(playerStatus));
 
-		//return image by assigned index
-		const setImgPath = (badgePath: string) => {
-			return <img className={isMain ? styles["main-player-card-badge"] : styles["player-card-badge"]} src={`./src/${badgePath}`} alt={"Player Status Badge"} />;
-		};
-
-		//make selection here
-		switch (status) {
-		case "murdered":
-			return setImgPath(arrayOfImages[0]);
-		case "accused":
-			return setImgPath(arrayOfImages[1]);
-		case "jailed":
-			return setImgPath(arrayOfImages[2]);
-		case "terminated":
-			return setImgPath(arrayOfImages[3]);
-		default:
-			return null;
+	const cursorHovering = (entered: boolean) => {
+		if (!playerStatus) {
+			if (entered) {
+				setRenderBadge(true);
+				setBadgeImagePath(getBadgeImage("accused"));
+			} else {
+				setRenderBadge(false);
+			}
 		}
 	};
+	
+	const cardStyle = isMain ? styles["main-player-status-overlay"] : styles["player-status-overlay"];
+	const imageStyle = isMain ? styles["main-player-card-badge"] : styles["player-card-badge"];
 
 	return (
-		<>
-			<div className={isMain ? styles["main-player-status-overlay"] : styles["player-status-overlay"]}>
-				{playerStatus && updatePlayerStatusBadge(playerStatus)}
-			</div>
-		</>
+		<div className={cardStyle} onMouseEnter={() => cursorHovering(true)} onMouseLeave={() => cursorHovering(false)}>
+			{renderBadge && <img className={imageStyle} src={`./src/${badgeImagePath}`} alt={"Player Status Badge"} />}
+		</div>
 	);
 };
 

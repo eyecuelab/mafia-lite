@@ -32,8 +32,8 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 					handleAccusePlayer();
 				}} >
 				{isAccused ?
-					<PlayerCard player={player} playerStatus={"accused"} isMain={false} /> :
-					<PlayerCard player={player} playerStatus={"alive"} isMain={false} />
+					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> :
+					<PlayerCard player={player} isLobby={isLobby} />
 				}
 				{!!numberOfVotes && (
 					<h5>Votes: {numberOfVotes}</h5>

@@ -80,7 +80,7 @@ const Lobby = (): JSX.Element => {
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>
 						<SubTitle title={"Your Character"} />
-						<PlayerCard player={gameData.thisPlayer} isMain={true} />
+						<PlayerCard player={gameData.thisPlayer} isMain={true} isLobby={true} />
 						<div className={styles.gameCodeInput}>
 							<p>Your game code: {gameData.game.gameCode}</p>
 							<button className={styles.copyButton} onClick={() => copyToClipBoard(gameData.game.gameCode)}>{(codeIsCopied) ? "Copied" : "Copy"} </button>

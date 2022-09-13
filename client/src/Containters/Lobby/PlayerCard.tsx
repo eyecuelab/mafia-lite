@@ -4,11 +4,12 @@ import { Player } from "../../Types/Types";
 
 type propTypes = {
 	player: Player
-	isMain: boolean
-	playerStatus?: string
+	isMain?: boolean
+	playerStatus?: string,
+	isLobby: boolean
 }
 
-const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus }) => {
+const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus, isLobby }) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	/*
@@ -21,7 +22,7 @@ const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus }) => {
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
 				<img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-				<PlayerStatusOverlay isMain={isMain} playerStatus={playerStatus ? playerStatus : "alive"} />
+				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
 					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
