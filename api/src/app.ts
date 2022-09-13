@@ -16,7 +16,8 @@ const environment = app.get('env')
 
 app.use(cors({ origin: [
   'http://localhost:5173',
-  'https://nameless-terror-client.fly.dev'
+  'https://nameless-terror-client.fly.dev',
+  'https://nameless-terror-api.fly.dev/',
 ], credentials: true }));
 
 
@@ -27,12 +28,11 @@ app.use(
     saveUninitialized: true,
     cookie: { 
       secure: environment === 'development' ? false : true,
-      // secure: process.env.SESSION_SECURE === "false" ? false : true,
     },
     store: new PrismaSessionStore(
       new PrismaClient(),
       {
-        checkPeriod: 2 * 60 * 1000,  //ms
+        checkPeriod: 2 * 60 * 1000,  // 2 minutes
         dbRecordIdIsSessionId: true,
         dbRecordIdFunction: undefined,
       }
