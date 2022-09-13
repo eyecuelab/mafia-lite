@@ -3,8 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "prisma generate",
-    "start": "ts-node src/server.ts",
+    "build": "prisma generate && npx tsc",
+    "start": "node dist/src/server.js",
     "dev": "nodemon src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "ts-node prisma/seed.ts"
@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.5",
     "@types/node": "^18.7.6",
     "nodemon": "^2.0.19",
     "prisma": "^4.2.1",
