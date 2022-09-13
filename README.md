@@ -83,11 +83,12 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - You will also need to have your database setup in PostgreSQL
 - To ensure the prisma schema has been updated to PostgreSQL, Run a migration to create your database tables with Prisma Migrate:
     - `npx prisma migrate dev --name init`
+    - `npm run seed` to seed the database with the default roles
 - Also, Prisma Studio is a visual editor for the data in your database. 
   - Run `npx prisma studio` in your terminal.
 ### Required .env Files <a id="required-files"></a>
 
-- In the `/api` directory, create an .env file and insert the following: `DATABASE_URL="postgresql://postgres:yourPasswordGoesHere@localhost:5432/yourDatabaseNameGoesHere?schema=yourSchemaNameGoesHere"`
+- In the `/api` directory, create an .env file and insert the following: `DATABASE_URL="postgresql://postgres:yourPasswordGoesHere@localhost:5432/yourDatabaseNameGoesHere?schema=yourSchemaNameGoesHere"` & `SESSION_SECRET="yourSecretGoesHere"`
 - Then save
 - In the `/client` directory, create an .env file (separate from the previous), and insert the following: `VITE_API_ENDPOINT=http://localhost:3000`
 - Then save
