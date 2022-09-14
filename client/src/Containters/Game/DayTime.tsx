@@ -1,4 +1,3 @@
-import React from "react";
 import PlayerFocusCard from "../PlayerFocusCard";
 import GenericButton from "../../Components/GenericButton";
 import PlayerList from "../Lobby/PlayerList";

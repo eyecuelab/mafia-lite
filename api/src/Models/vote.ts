@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+import { filterPlayerData } from '../Controllers/player';
 import io from '../server';
 import { getPlayerById } from './player';
+import { getRoleById } from './role';
 import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
@@ -36,7 +38,8 @@ const emitVoteResult = async(gameId: number, playerId?: number) => {
     io.in(gameId.toString()).emit('vote_results_tie');
   } else {
     const player = await getPlayerById(playerId);
-    io.in(gameId.toString()).emit('vote_results', player);
+		const filteredPlayer = await filterPlayerData(player.id, player);
+    io.in(gameId.toString()).emit('vote_results', { filteredPlayer });
   }
 }
 

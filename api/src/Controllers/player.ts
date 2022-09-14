@@ -100,7 +100,7 @@ const filterPlayersData = async (playerId: number, players: Player[]) => {
 	return filteredPlayers;
 }
 
-const filterPlayerData = async (playerId: number, player: Player): Promise<filteredPlayer> => {
+export const filterPlayerData = async (playerId: number, player: Player): Promise<filteredPlayer> => {
 	let role = undefined;
 	const requester = await getPlayerById(playerId);
 	const requesterTeam = (await getRoleById(requester.roleId))?.type;

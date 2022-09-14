@@ -29,8 +29,8 @@ const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }:
 
 	const startDay = (gameId: number) => {
 		startDayMutation.mutate(gameId);
-		// alert("start day");
 	};
+
 	return (
 		<div className={styles.gameScreenImage}>
 			<div className={styles.gameScreenContainer}>
