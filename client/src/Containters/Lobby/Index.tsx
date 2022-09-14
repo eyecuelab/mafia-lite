@@ -13,7 +13,6 @@ import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
-import { Player } from "../../Types/Types";
 
 const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 

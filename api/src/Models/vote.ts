@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { filterPlayerData } from '../Controllers/player';
 import io from '../server';
 import { getPlayerById } from './player';
-import { getRoleById } from './role';
 import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
@@ -19,9 +18,10 @@ const createVote = async (gameId: number, phase: string, candidateId: number, vo
 
   const voteTally = await prisma.vote.count({
     where: {
-    gameId: gameId,
-    candidateId: candidateId,
-    roundNumber: roundNumber,
+			gameId: gameId,
+			candidateId: candidateId,
+			roundNumber: roundNumber,
+			phase: phase
     }
   });
 

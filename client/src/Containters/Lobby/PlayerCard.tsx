@@ -4,7 +4,7 @@ import { Player } from "../../Types/Types";
 
 type propTypes = {
 	player: Player
-	playerStatus: string
+	playerStatus?: string
 	isMain?: boolean
 	isLobby: boolean
 	team?: string

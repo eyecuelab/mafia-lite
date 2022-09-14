@@ -53,7 +53,8 @@ function Game(): JSX.Element {
 			});
 
 			socket.on("vote_results_tie", () => {
-				handleGameState({ hasResult: true });
+				handleGameState({ hasResult: true, votingResults: undefined });
+				console.log("line - 58 - Game/Index.tsx");
 				alert("Tie");
 			});
 
@@ -72,8 +73,7 @@ function Game(): JSX.Element {
 				socket.off("start_day");
 			};
 		}
-		
-	}, []);
+	});
 
 	const voteMutation = useMutation(sendVote, {
 		onError: (error) => {

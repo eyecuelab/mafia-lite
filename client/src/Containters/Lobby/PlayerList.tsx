@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
 import styles from "./Lobby.module.css";
 import PlayerCardWrapper from "./Player";
 import { Player } from "../../Types/Types";
-
+import socket from "../../Hooks/WebsocketHook";
 
 type PlayerListProps = {
 	players: Player[],
   isLobby: boolean,
 	castVote?: (candidateId: number) => void,
-	socket?: Socket,
 	phase?: string,
 	team?: string,
 	isAlive?: boolean
@@ -20,7 +18,7 @@ type PlayerVotes = {
   votes: number
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, socket, phase, team, isAlive }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, phase, team, isAlive }) => {
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [voteCast, setVoteCast] = useState<boolean>(false);
 	const initialVotes = players.map((player) => ({ playerId: player.id, votes: 0 }));
@@ -33,7 +31,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, soc
 	}, [players]);
 
 	useEffect(() => {
-		if (socket) {
+		if (!isLobby) {
 			socket.on("vote_cast", (playerId, newTotal) => {
 				setVoteTally((previousTally) => {
 					return previousTally.map((voteTally) => {
@@ -48,12 +46,12 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, soc
 					});
 				});
 			});
-		
+
 			return () => {
 				socket.off("vote_cast");
 			};
 		}
-	}, [socket]);
+	}, [isLobby]);
 
 	const handleCastVote = (playerId: number) => {
 		setVoteCast(true);
