@@ -2,6 +2,7 @@ import { Player } from '@prisma/client';
 import { getGameById } from '../Models/game';
 import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
 import { getRoleById, getRoleByName } from '../Models/role';
+import { getCurrentRoundByGameId } from '../Models/round';
 import Utility from './Utility';
 
 type filteredPlayer = {
@@ -82,7 +83,7 @@ const playerControllers = {
 			const players = await getPlayersByGameId(gameId);
 			const filteredPlayers = await filterPlayersData(playerId, players);
 
-			res.json({game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player))});
+			res.json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound: (await getCurrentRoundByGameId(gameId)) });
 		}
 	}
 }

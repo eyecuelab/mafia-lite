@@ -9,30 +9,21 @@ import DayTime from "./DayTime";
 import NightTime from "./NightTime";
 import style from "./Game.module.css";
 
-
-
 type VotePayload = {
 	gameId: number,
-	candidateId: number,
-	phase: string
+	candidateId: number
 }
 
 type FinishRoundPayload = {
-	gameId: number,
-	phase: string
+	gameId: number
 }
 
 type Verdict = {
 	player: Player,
-	sentence: string,
-	nextPhase: string
+	sentence: string
 }
 
-interface VoteResult {
-	verdict: string
-}
-
-const sendVote = async (vote: VotePayload): Promise<VoteResult> => postData("/vote", vote);
+const sendVote = async (vote: VotePayload): Promise<Verdict> => postData("/vote", vote);
 const finishRound = async (roundData: FinishRoundPayload): Promise<Verdict> => postData("/tallyVote", roundData);
 
 
@@ -95,8 +86,7 @@ function Game(): JSX.Element {
 		if (gameData?.game.id) {
 			voteMutation.mutate({
 				gameId: gameData.game.id,
-				candidateId: candidateId,
-				phase: isDay ? "day" : "night"
+				candidateId: candidateId
 			});
 		}
 	};
@@ -115,8 +105,7 @@ function Game(): JSX.Element {
 	const endRound = () => {
 		if (gameData?.game.id) {
 			finishRoundMutation.mutate({
-				gameId: gameData?.game.id,
-				phase: isDay ? "day" : "night"
+				gameId: gameData?.game.id
 			});
 		}
 	};

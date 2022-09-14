@@ -1,4 +1,3 @@
-import React from "react";
 import socket from "../../Hooks/WebsocketHook";
 import PlayerList from "../Lobby/PlayerList";
 import PlayerFocusCard from "../PlayerFocusCard";

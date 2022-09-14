@@ -12,6 +12,7 @@ export type Round = {
 	id: number
 	gameId: number
 	roundNumber: number
+	currentPhase: string
 	died: Player[]
 }
 
@@ -44,5 +45,6 @@ export type Vote = {
 export interface GameData {
 	game: Game
 	players: Player[]
-	thisPlayer: Player
+	thisPlayer: Player,
+	currentRound: Round
 }

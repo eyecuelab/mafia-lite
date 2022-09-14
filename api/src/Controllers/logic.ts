@@ -19,10 +19,7 @@ const logicControllers = {
 
 			await createNewRound(1, gameId);
 
-			//Assign out Roles
-			//May want to randomize players array before looping. 
 			const players = await getPlayersByGameId((gameId));
-			console.log("Players", players)
 			const roles = await assignRoles(players.length);
 			for (let i = 0; i < players.length; i++) {
 				updatePlayerById(players[i].id, roles[i]);

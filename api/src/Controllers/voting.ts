@@ -2,21 +2,24 @@ import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
 import { unjailPrevJailedPlayer, updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
+import { Vote } from "@prisma/client";
 
-type voteResult = {
+type VoteResult = {
   id: number
   count: number
 }
 
 const votingControllers = {
   async castVote(req: any, res: any) {
-		const { gameId, candidateId, phase } = req.body;
+		const { gameId, candidateId } = req.body;
     const player = await getPlayerById(req.session.playerId);
+
     if(req.session.playerId === undefined || player.gameId !== gameId) {
       res.status(401).json({error : "Not allowed to vote on this game"});
     } else {
 			const currentRound = await getCurrentRoundByGameId(gameId);
-			const votes = await getAllVotes(gameId, currentRound.id, phase);
+			const votes = await getAllVotes(gameId, currentRound.id, currentRound.currentPhase);
+
 			let voted = false;
 			votes.forEach((vote) => {
 				if(vote.voterId === player.id)
@@ -25,21 +28,22 @@ const votingControllers = {
 				}
 			})
 			if (voted) {
-				res.status(500).json({error : "You have already voted"});
+				res.status(500).json({error: "You have already voted"});
 			} else {
-				const vote = await createVote(gameId, phase, candidateId, player.id, currentRound.roundNumber);
-				res.status(201).json({vote});
+				const vote = await createVote(gameId, currentRound.currentPhase, candidateId, player.id, currentRound.roundNumber);
+				res.status(201).json({ vote });
 			}
 		}
 	},
 
   async tallyVotes(req: any, res: any) {
-    const { gameId, phase } = req.body;
-    //Tally Votes
+    const { gameId } = req.body;
+    
 		const round = await getCurrentRoundByGameId(gameId);
-    const votes = await getAllVotes(gameId, round.id, phase);
+    const votes = await getAllVotes(gameId, round.id, round.currentPhase);
     const players = await getPlayersByGameId(gameId);
-    let voteResults: voteResult[] = [];
+
+		let voteResults: VoteResult[] = [];
     players.forEach((player) => {
       let playerVoteCount : number = 0;
       votes.forEach((vote) => {
@@ -49,7 +53,7 @@ const votingControllers = {
       voteResults.push(voteResult)
     })
 
-    voteResults.sort((a: voteResult, b: voteResult) => {
+    voteResults.sort((a: VoteResult, b: VoteResult) => {
       return b.count - a.count;
     })
 
@@ -65,7 +69,7 @@ const votingControllers = {
     else {
 			await unjailPrevJailedPlayer(gameId);
       res.status(200).json({ sentence: "Tie" });
-			await emitVoteResult(0, gameId);
+			await emitVoteResult(gameId);
     }
   
     // res.status(500).json({error : "Something went wrong"}) 
