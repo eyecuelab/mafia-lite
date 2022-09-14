@@ -34,7 +34,7 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 				id={String(player.id)}
 				className={styles.playerListInnerWrap}
 				onClick={() => {
-					if (!isLobby || !voteCast && canVote) {
+					if (!isLobby && !voteCast && canVote) {
 						handleAccusePlayer();
 					}
 				}} >
