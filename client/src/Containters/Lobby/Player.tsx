@@ -18,6 +18,7 @@ type PlayerProps = {
 const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team, isAlive }) => {
 	const [isAccused, setIsAccused] = useState(false); 
 	const [canVote, setCanVote] = useState(true);
+	const [playerStatus, setPlayerStatus] = useState("alive");
 
 	useEffect(() => {
 		setCanVote(!!(isAlive) && (phase === "day" || team === "cultist"));
@@ -26,6 +27,12 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 	const handleAccusePlayer = () => {
 		handleCastVote(player.id);
 		setIsAccused(true);
+
+		if (phase === "day") {
+			setPlayerStatus("accused");
+		} else {
+			setPlayerStatus("murder");
+		}
 	};
 
 	return (
@@ -40,7 +47,7 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 				}} >
 				{/* {isAccused ?
 					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> : */}
-				<PlayerCard player={player} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
+				<PlayerCard player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
 				{(canVote) ? (!!numberOfVotes && (
 					<h5 className={styles.voteCounter}>Votes: {numberOfVotes}</h5>
 				)) : null }
