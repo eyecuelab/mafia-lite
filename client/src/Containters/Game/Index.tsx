@@ -26,11 +26,10 @@ type Verdict = {
 const sendVote = async (vote: VotePayload): Promise<Verdict> => postData("/vote", vote);
 const finishRound = async (roundData: FinishRoundPayload): Promise<Verdict> => postData("/tallyVote", roundData);
 
-
 function Game(): JSX.Element {
 	const { callModal } = useModal();
 	const [hasResult, setHasResult] = useState(false);
-	const [votingResults, setVotingResults] = useState();
+	const [votingResults, setVotingResults] = useState<Player>();
 	const [isDay, setIsDay] = useState(true);
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const queryClient = useQueryClient();
@@ -39,27 +38,31 @@ function Game(): JSX.Element {
 		callModal(gameQueryError.message);
 	}
 
+	const handleGameState = ({ votingResults, hasResult, isDay }: { votingResults?: Player, hasResult: boolean, isDay?: boolean }) => {
+		if (votingResults) { setVotingResults(votingResults); }
+		if (isDay !== undefined) { setIsDay(isDay); }
+		setHasResult(hasResult);
+
+		queryClient.invalidateQueries(["games"]);
+	};
+
 	useEffect(() => {
 		if (socket) {
-			socket.on("vote_results", (player) => {
-				console.log("recieve results");
-				setVotingResults(player);
-				setHasResult(true);
+			socket.on("vote_results", (player: Player) => {
+				handleGameState({ votingResults: player, hasResult: true });
 			});
 
 			socket.on("vote_results_tie", () => {
-				setHasResult(true);
+				handleGameState({ hasResult: true });
 				alert("Tie");
 			});
 
 			socket.on("start_night", () => {
-				setHasResult(false);
-				setIsDay(false);
+				handleGameState({ hasResult: false, isDay: false });
 			});
 
 			socket.on("start_day", () => {
-				setHasResult(false);
-				setIsDay(true);
+				handleGameState({ hasResult: false, isDay: true });
 			});
 		
 			return () => {

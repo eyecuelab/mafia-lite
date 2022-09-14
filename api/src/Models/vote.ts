@@ -7,50 +7,51 @@ import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
 const createVote = async (gameId: number, phase: string, candidateId: number, voterId: number, roundNumber: number) => {
-    const vote = await prisma.vote.create({
-      data: {
-        gameId : gameId,
-        voterId: voterId,
-        candidateId: candidateId,
-        roundNumber: roundNumber,
-        phase: phase
-      }
-    });
-
-    const voteTally = await prisma.vote.count({
-      where: {
-        gameId: gameId,
-        candidateId: candidateId,
-        roundNumber: roundNumber,
-      }
-    });
-
-    if (voteTally) {
-			console.log(`casting vote -> ${candidateId}, total: ${voteTally}`);
-      io.in(gameId.toString()).emit('vote_cast', candidateId, voteTally);
+  const vote = await prisma.vote.create({
+    data: {
+    gameId : gameId,
+    voterId: voterId,
+    candidateId: candidateId,
+    roundNumber: roundNumber,
+    phase: phase
     }
+  });
 
-    return vote;
+  const voteTally = await prisma.vote.count({
+    where: {
+    gameId: gameId,
+    candidateId: candidateId,
+    roundNumber: roundNumber,
+    }
+  });
+
+  if (voteTally) {
+		console.log(`casting vote -> ${candidateId}, total: ${voteTally}`);
+    io.in(gameId.toString()).emit('vote_cast', candidateId, voteTally);
   }
+
+	return vote;
+}
 
 const emitVoteResult = async(gameId: number, playerId?: number) => {
   if (!playerId) {
-    io.in(gameId.toString()).emit('vote_results_tie');
+  	io.in(gameId.toString()).emit('vote_results_tie');
   } else {
-    const player = await getPlayerById(playerId);
+  	const player = await getPlayerById(playerId);
 		const filteredPlayer = await filterPlayerData(player.id, player);
-    io.in(gameId.toString()).emit('vote_results', { filteredPlayer });
+  	io.in(gameId.toString()).emit('vote_results', filteredPlayer);
   }
 }
 
 const getAllVotes = async (gameId: number, roundId: number, phase: string) => {
-    const round = await getRoundById(roundId)
-    return await prisma.vote.findMany({
-        where :{
-            gameId : Number(gameId),
-            roundNumber : round.roundNumber,
-            phase : phase
-        }
-    })
+  const round = await getRoundById(roundId)
+  return await prisma.vote.findMany({
+    where :{
+      gameId : Number(gameId),
+      roundNumber : round.roundNumber,
+      phase : phase
+    }
+  })
 }
-export {createVote, getAllVotes, emitVoteResult}
+
+export {createVote, getAllVotes, emitVoteResult};

@@ -12,7 +12,6 @@ import titleImg from "../../assets/images/Title.png";
 const beginDay = async (gameId : number): Promise<void> => postData("/startDay", { gameId });
 
 const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }: { gameData: GameData, hasResult: boolean, votingResults?: Player, finishVote: (candidateId: number) => void, endRound: () => void }) => {
-	console.log(gameData);
 	const queryClient = useQueryClient();
 	const { callModal } = useModal();
 
