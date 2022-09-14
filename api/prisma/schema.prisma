@@ -44,7 +44,7 @@ model Player {
 model Round {
   id           Int       @id @default(autoincrement())
   game         Game      @relation(fields: [gameId], references: [id])
-  gameId       Int       @unique
+  gameId       Int
   roundNumber  Int
   currentPhase String    @default("day")
   createdAt    DateTime  @default(now())

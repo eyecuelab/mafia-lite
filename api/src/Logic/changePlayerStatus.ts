@@ -1,5 +1,5 @@
 import { Player } from "@prisma/client";
-import { getJailedPlayer, updatePlayerStatus } from "../Models/player";
+import { getJailedPlayer, getPlayerById, updatePlayerStatus } from "../Models/player";
 import { getRoleById } from "../Models/role";
 import { getCurrentRoundByGameId } from "../Models/round";
 
@@ -20,16 +20,17 @@ const getSentence = async (player: Player, phase: string) => {
 	}
 };
 
-const updateEndOfRoundStatus = async (gameId: number, accused: Player) => {
+const updateEndOfRoundStatus = async (gameId: number, accusedId: number) => {
 	const round = await getCurrentRoundByGameId(gameId);
 	if (round.currentPhase === "day") {
 		await unjailPrevJailedPlayer(gameId);
 	}
 	
+	const accused = await getPlayerById(accusedId);
 	const sentence = await getSentence(accused, round.currentPhase);
-	const player = await updatePlayerStatus(accused.id, (sentence));
+	const updatedPlayer = await updatePlayerStatus(accused.id, (sentence));
 
-	return { player, sentence };
+	return { updatedPlayer, sentence };
 }
 
 const unjailPrevJailedPlayer = async (gameId: number) => {
