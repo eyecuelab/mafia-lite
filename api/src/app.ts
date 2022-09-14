@@ -18,7 +18,8 @@ console.log("🚀 ~ file: app.ts ~ line 17 ~ environment", environment)
 
 app.use(cors({ origin: [
   'http://localhost:5173',
-  'https://nameless-terror-client.fly.dev'
+  'https://nameless-terror-client.fly.dev',
+  'https://nameless-terror-api.fly.dev',
 ], credentials: true }));
 
 const secret = process.env.SESSION_SECRET || 'default-app-secret';
