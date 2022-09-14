@@ -3,12 +3,11 @@ import { getPlayerById } from './player';
 const prisma = new PrismaClient();
 
 const createNewRound = async (roundNumber: number, gameId: number) => {
-  const currentPhase = "DAY"
+
 	return await prisma.round.create({
 		data: {
 			gameId,
-			roundNumber,
-      currentPhase, 
+			roundNumber
 		}
 	});
 }
@@ -57,7 +56,7 @@ const updateToNightPhase = async (currentRoundId: number) => {
   return await prisma.round.update({
     where: { id: currentRoundId },
     data: {
-      currentPhase : "NIGHT"
+      currentPhase : "night"
     }
   });
 }

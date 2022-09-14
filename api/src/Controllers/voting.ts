@@ -2,7 +2,6 @@ import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
 import { unjailPrevJailedPlayer, updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
-import { Vote } from "@prisma/client";
 
 type VoteResult = {
   id: number
@@ -61,7 +60,7 @@ const votingControllers = {
       const player = await getPlayerById(voteResults[0].id);
 			try {
 				res.status(200).json((await updateEndOfRoundStatus(gameId, player)));
-				await emitVoteResult(voteResults[0].id, gameId);
+				await emitVoteResult(gameId, voteResults[0].id);
 			} catch (error) {
 				res.status(500).json({ error });
 			}

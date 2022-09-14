@@ -32,7 +32,6 @@ function Game(): JSX.Element {
 	const [hasResult, setHasResult] = useState(false);
 	const [votingResults, setVotingResults] = useState();
 	const [isDay, setIsDay] = useState(true);
-
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const queryClient = useQueryClient();
 
@@ -43,6 +42,7 @@ function Game(): JSX.Element {
 	useEffect(() => {
 		if (socket) {
 			socket.on("vote_results", (player) => {
+				console.log("recieve results");
 				setVotingResults(player);
 				setHasResult(true);
 			});

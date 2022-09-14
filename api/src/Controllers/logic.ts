@@ -4,6 +4,7 @@ import assignRoles from "../Logic/assignRoles";
 import io from "../server";
 import { createNewRound, updateToNightPhase, getCurrentRoundByGameId } from "../Models/round";
 import { emitStartNight } from "../Models/logic";
+import { getRolesbyType } from "../Models/role";
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
@@ -21,8 +22,14 @@ const logicControllers = {
 
 			const players = await getPlayersByGameId((gameId));
 			const roles = await assignRoles(players.length);
+
+			if (process.env.FORCE_CULTIST === "true") {
+				const cultistRoles = await getRolesbyType("cultist");
+				roles[0] = cultistRoles[0].id;
+			}
+
 			for (let i = 0; i < players.length; i++) {
-				updatePlayerById(players[i].id, roles[i]);
+				await updatePlayerById(players[i].id, roles[i]);
 			}
 
 			res.json({ players: (await getPlayersByGameId(gameId)) });

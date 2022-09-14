@@ -5,25 +5,28 @@ const arrayOfImages = [
 	"assets/images/ui/image_104.png",
 	"assets/images/ui/image_35.png",
 	"assets/images/ui/image_105.png",
-	"assets/images/ui/image_180.png"
+	"assets/images/ui/image_180.png",
+	"assets/images/ui/image_51.png"
 ];
 
 const getBadgeImage = (status: string | undefined) => {
 	switch (status) {
-	case "murdered":
-		return arrayOfImages[0];
-	case "accused":
-		return arrayOfImages[1];
-	case "jailed":
-		return arrayOfImages[2];
-	case "terminated":
-		return arrayOfImages[3];
-	default:
-		return "";
+		case "murdered":
+			return arrayOfImages[0];
+		case "accused":
+			return arrayOfImages[1];
+		case "jailed":
+			return arrayOfImages[2];
+		case "terminated":
+			return arrayOfImages[3];
+		case "murder":
+			return arrayOfImages[4];
+		default:
+			return "";
 	}
 };
 
-const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerStatus: string | undefined, isMain: boolean | null, phase: string, canVote: boolean }) => {
+const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerStatus: string | undefined, isMain: boolean | null, phase: string | undefined, canVote: boolean }) => {
 	const [ renderBadge, setRenderBadge ] = useState(false);
 	const [ badgeImagePath, setBadgeImagePath ] = useState(getBadgeImage(playerStatus));
 
@@ -37,7 +40,7 @@ const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerS
 				console.log(playerStatus);
 				if (entered) {
 					setRenderBadge(true);
-					(phase === "day") ? setBadgeImagePath(getBadgeImage("accused")) : setBadgeImagePath(getBadgeImage("murdered"));
+					(phase === "day") ? setBadgeImagePath(getBadgeImage("accused")) : setBadgeImagePath(getBadgeImage("murder"));
 				} else {
 					setRenderBadge(false);
 				}

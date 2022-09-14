@@ -38,7 +38,7 @@ const DayTime = ({ gameData, hasResult, votingResults, finishVote, endRound }: {
 				<div className={styles.gameScreen}>
 					<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 					<h1>Day</h1>
-					{ gameData && gameData.thisPlayer.team ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} team={gameData.thisPlayer.team} phase={"day"} /> : <p>...loading</p> }
+					{gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} team={gameData.thisPlayer.team} phase={"day"} isAlive={gameData.thisPlayer.status === "alive"} /> : <p>...loading</p> }
 					{hasResult ? <GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
 				<div className={styles.voteResults}>

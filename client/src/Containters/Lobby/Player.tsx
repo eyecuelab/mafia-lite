@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlayerCard from "./PlayerCard";
 import { Player } from "../../Types/Types";
 import styles from "./Lobby.module.css";
@@ -9,15 +9,20 @@ type PlayerProps = {
   voteCast: boolean;
   numberOfVotes: number;
   handleCastVote: (playerId: number) => void,
-	phase: string,
-	team: string
+	phase?: string,
+	team?: string,
+	isAlive?: boolean
 }
 
 
-const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team }) => {
-	const [isAccused, setIsAccused] = useState(false);  
+const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team, isAlive }) => {
+	const [isAccused, setIsAccused] = useState(false); 
+	const [canVote, setCanVote] = useState(true);
 
-	const canVote = (phase === "night" && team ==="investigator") ? false : true;
+	useEffect(() => {
+		setCanVote(!!(isAlive) && (phase === "day" || team === "cultist"));
+	}, [isAlive, phase, team]);
+
 	const handleAccusePlayer = () => {
 		handleCastVote(player.id);
 		setIsAccused(true);

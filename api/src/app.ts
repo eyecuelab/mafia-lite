@@ -14,6 +14,7 @@ const session = require("express-session")
 const app = express();
 
 const environment = app.get('env');
+console.log("🚀 ~ file: app.ts ~ line 17 ~ environment", environment)
 
 app.use(cors({ origin: [
   'http://localhost:5173',
@@ -28,7 +29,7 @@ const sessionOptions: SessionOptions = {
   saveUninitialized: true,
   cookie: { 
     secure: environment === 'production' ? true : false,
-    sameSite: 'none',
+    sameSite: environment === 'production' ? 'none' : 'lax',
   },
   store: new PrismaSessionStore(
     new PrismaClient(),

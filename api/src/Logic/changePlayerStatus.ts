@@ -1,11 +1,16 @@
 import { Player } from "@prisma/client";
 import { getJailedPlayer, updatePlayerStatus } from "../Models/player";
 import { getRoleById } from "../Models/role";
+import { getCurrentRoundByGameId } from "../Models/round";
 
-const getSentence = async (player: Player) => {
+const getSentence = async (player: Player, phase: string) => {
 	const role = await getRoleById(player.roleId);
 	if (!role) {
 		throw new Error("Role not found");
+	}
+
+	if (phase === "night") {
+		return "murdered";
 	}
 
 	switch (role.type) {
@@ -16,9 +21,12 @@ const getSentence = async (player: Player) => {
 };
 
 const updateEndOfRoundStatus = async (gameId: number, accused: Player) => {
-	await unjailPrevJailedPlayer(gameId);
+	const round = await getCurrentRoundByGameId(gameId);
+	if (round.currentPhase === "day") {
+		await unjailPrevJailedPlayer(gameId);
+	}
 	
-	const sentence = await getSentence(accused);
+	const sentence = await getSentence(accused, round.currentPhase);
 	const player = await updatePlayerStatus(accused.id, (sentence));
 
 	return { player, sentence };

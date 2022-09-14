@@ -5,16 +5,15 @@ import { Player } from "../../Types/Types";
 type propTypes = {
 	player: Player
 	isMain?: boolean
-	playerStatus?: string,
-	isLobby: boolean,
-	team: string,
-	canVote: boolean,
-	phase: string
+	isLobby: boolean
+	team?: string
+	canVote: boolean
+	phase?: string
 }
 
 const cultistBadge = "./src/assets/images/ui/Cultist_Badge.png";
 
-const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus, isLobby, team, canVote, phase}) => {
+const PlayerCard: React.FC<propTypes> = ({ player, isMain, isLobby, team, canVote, phase}) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	/*
