@@ -66,7 +66,8 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - _[Prisma](https://www.prisma.io/)_
 - _[PostgreSQL](https://www.postgresql.org/)_
 - _[ExpressJs](https://expressjs.com/)_
-- _[Express-Session](https://www.npmjs.com/package/express-session/v/1.17.3)_
+- _[Express-Session](https://www.npmjs.com/package/express-session/v/1.17.3)_+
+- _[Prisma-session-store](https://www.npmjs.com/package/@quixo3/prisma-session-store)_
 - _[ViteJS](https://vitejs.dev/)_
 - _[Nodemon](https://www.npmjs.com/package/nodemon)_
 - _[Fly.IO](https://fly.io/)_
