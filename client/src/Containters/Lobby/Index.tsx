@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
@@ -11,18 +11,17 @@ import PlayerCard from "./PlayerCard";
 import PlayerList from "./PlayerList";
 import questionMark from "../../assets/images/question_mark.png";
 import { useModal } from "../../ModalContext";
-//import io, { Socket } from "socket.io-client";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
+import { Player } from "../../Types/Types";
 
 const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
 
-//const socket: Socket = io(API_ENDPOINT);
-
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 
@@ -38,6 +37,10 @@ const Lobby = (): JSX.Element => {
 	useEffect(() => {
 		socket.on("game_start", () => {
 			navigate("/game");
+		});
+
+		socket.on("player_joined_lobby", () => {
+			queryClient.invalidateQueries(["games"]);
 		});
 
 		return () => { socket.off("game_start"); };

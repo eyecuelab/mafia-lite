@@ -3,6 +3,7 @@ import { getGameById } from '../Models/game';
 import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
 import { getRoleById, getRoleByName } from '../Models/role';
 import { getCurrentRoundByGameId } from '../Models/round';
+import io from '../server';
 import Utility from './Utility';
 
 type filteredPlayer = {
@@ -22,8 +23,9 @@ const playerControllers = {
 
 		if (Utility.validateInputs(res, "Invalid body parameters", gameId, name, isHost)) {
 			const newPlayer = await createPlayer(gameId, isHost, name);
-
 			req.session.playerId = newPlayer.id;
+
+			io.to(gameId.toString()).emit("player_joined_lobby");
 			res.status(201).json(newPlayer);
 		}
 	},
