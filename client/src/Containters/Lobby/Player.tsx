@@ -9,12 +9,15 @@ type PlayerProps = {
   voteCast: boolean;
   numberOfVotes: number;
   handleCastVote: (playerId: number) => void,
+	phase: string,
+	team: string
 }
 
 
-const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes }) => {
+const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team }) => {
 	const [isAccused, setIsAccused] = useState(false);  
 
+	const canVote = (phase === "night" && team ==="investigator") ? false : true;
 	const handleAccusePlayer = () => {
 		handleCastVote(player.id);
 		setIsAccused(true);
@@ -26,19 +29,16 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 				id={String(player.id)}
 				className={styles.playerListInnerWrap}
 				onClick={() => {
-					if (isLobby || voteCast) {
-						console.log("Click disabled, votes already casted, or disabled!");
-						return;
+					if (!isLobby || !voteCast && canVote) {
+						handleAccusePlayer();
 					}
-					handleAccusePlayer();
 				}} >
 				{/* {isAccused ?
 					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> : */}
-				<PlayerCard player={player} isLobby={isLobby}/>
-				{/* } */}
-				{!!numberOfVotes && (
+				<PlayerCard player={player} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
+				{(canVote) ? (!!numberOfVotes && (
 					<h5 className={styles.voteCounter}>Votes: {numberOfVotes}</h5>
-				)}
+				)) : null }
 			</div>
 		</>
 	);

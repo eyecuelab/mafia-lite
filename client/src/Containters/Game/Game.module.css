@@ -54,5 +54,12 @@
     display: flex;
     height: 100%;
     margin: auto;
-
+}
+.voteResultsNight {
+    background: url(../../assets/images/image_34.png);
+    background-size: cover; 
+    width: 50%;
+    display: flex;
+    height: 100%;
+    margin: auto;
 }

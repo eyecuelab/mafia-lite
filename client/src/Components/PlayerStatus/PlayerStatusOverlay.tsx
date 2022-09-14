@@ -23,7 +23,7 @@ const getBadgeImage = (status: string | undefined) => {
 	}
 };
 
-const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string | undefined, isMain: boolean | null }) => {
+const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerStatus: string | undefined, isMain: boolean | null, phase: string, canVote: boolean }) => {
 	const [ renderBadge, setRenderBadge ] = useState(false);
 	const [ badgeImagePath, setBadgeImagePath ] = useState(getBadgeImage(playerStatus));
 
@@ -32,16 +32,17 @@ const PlayerStatusOverlay = ({ playerStatus, isMain }: { playerStatus: string | 
 	}, [playerStatus]);
 
 	const cursorHovering = (entered: boolean) => {
-		if (!playerStatus || playerStatus === "alive") {
-			console.log(playerStatus);
-			if (entered) {
-				setRenderBadge(true);
-				setBadgeImagePath(getBadgeImage("accused"));
-			} else {
-				setRenderBadge(false);
+		if(canVote) {
+			if (!playerStatus || playerStatus === "alive") {
+				console.log(playerStatus);
+				if (entered) {
+					setRenderBadge(true);
+					(phase === "day") ? setBadgeImagePath(getBadgeImage("accused")) : setBadgeImagePath(getBadgeImage("murdered"));
+				} else {
+					setRenderBadge(false);
+				}
 			}
 		}
-		
 	};
 
 	const cardStyle = isMain ? styles["main-player-status-overlay"] : styles["player-status-overlay"];

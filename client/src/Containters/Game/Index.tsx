@@ -55,13 +55,11 @@ function Game(): JSX.Element {
 			socket.on("start_night", () => {
 				setHasResult(false);
 				setIsDay(false);
-				alert("Starting Night");
 			});
 
 			socket.on("start_day", () => {
 				setHasResult(false);
 				setIsDay(true);
-				alert("Starting Day");
 			});
 		
 			return () => {

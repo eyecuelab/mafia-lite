@@ -12,6 +12,7 @@ import titleImg from "../../assets/images/Title.png";
 const beginDay = async (gameId : number): Promise<void> => postData("/startDay", { gameId });
 
 const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }: { gameData: GameData, hasResult: boolean, votingResults?: Player, finishVote: (candidateId: number) => void, endRound: () => void }) => {
+	console.log(gameData);
 	const queryClient = useQueryClient();
 	const { callModal } = useModal();
 
@@ -27,20 +28,19 @@ const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }:
 	});
 
 	const startDay = (gameId: number) => {
-		//startDayMutation.mutate(gameId);
-		alert("start day");
+		startDayMutation.mutate(gameId);
+		// alert("start day");
 	};
-
 	return (
 		<div className={styles.gameScreenImage}>
 			<div className={styles.gameScreenContainer}>
 				<div className={styles.gameScreen}>
 					<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 					<h1>Night</h1>
-					{ gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} /> : <p>...loading</p> }
+					{ gameData && gameData.thisPlayer.team ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} socket={socket} team={gameData.thisPlayer.team} phase={"night"} /> : <p>...loading</p> }
 					{hasResult ? <GenericButton text="Start Day" onClick={() => startDay(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
-				<div className={styles.voteResults}>
+				<div className={styles.voteResultsNight}>
 					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} /> : null}
 				</div>
 			</div>

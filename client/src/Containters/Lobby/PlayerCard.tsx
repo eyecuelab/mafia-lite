@@ -6,13 +6,15 @@ type propTypes = {
 	player: Player
 	isMain?: boolean
 	playerStatus?: string,
-	isLobby: boolean
+	isLobby: boolean,
+	team: string,
+	canVote: boolean,
+	phase: string
 }
 
-const terminatedStatusImage = "./src/assets/images/ui/image_180.png";
-const jailedStatusImage = "./src/assets/images/ui/image_105.png";
+const cultistBadge = "./src/assets/images/ui/Cultist_Badge.png";
 
-const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus, isLobby }) => {
+const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus, isLobby, team, canVote, phase}) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 
 	/*
@@ -25,12 +27,11 @@ const PlayerCard: React.FC<propTypes> = ({ player, isMain, playerStatus, isLobby
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : styles.playerCard + transitionAnimation}>
 				<img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={player.status} /> : null}
+				{(team === "cultist" && player.team === "cultist")? <img src={cultistBadge} className={styles.cultistBadge} /> : null}
+				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={player.status} canVote={canVote} phase={phase} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
 					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
-					{/* {(player.status === "jailed") ? <img src={jailedStatusImage} className={styles.playerStatusOverlayImage}/> : null }
-					{(player.status === "terminated") ? <img src={terminatedStatusImage} className={styles.playerStatusOverlayImage}/> : null } */}
 				</div>
 			</div>
 		</>
