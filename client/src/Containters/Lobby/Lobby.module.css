@@ -290,8 +290,15 @@
 	width: 90%;
 	margin: auto;
 	font-family: 'American Typewriter', sans-serif;
-	color: #0083D1;
 	font-weight: 700;
+}
+
+.dayVoteCounter {
+	color: #0083D1;
+}
+
+.nightVoteCounter {
+	color: rgb(208, 0, 9);
 }
 
 .playerStatusOverlayImage {
