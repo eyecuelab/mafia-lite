@@ -1,6 +1,7 @@
 import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
 import styles from "./Lobby.module.css";
 import { Player } from "../../Types/Types";
+import cultistBadge from "../../assets/images/ui/Cultist_Badge.png";
 
 type propTypes = {
 	player: Player
@@ -11,8 +12,6 @@ type propTypes = {
 	canVote: boolean
 	phase?: string
 }
-
-const cultistBadge = "./src/assets/images/ui/Cultist_Badge.png";
 
 const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby, team, canVote, phase}) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;

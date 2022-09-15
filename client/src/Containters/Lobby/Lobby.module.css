@@ -84,7 +84,7 @@
 
 .playerListGameContainer {
 	display: grid;
-	gap: 30px 10px;
+	gap: 5px;
 	grid-template-columns: 1fr 1fr;
 	width: 100%;
 	padding: 0;
