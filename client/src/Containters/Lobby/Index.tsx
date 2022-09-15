@@ -104,6 +104,7 @@ const Lobby = (): JSX.Element => {
 					</div> : null}
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />
+						<h3 className={styles.playerCount}>Player Count: {gameData?.players.length}</h3>
 						{!!(gameData?.players.length) && 
 						<PlayerList 
 							players={

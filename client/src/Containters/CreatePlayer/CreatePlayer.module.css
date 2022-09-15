@@ -24,7 +24,7 @@
 }
 
 .user-selection-input {
-  margin: 1%;
+  margin-top: 1%;
   height: 6vh;
   width: 33vw;
   background-color: #ffffff;
@@ -39,7 +39,7 @@
 }
 
 .continue-game-btn {
-  margin: 1%;
+  margin-top: 1%;
   height: 6vh;
   width: 33vw;
   background-size: 100%;

@@ -55,11 +55,33 @@
 	margin-right: 10px;
 	max-height: 90vh;
 }
+
+.playerCount {
+	font-family: 'American Typewriter', serif;
+	font-size: 1rem;
+	margin-top: -4.5%;
+	font-weight: 500;
+}
+
 .playerListContainer{
     max-height: 60%;
     overflow: auto;
     overflow-x: hidden;
 }
+
+.playerListContainer::-webkit-scrollbar {
+  width: 10px;
+	padding-left: 1px;             /* width of the entire scrollbar */
+}
+.playerListContainer::-webkit-scrollbar-track {
+  background: transparent;         /* color of the tracking area */
+}
+.playerListContainer::-webkit-scrollbar-thumb {
+  background-color: transparent;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  /* border: 3px solid rgb(255, 255, 255);  creates padding around scroll thumb */
+}
+
 .playerListGameContainer {
 	display: grid;
 	gap: 30px 10px;
@@ -87,10 +109,9 @@
 	justify-content: left;
 	background-color: rgba(0, 0, 0, 0.75);
 	border-radius: 5px;
-	width: 70%;
+	width: 52%;
 	margin: auto;
 	margin-bottom: 10px;
-	/* z-index: 1; */
 }
 .mainPlayerCardImage {
 	width: 180px;
@@ -143,7 +164,7 @@
 }
 .gameCodeInput {
 	background-color: #000000;
-	width: 72%;
+	width: 48%;
 	margin: auto;
 	padding: 10px;
 	margin-top: 30px;
@@ -181,11 +202,10 @@
 		transition: 0.3s;
 }
 
-
 .start-game-btn {
 	margin: 1%;
 	height: 6vh;
-	width: 23vw;
+	width: 31vw;
 	background-size: 100%;
 	transform: scale(0.8);
 	font-family: 'Bebas Neue';
@@ -208,7 +228,7 @@
 
 .cancel-game-btn {
 	height: 6vh;
-	width: 23vw;
+	width: 31vw;
 	background-color: transparent;
 	transform: scale(0.8);
 	font-family: 'Bebas Neue';
@@ -231,7 +251,7 @@
   justify-content: center;
   place-items: center;
   margin: 0 auto;
-  margin-top: 2%;
+  margin-top: 0.5%;
   font-family: 'American Typewriter', sans-serif;
   font-size: 20px;
   font-weight: 800;
@@ -248,7 +268,7 @@
 
 .questionMark:hover {
 	transform: scale(1.2);
-	transition: ease-in 0.3s;
+	transition: ease-in-out 0.3s;
 }
 
 .modalContent {
@@ -310,10 +330,21 @@
 .cultistBadge {
 	position: absolute;
 	bottom: 0;
-	left: 10%;
+	left: 19%;
 	width: 50px;
 }
 
+
+@media screen and (max-width: 1920px) {
+	.titleImage {
+		height: 18vh;
+		width: 16vw;
+		left: -570px;	
+		top: 150px;
+		margin-top: -8%;
+		margin-bottom: 75px;
+	}
+}
   
 @media screen and (max-width: 820px){
 	.titleImage {

@@ -30,7 +30,7 @@ form {
 }
 
 .user-selection-input {
-  margin: 1%;
+  /* margin: 1%; */
   height: 6vh;
   width: 33vw;
   background-color: #ffffff;
@@ -45,7 +45,7 @@ form {
 }
 
 .drop-selection-input {
-  margin: 1%;
+  /* margin: 1%; */
   height: 6vh;
   width: 33vw;
   background-color: #ffffff;
@@ -65,7 +65,7 @@ form {
 }
 
 .create-game-btn {
-  margin: 1%;
+  margin-top: 1%;
   height: 6vh;
   width: 33vw;
   background-size: 100%;
