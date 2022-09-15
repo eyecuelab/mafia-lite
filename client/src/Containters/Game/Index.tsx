@@ -8,6 +8,7 @@ import socket from "../../Hooks/WebsocketHook";
 import DayTime from "./DayTime";
 import NightTime from "./NightTime";
 import style from "./Game.module.css";
+import GameOver from "./GameOver";
 
 type VotePayload = {
 	gameId: number,
@@ -23,6 +24,12 @@ type Verdict = {
 	sentence: string
 }
 
+type GameEndData = {
+	gameOver: boolean
+	cultistsWin: boolean
+	winners: Player[]
+}
+
 const sendVote = async (vote: VotePayload): Promise<Verdict> => postData("/vote", vote);
 const finishRound = async (roundData: FinishRoundPayload): Promise<Verdict> => postData("/tallyVote", roundData);
 
@@ -31,6 +38,7 @@ function Game(): JSX.Element {
 	const [hasResult, setHasResult] = useState(false);
 	const [votingResults, setVotingResults] = useState<Player>();
 	const [isDay, setIsDay] = useState(true);
+	const [gameEndData, setGameEndData] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const queryClient = useQueryClient();
 
@@ -64,6 +72,10 @@ function Game(): JSX.Element {
 
 			socket.on("start_day", () => {
 				handleGameState({ hasResult: false, isDay: true });
+			});
+
+			socket.on("end_game", (cultistsWin: boolean, winners: Player[]) => {
+				setGameEndData({ gameOver: true, cultistsWin, winners });
 			});
 		
 			return () => {
@@ -110,20 +122,25 @@ function Game(): JSX.Element {
 			});
 		}
 	};
-
-	const team = gameData?.thisPlayer.team ? gameData.thisPlayer.team : "";
 	
-	return (
-		<React.Fragment>
-			<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
-			{gameData ?  (
-				(
-					(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />)
-				)
-			) : <p>...loading</p>}
-		</React.Fragment>
-
-	);
+	if (gameEndData?.gameOver) {
+		return (
+			<GameOver winners={gameEndData.winners} cultistsWin={gameEndData.cultistsWin} />
+		);
+	} else {
+		const team = gameData?.thisPlayer.team ? gameData.thisPlayer.team : "";
+		return (
+			<React.Fragment>
+				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
+				{gameData ?  (
+					(
+						(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />)
+					)
+				) : <p>...loading</p>}
+			</React.Fragment>
+		);
+	}
+	
 }
 
 export default Game;

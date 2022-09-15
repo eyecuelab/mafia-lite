@@ -1,5 +1,6 @@
 import { Player, PrismaClient } from '@prisma/client';
 import { getGameById } from './game';
+import { getRoleById } from './role';
 import { getRoundById } from './round';
 const prisma = new PrismaClient();
 
@@ -84,5 +85,33 @@ const getJailedPlayer = async (gameId: number) => {
 	});
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer };
+const getLivingPlayersByGameId = async (gameId: number) => {
+	return await prisma.player.findMany({
+		where: {
+			gameId: gameId,
+			OR: [
+				{ status: "alive" },
+				{ status: "jailed" }
+			]
+		}
+	});
+}
+
+const getPlayersInGameByTeam = async (gameId: number) => {
+	const players = await getPlayersByGameId(gameId);
+
+	const playersByTeam: { investigators: Player[], cultists: Player[] } = { investigators: [], cultists: [] };
+	for (let i = 0; i < players.length; i++) {
+		const role = await getRoleById(players[i].roleId);
+		if (role?.type === "cultist") {
+			playersByTeam.cultists.push(players[i]);
+		} else {
+			playersByTeam.investigators.push(players[i]);
+		}
+	}
+
+	return playersByTeam;
+}
+
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getPlayersInGameByTeam };
 

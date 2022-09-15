@@ -2,6 +2,7 @@ import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
 import { unjailPrevJailedPlayer, updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
+import { Player, Vote } from "@prisma/client";
 
 type VoteResult = {
   id: number
@@ -42,25 +43,11 @@ const votingControllers = {
     const votes = await getAllVotes(gameId, round.id, round.currentPhase);
     const players = await getPlayersByGameId(gameId);
 
-		let voteResults: VoteResult[] = [];
-    players.forEach((player) => {
-      let playerVoteCount : number = 0;
-      votes.forEach((vote) => {
-        if(vote.candidateId === player.id) playerVoteCount++;
-      })
-      const voteResult = {id : player.id, count: playerVoteCount}
-      voteResults.push(voteResult)
-    })
-
-    voteResults.sort((a: VoteResult, b: VoteResult) => {
-      return b.count - a.count;
-    })
-
+		const voteResults = countVotes(players, votes);
     if(voteResults.length === 1 || voteResults[0].count !== voteResults[1].count) {
-      const player = await getPlayerById(voteResults[0].id);
 			try {
-				res.status(200).json((await updateEndOfRoundStatus(gameId, player)));
-				await emitVoteResult(gameId, voteResults[0].id);
+				res.status(200).json((await updateEndOfRoundStatus(gameId, voteResults[0].id)));
+				emitVoteResult(gameId, voteResults[0].id);
 			} catch (error) {
 				res.status(500).json({ error });
 			}
@@ -68,13 +55,31 @@ const votingControllers = {
     else {
 			await unjailPrevJailedPlayer(gameId);
       res.status(200).json({ sentence: "Tie" });
-			await emitVoteResult(gameId);
+			emitVoteResult(gameId);
     }
   
     // res.status(500).json({error : "Something went wrong"}) 
     // Save the voted player in round object
     // Communicate with clients
   }
+}
+
+const countVotes = (players: Player[], votes: Vote[]) => {
+	let voteResults: VoteResult[] = [];
+	players.forEach((player) => {
+		let playerVoteCount : number = 0;
+		votes.forEach((vote) => {
+			if(vote.candidateId === player.id) playerVoteCount++;
+		})
+		const voteResult = {id : player.id, count: playerVoteCount}
+		voteResults.push(voteResult)
+	});
+
+	voteResults.sort((a: VoteResult, b: VoteResult) => {
+		return b.count - a.count;
+	});
+
+	return voteResults;
 }
 
 export default votingControllers;
