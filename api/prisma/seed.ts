@@ -23,7 +23,7 @@ async function main() {
 			name: "Cultist",
 			type: "cultist",
 			nightTimePrompt: "Select a sacrafice",
-			roleDesc: "Sacrafice players to your dark god without being discovered, lest you be sacraficed yourself"
+			roleDesc: "Sacrfice players to your dark god without being discovered, lest you be sacraficed yourself"
 		}
 	});
 }
