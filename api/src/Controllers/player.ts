@@ -52,7 +52,7 @@ const playerControllers = {
 
 		if (Utility.validateInputs(res, "Invalid id", gameId)) {
 			const players = await getPlayersByGameId(gameId);
-			const filteredPlayers = filterPlayersData(req.session.playerId, players);
+			const filteredPlayers = await filterPlayersData(req.session.playerId, players);
 			res.json(filteredPlayers);
 		}
 	},

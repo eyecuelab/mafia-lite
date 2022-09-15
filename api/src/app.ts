@@ -6,6 +6,7 @@ import roundRouter from "./Routes/round";
 import logicRouter from "./Routes/logic";
 import voterRouter from './Routes/vote';
 import roleRouter from './Routes/role';
+import traitsRouter from './Routes/traits';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { SessionOptions } from 'express-session';
@@ -47,6 +48,6 @@ if (environment === 'production') {
 }
 
 app.use(express.json());
-app.use(gameRouter, roundRouter, playerRouter, logicRouter, voterRouter, roleRouter);
+app.use(gameRouter, roundRouter, playerRouter, logicRouter, voterRouter, roleRouter, traitsRouter);
 
 export default app;
