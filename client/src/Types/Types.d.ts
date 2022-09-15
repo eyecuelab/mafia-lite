@@ -5,6 +5,7 @@ export type Player = {
 	team?: string
 	gameId: number
 	status: string
+	traits: string[]
 	avatar: string
 }
 

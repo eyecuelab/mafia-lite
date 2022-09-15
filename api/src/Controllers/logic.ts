@@ -1,9 +1,15 @@
 import Utility from "./Utility";
-import { getPlayerById, getPlayersByGameId, updatePlayerById } from "../Models/player";
+import { createPlayer, getPlayerById, getPlayersByGameId, updatePlayerById } from "../Models/player";
 import assignRoles from "../Logic/assignRoles";
 import { createNewRound, updateToNightPhase, getCurrentRoundByGameId } from "../Models/round";
 import { checkEndConditions, emitEndGame, emitStartDay, emitStartNight } from "../Models/logic";
 import { getRolesbyType } from "../Models/role";
+import { assignTrait, getTraits } from "../Models/traits";
+import { getTraitsForGame } from "../Logic/assignTraits";
+import { getGameById } from "../Models/game";
+
+const NUM_TRAIT_REPEATS = 2;
+const NUM_TRAITS_PER_PLAYER = 3;
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
@@ -18,8 +24,20 @@ const logicControllers = {
 
 			await createNewRound(1, gameId);
 
+			if(process.env.CREATE_FULL_LOBBY === "true") {
+				const checkPlayers = await getPlayersByGameId((gameId));
+				const game = (await getGameById(gameId))!!;
+				if (checkPlayers.length < game.size) {
+					for (let i = checkPlayers.length; i < 12; i++) {
+						await createPlayer(gameId, false, i.toString());
+					}
+				}
+			}
+
 			const players = await getPlayersByGameId((gameId));
 			const roles = await assignRoles(players.length);
+			const traits = await getTraits();
+			const playerTraits = getTraitsForGame(traits, players.length, NUM_TRAIT_REPEATS, NUM_TRAITS_PER_PLAYER);
 
 			if (process.env.FORCE_CULTIST === "true") {
 				const cultistRoles = await getRolesbyType("cultist");
@@ -28,6 +46,9 @@ const logicControllers = {
 
 			for (let i = 0; i < players.length; i++) {
 				await updatePlayerById(players[i].id, roles[i]);
+				for (let j = 0; j < 3; j++) {
+					await assignTrait(playerTraits[i][j], players[i].id);
+				}
 			}
 
 			res.json({ players: (await getPlayersByGameId(gameId)) });
