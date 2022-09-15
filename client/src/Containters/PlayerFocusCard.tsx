@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import styles from "./PlayerFocusCard.module.css";
 import { Player } from "../Types/Types";
+import murdered from "../assets/images/ui/image_104.png";
+import jailed from "../assets/images/ui/image_105.png";
+import terminated from "../assets/images/ui/image_180.png";
+
 
 type propTypes = {
 	player: Player
 }
-
-const terminatedStatusImage = "./src/assets/images/ui/image_180.png";
-const jailedStatusImage = "./src/assets/images/ui/image_105.png";
-const murderedStatusImage = "./src/assets/images/ui/image_104.png";
 
 const PlayerFocusCard = (props: propTypes) => {
 	const { player } = props;
@@ -17,9 +17,9 @@ const PlayerFocusCard = (props: propTypes) => {
 
 	useEffect(() => {
 		switch(player.status) {
-			case "terminated": setImgPath(terminatedStatusImage); break;
-			case "jailed": setImgPath(jailedStatusImage); break;
-			case "murdered": setImgPath(murderedStatusImage); break;
+			case "terminated": setImgPath(terminated); break;
+			case "jailed": setImgPath(jailed); break;
+			case "murdered": setImgPath(murdered); break;
 			default: setImgPath("");
 		}
 	}, [player]);

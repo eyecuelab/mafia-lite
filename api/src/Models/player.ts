@@ -2,13 +2,12 @@ import { Player, PrismaClient } from '@prisma/client';
 import { getGameById } from './game';
 import { getRoleById } from './role';
 import { getRoundById } from './round';
-const prisma = new PrismaClient();
 
-const randomlyGenerateAvatar = () => {
-  let randomImageNumber = Math.floor(Math.random() * (193 - 181) + 181);
-  const avatarBasePath = `./src/assets/images/portraits/image_${randomImageNumber}.png`;
-  return avatarBasePath;
-}
+// import all 12 images from assets/images/portraits
+// create an array of all images
+// create a function that randomly selects an image from the array or an index
+
+const prisma = new PrismaClient();
 
 const getPlayerById = async (id: number) => {	
   try {
@@ -26,22 +25,27 @@ const getPlayersByGameId = async (gameId: number) => {
   });
 }
 
+const randomlyGenerateAvatar = () => {
+  let randomImageNumber = Math.floor(Math.random() * (193 - 181) + 181);
+  const avatarBasePath = `./portraits/image_${randomImageNumber}.png`;
+  return avatarBasePath;
+}
+
 const setUniqueAvatarPath = async (gameId: number) => {
   const maxNumOfPlayers = 12  //placeholder
-  const getPlayersInGame = await getPlayersByGameId(gameId)
-  let uniqueAvatarPath = randomlyGenerateAvatar();
+  const getPlayersInGame = await getPlayersByGameId(gameId) //get players in game
+  let uniqueAvatarPath = randomlyGenerateAvatar(); //generate string of file path with randomized num
 
-  const avatarAlreadyAssigned = (path: string) => {
+  const avatarAlreadyAssigned = (path: string) => { //checks players if some have the path in their avatar property
     return getPlayersInGame.some((player: Player) => player.avatar === path)
   }
 
   while (avatarAlreadyAssigned(uniqueAvatarPath)) {
-    uniqueAvatarPath = randomlyGenerateAvatar();
+    uniqueAvatarPath = randomlyGenerateAvatar();  //runs function above and if that avatar is already assigned keep running it endlessly...
 
-    if (!avatarAlreadyAssigned) {
+    if (!avatarAlreadyAssigned) { //finally if it is a unique avatar path return
       return uniqueAvatarPath;
     } else if (avatarAlreadyAssigned(uniqueAvatarPath) && maxNumOfPlayers === getPlayersInGame.length) {
-      console.log(`no unique photos remaining, total players: ${getPlayersInGame.length}`)
       return uniqueAvatarPath = ''
     }
   }
