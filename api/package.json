@@ -6,7 +6,8 @@
     "build": "prisma generate && npx tsc",
     "start": "node dist/src/server.js",
     "dev": "nodemon src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+		"seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

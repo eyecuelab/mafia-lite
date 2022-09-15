@@ -16,7 +16,6 @@ type PlayerProps = {
 
 
 const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team, isAlive }) => {
-	const [isAccused, setIsAccused] = useState(false); 
 	const [canVote, setCanVote] = useState(true);
 	const [playerStatus, setPlayerStatus] = useState("alive");
 
@@ -26,7 +25,6 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 
 	const handleAccusePlayer = () => {
 		handleCastVote(player.id);
-		setIsAccused(true);
 
 		if (phase === "day") {
 			setPlayerStatus("accused");
@@ -45,8 +43,6 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 						handleAccusePlayer();
 					}
 				}} >
-				{/* {isAccused ?
-					<PlayerCard player={player} isLobby={isLobby} playerStatus={"accused"} /> : */}
 				<PlayerCard player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
 				{(canVote) ? (!!numberOfVotes && (
 					<h5 className={`${styles.voteCounter} ${phase === "day" ? styles.dayVoteCounter : styles.nightVoteCounter}`}>Votes: {numberOfVotes}</h5>

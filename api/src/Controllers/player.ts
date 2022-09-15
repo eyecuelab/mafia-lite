@@ -3,17 +3,19 @@ import { getGameById } from '../Models/game';
 import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
 import { getRoleById, getRoleByName } from '../Models/role';
 import { getCurrentRoundByGameId } from '../Models/round';
+import { getPlayerTraits } from '../Models/traits';
 import io from '../server';
 import Utility from './Utility';
 
-type filteredPlayer = {
-	id: number,
-	isHost: boolean,
-	name: string,
-	team?: string,
-	gameId: number,
-	roundDiedId: number | null,
-	status: string,
+export type FilteredPlayer = {
+	id: number
+	isHost: boolean
+	name: string
+	team?: string
+	gameId: number
+	roundDiedId: number | null
+	status: string
+	traits: string[]
 	avatar: string
 }
 
@@ -50,7 +52,7 @@ const playerControllers = {
 
 		if (Utility.validateInputs(res, "Invalid id", gameId)) {
 			const players = await getPlayersByGameId(gameId);
-			const filteredPlayers = filterPlayersData(req.session.playerId, players);
+			const filteredPlayers = await filterPlayersData(req.session.playerId, players);
 			res.json(filteredPlayers);
 		}
 	},
@@ -90,8 +92,8 @@ const playerControllers = {
 	}
 }
 
-const filterPlayersData = async (playerId: number, players: Player[]) => {
-	let filteredPlayers: filteredPlayer[] = [];
+export const filterPlayersData = async (playerId: number, players: Player[]) => {
+	let filteredPlayers: FilteredPlayer[] = [];
 	
 	for (let i = 0; i < players.length; i++) {
 		filteredPlayers.push(await filterPlayerData(playerId, players[i]));
@@ -100,7 +102,7 @@ const filterPlayersData = async (playerId: number, players: Player[]) => {
 	return filteredPlayers;
 }
 
-export const filterPlayerData = async (playerId: number, player: Player): Promise<filteredPlayer> => {
+export const filterPlayerData = async (playerId: number, player: Player): Promise<FilteredPlayer> => {
 	let role = undefined;
 	const requester = await getPlayerById(playerId);
 	const requesterTeam = (await getRoleById(requester.roleId))?.type;
@@ -108,8 +110,10 @@ export const filterPlayerData = async (playerId: number, player: Player): Promis
 	if (requesterTeam === "cultist" || playerId === player.id) {
 		role = await getRoleById(player.roleId);
 	}
+
+	const traits = await getPlayerTraits(player.id);
 	
-	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, avatar: player.avatar };
+	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, traits, avatar: player.avatar };
 }
 
 export default playerControllers;

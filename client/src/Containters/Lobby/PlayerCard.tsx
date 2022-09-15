@@ -31,7 +31,9 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} canVote={canVote} phase={phase} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>
-					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>Trait A, Trait B, Trait C</p>
+					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>
+						{player.traits.map((trait, index, array) => index === array.length - 1 ? trait : `${trait},`)}
+					</p>
 				</div>
 			</div>
 		</>

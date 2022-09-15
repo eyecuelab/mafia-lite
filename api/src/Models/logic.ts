@@ -1,4 +1,4 @@
-import { Player } from '@prisma/client';
+import { FilteredPlayer, filterPlayersData } from '../Controllers/player';
 import io from '../server';
 import { getLivingPlayersByGameId, getPlayersInGameByTeam } from './player';
 import { getRoleById } from './role';
@@ -31,13 +31,15 @@ const checkEndConditions = async (gameId: number) => {
 	if (gameOver) {
 		const playersByTeam = await getPlayersInGameByTeam(gameId);
 		const winners = cultistsWin ? playersByTeam.cultists : playersByTeam.investigators;
-		return { gameOver, cultistsWin, winners }
+
+		const filteredWinners = await filterPlayersData(winners[0].id, winners);
+		return { gameOver, cultistsWin, winners: filteredWinners }
 	} else {
 		return { gameOver };
 	}
 }
 
-const emitEndGame = (gameId: number, cultistsWin: boolean, winners: Player[]) => {
+const emitEndGame = (gameId: number, cultistsWin: boolean, winners: FilteredPlayer[]) => {
 	io.in(gameId.toString()).emit('end_game', cultistsWin, winners );
 }
 

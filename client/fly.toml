@@ -10,6 +10,7 @@ processes = []
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+  entrypoint = ["/goStatic", "-fallback", "/index.html"]
 
 [[services]]
   http_checks = []

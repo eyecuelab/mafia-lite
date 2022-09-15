@@ -38,6 +38,7 @@ model Player {
   roundDied   Round?  @relation(fields: [roundDiedId], references: [id])
   roundDiedId Int?
   status      String  @default("alive")
+	traits			PlayerTrait[]
   avatar      String
 }
 
@@ -66,4 +67,18 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model Trait {
+	id 			Int							 @id @default(autoincrement())
+	name 		String
+	players PlayerTrait[]
+}
+
+model PlayerTrait {
+	id       Int 		  @id @default(autoincrement())
+	trait    Trait  	@relation(fields: [traitId], references: [id])
+	traitId  Int
+	player 	 Player   @relation(fields: [playerId], references: [id])
+	playerId Int
 }
