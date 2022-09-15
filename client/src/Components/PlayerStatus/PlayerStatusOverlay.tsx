@@ -1,12 +1,17 @@
 import styles from "./PlayerStatusOverlay.module.css";
 import { useState, useEffect } from "react";
+import murdered from "../../assets/images/ui/image_104.png";
+import accused from "../../assets/images/ui/image_35.png";
+import jailed from "../../assets/images/ui/image_105.png";
+import terminated from "../../assets/images/ui/image_180.png";
+import murder from "../../assets/images/ui/image_51.png";
 
 const arrayOfImages = [
-	"assets/images/ui/image_104.png",
-	"assets/images/ui/image_35.png",
-	"assets/images/ui/image_105.png",
-	"assets/images/ui/image_180.png",
-	"assets/images/ui/image_51.png"
+	murdered,
+	accused,
+	jailed,
+	terminated,
+	murder
 ];
 
 const getBadgeImage = (status: string | undefined) => {
@@ -53,7 +58,7 @@ const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerS
 
 	return (
 		<div className={cardStyle} onMouseEnter={() => cursorHovering(true)} onMouseLeave={() => cursorHovering(false)}>
-			{renderBadge || playerStatus !== "alive" ? <img className={imageStyle} src={`./src/${badgeImagePath}`} alt={"Player Status Badge"} /> : null}
+			{renderBadge || playerStatus !== "alive" ? <img className={imageStyle} src={badgeImagePath} alt={"Player Status Badge"} /> : null}
 		</div>
 	);
 };
