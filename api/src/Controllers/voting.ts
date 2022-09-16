@@ -1,7 +1,7 @@
 import { getPlayerById, getPlayersByGameId } from "../Models/player";
 import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
-import { unjailPrevJailedPlayer, updateEndOfRoundStatus } from "../Logic/changePlayerStatus";
+import { unjailPrevJailedPlayer, updateEndOfRoundStatus, randomlyKillPlayer } from "../Logic/changePlayerStatus";
 import { Player, Vote } from "@prisma/client";
 
 type VoteResult = {
@@ -42,9 +42,10 @@ const votingControllers = {
 		const round = await getCurrentRoundByGameId(gameId);
     const votes = await getAllVotes(gameId, round.id, round.currentPhase);
     const players = await getPlayersByGameId(gameId);
+    const isNight = round.currentPhase === "night"
 
 		const voteResults = countVotes(players, votes);
-    if(voteResults.length === 1 || voteResults[0].count !== voteResults[1].count) {
+    if(voteResults.length === 1 || voteResults[0].count !== voteResults[1].count && !isNight) {
 			try {
 				res.status(200).json((await updateEndOfRoundStatus(gameId, voteResults[0].id)));
 				emitVoteResult(gameId, voteResults[0].id);
@@ -54,13 +55,16 @@ const votingControllers = {
     }
     else {
 			await unjailPrevJailedPlayer(gameId);
-      res.status(200).json({ sentence: "Tie" });
-			emitVoteResult(gameId);
+      if(isNight)
+      {
+        const chosenPlayer = await randomlyKillPlayer(gameId);
+        res.status(200).json((await updateEndOfRoundStatus(gameId, chosenPlayer.id)));
+        await emitVoteResult(gameId, chosenPlayer.id, true)
+      }else {
+        res.status(200).json({ sentence: "Tie" });
+        await emitVoteResult(gameId);
+      }
     }
-  
-    // res.status(500).json({error : "Something went wrong"}) 
-    // Save the voted player in round object
-    // Communicate with clients
   }
 }
 

@@ -10,7 +10,7 @@ import titleImg from "../../assets/images/Title.png";
 
 const beginDay = async (gameId : number): Promise<void> => postData("/startDay", { gameId });
 
-const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }: { gameData: GameData, hasResult: boolean, votingResults?: Player, finishVote: (candidateId: number) => void, endRound: () => void }) => {
+const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound, randomKill }: { gameData: GameData, hasResult: boolean, votingResults?: Player, finishVote: (candidateId: number) => void, endRound: () => void, randomKill:boolean}) => {
 	const queryClient = useQueryClient();
 	const { callModal } = useModal();
 
@@ -39,7 +39,8 @@ const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound }:
 					{hasResult ? <GenericButton text="Start Day" onClick={() => startDay(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
 				<div className={styles.voteResultsNight}>
-					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} /> : null}
+					{hasResult && votingResults && !randomKill ? <PlayerFocusCard player={votingResults} /> : null}
+					{hasResult && randomKill ? <PlayerFocusCard player={votingResults} nightTie ={true} /> : null}
 				</div>
 			</div>
 		</div> 

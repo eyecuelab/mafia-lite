@@ -7,16 +7,18 @@ import terminated from "../assets/images/ui/image_180.png";
 
 
 type propTypes = {
-	player: Player
+	player: Player | undefined
+	tie?: boolean
+	nightTie?:boolean
 }
 
 const PlayerFocusCard = (props: propTypes) => {
-	const { player } = props;
+	const { player, tie, nightTie } = props;
 	const [imgPath, setImgPath] = useState("");
 
 
 	useEffect(() => {
-		switch(player.status) {
+		switch(player?.status) {
 			case "terminated": setImgPath(terminated); break;
 			case "jailed": setImgPath(jailed); break;
 			case "murdered": setImgPath(murdered); break;
@@ -26,14 +28,33 @@ const PlayerFocusCard = (props: propTypes) => {
 
 	return (
 		<div className={styles.playerFocusCardContainer}>
-			<div className={styles.playerFocusAvatar}>
-				<img src={player.avatar} className={styles.playerFocusImage} />
-				<img src={imgPath} className={styles.playerFocusStatus} />
-			</div>
-			<div className={styles.playerFocusTextContainer}>
-				<p className={styles.playerFocusName}>{player.name} has been {player.status}</p>
-				<p className={styles.playerFocusDetails}>{player.team === "cultist" ? "You've eliminated a Cultist!" : `${player.name} is not a cultist`}</p>
-			</div>
+			{(tie) ? 
+				<div className={styles.playerFocusTextContainer}>
+					<p className={styles.playerFocusDetails}>Tie.</p>
+					<p className={styles.playerFocusSubDetail}>No one was jailed.</p>
+				</div> 
+				: 
+				<div className={styles.playerFocusCardContainer}>
+					<div className={styles.playerFocusAvatar}>
+						<img src={player?.avatar} className={styles.playerFocusImage} />
+						<img src={imgPath} className={styles.playerFocusStatus} />
+					</div>
+					<div className={styles.playerFocusTextContainer}>
+						{(nightTie) ? 
+							<div>
+								<p className={styles.playerFocusName}>{player?.name} has been randomly {player?.status} by the Cthulhu</p> 
+								<p className={styles.playerFocusDetails}>{player?.team === "cultist" ? "Cthulhu killed a Cultist!" : "Cthulhu killed an Investigator!"}</p>
+							</div>
+							: 
+							<div>
+								<p className={styles.playerFocusName}>{player?.name} has been {player?.status}</p>
+								<p className={styles.playerFocusDetails}>{player?.team === "cultist" ? "You've eliminated a Cultist!" : `${player?.name} is not a cultist`}</p>
+							</div>
+						}
+					</div>
+				</div>
+			}
+		
 		</div>);
 };
 

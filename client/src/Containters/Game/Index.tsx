@@ -37,6 +37,7 @@ function Game(): JSX.Element {
 	const { callModal } = useModal();
 	const [hasResult, setHasResult] = useState(false);
 	const [votingResults, setVotingResults] = useState<Player>();
+	const [randomKill, setRandomKill] = useState(false);
 	const [isDay, setIsDay] = useState(true);
 	const [gameEndData, setGameEndData] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
@@ -62,8 +63,11 @@ function Game(): JSX.Element {
 
 			socket.on("vote_results_tie", () => {
 				handleGameState({ hasResult: true, votingResults: undefined });
-				console.log("line - 58 - Game/Index.tsx");
-				alert("Tie");
+			});
+
+			socket.on("vote_results_tie_night", (player: Player) => {
+				setRandomKill(true);
+				handleGameState({ hasResult: true, votingResults: player });
 			});
 
 			socket.on("start_night", () => {
@@ -81,6 +85,7 @@ function Game(): JSX.Element {
 			return () => {
 				socket.off("vote_results");
 				socket.off("vote_results_tie");
+				socket.off("vote_results_tie_night");
 				socket.off("start_night");
 				socket.off("start_day");
 			};
@@ -134,7 +139,7 @@ function Game(): JSX.Element {
 				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
 				{gameData ?  (
 					(
-						(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />)
+						(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} randomKill={randomKill} />)
 					)
 				) : <p>...loading</p>}
 			</React.Fragment>

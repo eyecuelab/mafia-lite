@@ -1,7 +1,8 @@
 import { Player } from "@prisma/client";
-import { getJailedPlayer, getPlayerById, updatePlayerStatus } from "../Models/player";
+import { getJailedPlayer, getPlayerById, updatePlayerStatus, getLivingPlayersByGameId } from "../Models/player";
 import { getRoleById } from "../Models/role";
 import { getCurrentRoundByGameId } from "../Models/round";
+import Utility from "../Logic/Utility";
 
 const getSentence = async (player: Player, phase: string) => {
 	const role = await getRoleById(player.roleId);
@@ -19,6 +20,16 @@ const getSentence = async (player: Player, phase: string) => {
 		default: throw new Error("Unknown role type");
 	}
 };
+
+const randomlyKillPlayer = async (gameId: number) => {
+	const players = await getLivingPlayersByGameId(gameId);
+	const eligiblePlayers = players.filter((player : Player) => {
+		return player.status !== "jailed"
+	})
+	const shuffledPlayers = Utility.shuffleArray(eligiblePlayers);
+	updatePlayerStatus(shuffledPlayers[0].id, "murdered")
+	return shuffledPlayers[0];
+}
 
 const updateEndOfRoundStatus = async (gameId: number, accusedId: number) => {
 	const round = await getCurrentRoundByGameId(gameId);
@@ -40,4 +51,4 @@ const unjailPrevJailedPlayer = async (gameId: number) => {
 	}
 }
 
-export { updateEndOfRoundStatus, unjailPrevJailedPlayer };
+export { updateEndOfRoundStatus, unjailPrevJailedPlayer, randomlyKillPlayer };

@@ -40,7 +40,8 @@ const DayTime = ({ gameData, hasResult, votingResults, finishVote, endRound }: {
 					{hasResult ? <GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
 				<div className={styles.voteResults}>
-					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} /> : null}
+					{hasResult && votingResults ? <PlayerFocusCard player={votingResults} tie={false} /> : null}
+					{hasResult && !votingResults ? <PlayerFocusCard player={undefined} tie={true} /> : null}
 				</div>
 			</div>
 		</div> 

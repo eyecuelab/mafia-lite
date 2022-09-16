@@ -26,16 +26,19 @@ const createVote = async (gameId: number, phase: string, candidateId: number, vo
   });
 
   if (voteTally) {
-		console.log(`casting vote -> ${candidateId}, total: ${voteTally}`);
     io.in(gameId.toString()).emit('vote_cast', candidateId, voteTally);
   }
 
 	return vote;
 }
 
-const emitVoteResult = async(gameId: number, playerId?: number) => {
+const emitVoteResult = async(gameId: number, playerId?: number, randomKill?: boolean) => {
   if (!playerId) {
   	io.in(gameId.toString()).emit('vote_results_tie');
+  } else if(randomKill) {
+    const player = await getPlayerById(playerId);
+		const filteredPlayer = await filterPlayerData(player.id, player);
+  	io.in(gameId.toString()).emit('vote_results_tie_night', filteredPlayer);
   } else {
   	const player = await getPlayerById(playerId);
 		const filteredPlayer = await filterPlayerData(player.id, player);

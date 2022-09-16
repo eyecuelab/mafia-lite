@@ -50,5 +50,10 @@
 .playerFocusTextContainer {
     margin-top: 1.5vh;
     background-color: rgba(0, 0, 0, 0.85);
-    border-radius: 5px;
+    border-radius: 7px;
+    padding: 2px;
+}
+.playerFocusSubDetail {
+    font-size: 20px;
+    margin: 0;
 }
