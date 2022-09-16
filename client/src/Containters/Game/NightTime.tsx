@@ -35,7 +35,7 @@ const NightTime = ({ gameData, hasResult, votingResults, finishVote, endRound, r
 				<div className={styles.gameScreen}>
 					<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
 					<h1>Night</h1>
-					{gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} team={gameData.thisPlayer.team} phase={"night"} isAlive={gameData.thisPlayer.status === "alive"} /> : <p>...loading</p> }
+					{gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} clientPlayer={gameData.thisPlayer} phase={"night"} /> : <p>...loading</p> }
 					{hasResult ? <GenericButton text="Start Day" onClick={() => startDay(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
 				<div className={styles.voteResultsNight}>

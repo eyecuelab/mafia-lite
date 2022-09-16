@@ -10,12 +10,14 @@ type PlayerProps = {
   numberOfVotes: number;
   handleCastVote: (playerId: number) => void,
 	phase?: string,
-	team?: string,
-	isAlive?: boolean
+	clientPlayer?: Player
 }
 
 
-const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, team, isAlive }) => {
+const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, clientPlayer }) => {
+	const team = clientPlayer?.team;
+	const isAlive = clientPlayer?.status === "alive";
+	const isPlayer = (player.id === clientPlayer?.id);
 	const [canVote, setCanVote] = useState(true);
 	const [playerStatus, setPlayerStatus] = useState("alive");
 
@@ -43,7 +45,7 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 						handleAccusePlayer();
 					}
 				}} >
-				<PlayerCard player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
+				<PlayerCard isPlayer={isPlayer} player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
 				{(canVote) ? (!!numberOfVotes && (
 					<h5 className={`${styles.voteCounter} ${phase === "day" ? styles.dayVoteCounter : styles.nightVoteCounter}`}>Votes: {numberOfVotes}</h5>
 				)) : null }

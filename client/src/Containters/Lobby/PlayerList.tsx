@@ -9,8 +9,7 @@ type PlayerListProps = {
   isLobby: boolean,
 	castVote?: (candidateId: number) => void,
 	phase?: string,
-	team?: string,
-	isAlive?: boolean
+	clientPlayer?: Player
 }
 
 type PlayerVotes = {
@@ -18,7 +17,7 @@ type PlayerVotes = {
   votes: number
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, phase, team, isAlive }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, phase, clientPlayer }) => {
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [voteCast, setVoteCast] = useState<boolean>(false);
 	const initialVotes = players.map((player) => ({ playerId: player.id, votes: 0 }));
@@ -76,9 +75,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 							handleCastVote={handleCastVote}
 							voteCast={voteCast}
 							numberOfVotes={numberOfVotes}
-							team={team}
+							clientPlayer={clientPlayer}
 							phase={phase}
-							isAlive={isAlive}
 						/>
 					);
 				})}

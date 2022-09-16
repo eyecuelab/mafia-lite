@@ -62,6 +62,7 @@ function Game(): JSX.Element {
 			});
 
 			socket.on("vote_results_tie", () => {
+				setVotingResults(undefined);
 				handleGameState({ hasResult: true, votingResults: undefined });
 			});
 
