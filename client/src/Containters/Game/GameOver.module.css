@@ -1,0 +1,81 @@
+.background-image-cultist {
+  background: url(../../assets/images/cultistwin.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+}
+.background-image-invest {
+  background: url(../../assets/images/investwin.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+}
+
+.title-Img  {
+  width: 55vw;
+  top: 10px;
+  left: 50px;
+  position: absolute;
+}
+
+.player-list-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}
+
+.winner-header {
+  position: absolute;
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 71px;
+  line-height: 88px;
+  margin-left: 4%;
+  margin-top: 18.5%;
+  padding-bottom: 3px;
+}
+
+.paragraph{
+  position: absolute;
+  width: 600px;
+  height: 414px;
+  text-align: left;
+
+  font-family: 'American Typewriter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 33px;
+  line-height: 38px;
+  margin-left: 4%;
+  margin-top: 23.5%;
+}
+
+
+
+/* .player-list {
+  margin-top: 6%;
+  display: grid;
+	gap: 30px;
+	grid-template-columns: 1fr 1fr;
+	max-height: 540px;
+	overflow: auto;
+  overflow-x: hidden;
+}
+
+.player-list::-webkit-scrollbar {
+  width: 10px;
+	padding-left: 1px;            
+}
+.player-list::-webkit-scrollbar-track {
+  background: transparent;         
+}
+.player-list::-webkit-scrollbar-thumb {
+  background-color: transparent;    
+} */
+
+
+
+
