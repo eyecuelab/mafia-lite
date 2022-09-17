@@ -28,7 +28,7 @@ const votingControllers = {
 				}
 			})
 			if (voted) {
-				res.status(500).json({error: "You have already voted"});
+				res.status(401).json({error: "You have already voted"});
 			} else {
 				const vote = await createVote(gameId, currentRound.currentPhase, candidateId, player.id, currentRound.roundNumber);
 				res.status(201).json({ vote });
@@ -50,7 +50,7 @@ const votingControllers = {
 				res.status(200).json((await updateEndOfRoundStatus(gameId, voteResults[0].id)));
 				emitVoteResult(gameId, voteResults[0].id);
 			} catch (error) {
-				res.status(500).json({ error });
+				res.status(403).json({ error: "Unable to count vote results" });
 			}
     }
     else {

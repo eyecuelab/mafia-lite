@@ -20,15 +20,16 @@ const getRoleById = async (id: number | null) => {
 	if (!id) {
 		return null;
 	}
-
   try {
     return await prisma.role.findFirstOrThrow ({
       where: { id: Number(id) },
     });
   } catch (error) {
-    throw "Role not found"
+    if (error instanceof Error)
+    throw (error.message)
+    }
   }
-}
+
 
 const getRolesbyType = async (type: string) => {
 	return await prisma.role.findMany({

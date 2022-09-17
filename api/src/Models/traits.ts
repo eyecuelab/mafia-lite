@@ -30,7 +30,11 @@ const getPlayerTraits = async (playerId: number) => {
 }
 
 const getTraits = async () => {
-	return await prisma.trait.findMany();
+	try{
+		return await prisma.trait.findMany();
+	} catch (error) {
+		throw error;
+	}
 }
 
 const getTraitById = async (id: number) => {

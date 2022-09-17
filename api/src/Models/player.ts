@@ -3,9 +3,6 @@ import { getGameById } from './game';
 import { getRoleById } from './role';
 import { getRoundById } from './round';
 
-// import all 12 images from assets/images/portraits
-// create an array of all images
-// create a function that randomly selects an image from the array or an index
 
 const prisma = new PrismaClient();
 

@@ -40,7 +40,7 @@ const playerControllers = {
 				const player = await getPlayerById(id);
 				const filteredPlayer = await filterPlayerData(req.session.playerId, player);
 				
-				res.json(filteredPlayer);
+				res.status(200).json(filteredPlayer);
 			} catch (error) {
 				return res.status(404).json({ error: "Player not found" });
 			}
@@ -53,7 +53,7 @@ const playerControllers = {
 		if (Utility.validateInputs(res, "Invalid id", gameId)) {
 			const players = await getPlayersByGameId(gameId);
 			const filteredPlayers = await filterPlayersData(req.session.playerId, players);
-			res.json(filteredPlayers);
+			res.status(200).json(filteredPlayers);
 		}
 	},
 
@@ -64,15 +64,14 @@ const playerControllers = {
 			if (newRole) {
 				await updatePlayerById(id, newRole?.id);
 			} else {
-				res.status(500).json({ error: "Unable to find role" });
+				res.status(403).json({ error: "Unable to find role" });
 			}
 		}
 
 		if (newStatus) {
 			await updatePlayerStatus(id, newStatus);
 		}
-
-		res.json({ message: "Updated" });
+		res.status(200).json({ message: "Updated" });
 	},
 
 	async getPlayerGame(req: any, res: any) {
@@ -87,7 +86,7 @@ const playerControllers = {
 			const players = await getPlayersByGameId(gameId);
 			const filteredPlayers = await filterPlayersData(playerId, players);
 
-			res.json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound: (await getCurrentRoundByGameId(gameId)) });
+			res.status(200).json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound: (await getCurrentRoundByGameId(gameId)) });
 		}
 	}
 }

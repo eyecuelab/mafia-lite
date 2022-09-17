@@ -9,7 +9,7 @@ const gameControllers = {
 		const { name, size } = req.body;
 		if (Utility.validateInputs(res, "Invalid lobby name or size", name, size)) {
 			if (size > maxLobbySize || size < minLobbySize) {
-				res.status(500).json({ error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})` });
+				res.status(403).json({ error: `Lobby size outside allowed bounds (min: ${minLobbySize}, max: ${maxLobbySize})` });
 			} else {
 				const newGame = await createNewGame(name, size);
 				res.status(201).json(newGame);
@@ -34,12 +34,12 @@ const gameControllers = {
 
 			if (game) {
 				if (game.players.length >= game.size) {
-					res.status(500).json({ error: "Unable to join, lobby is full" });
+					res.status(401).json({ error: "Unable to join, lobby is full" });
 				} else {
 					res.json(game);
 				}
 			} else {
-				res.status(500).json({ error: "Unable to retreive game" });
+				res.status(401).json({ error: "Unable to retreive game" });
 			}
 		} catch (error) {
 			res.status(404).json({ error: "Game not found, Please enter a valid game code" });

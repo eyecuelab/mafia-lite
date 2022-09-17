@@ -12,15 +12,14 @@ const roleControllers ={
 
   async getRoles(req: any, res: any) {
     const roles = await getRoles();
-    res.json(roles);
+    res.status(200).json(roles);
   },
 
   async getSingleRole(req: any, res: any) {
     const { id } = req.params;
-
     try {
       const role = await getRoleById(id);
-      res.json(role);
+      res.status(200).json(role);
     } catch (error) {
       return res.status(404).json({ error: "Role not found"})
     }
@@ -29,7 +28,7 @@ const roleControllers ={
   async updateRoles(req: any, res: any) {
     const { id, name, type, roleDesc, nightTimePrompt } = req.body
     const updatedRoles = await updateRole(id, name, type, roleDesc, nightTimePrompt);
-    res.json(updatedRoles);
+    res.status(201).json(updatedRoles);
   },
 
   async deleteRole(req: any, res: any) {
