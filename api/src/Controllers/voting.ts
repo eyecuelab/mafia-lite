@@ -43,9 +43,10 @@ const votingControllers = {
     const votes = await getAllVotes(gameId, round.id, round.currentPhase);
     const players = await getPlayersByGameId(gameId);
     const isNight = round.currentPhase === "night"
-
+		console.log(isNight)
 		const voteResults = countVotes(players, votes);
-    if(voteResults.length === 1 || voteResults[0].count !== voteResults[1].count && !isNight) {
+    if(voteResults.length > 0 && voteResults[0].count !== voteResults[1].count) {
+			console.log("Not a Tie", voteResults)
 			try {
 				res.status(200).json((await updateEndOfRoundStatus(gameId, voteResults[0].id)));
 				emitVoteResult(gameId, voteResults[0].id);
