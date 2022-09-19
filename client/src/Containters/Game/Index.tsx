@@ -9,6 +9,7 @@ import DayTime from "./DayTime";
 import NightTime from "./NightTime";
 import style from "./Game.module.css";
 import GameOver from "./GameOver";
+import Rules from "../../Components/Rules/Rules";
 
 type VotePayload = {
 	gameId: number,

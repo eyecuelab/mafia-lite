@@ -3,6 +3,7 @@ import { Player } from "../../Types/Types";
 import PlayerList from "../Lobby/PlayerList";
 import GameOverCSS from "./GameOver.module.css";
 import titleImg from "../../assets/images/image196.png";
+import MenuButton from "../../Components/MenuButton";
 
 const GameOver = ({
 	// winners,
@@ -44,6 +45,11 @@ const GameOver = ({
 					{paragraph}<br/>
 					<br/>{paragraph2}
 				</p>
+				<MenuButton
+					link={"/"}
+					className={GameOverCSS["Done-button"]}
+					text={"Done"}
+				/>
 			</div>
 		</div>
 	);

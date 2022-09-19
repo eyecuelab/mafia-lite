@@ -7,6 +7,7 @@ import { useModal } from "../../ModalContext";
 import { postData } from "../../ApiHelper";
 import styles from "./Game.module.css";
 import titleImg from "../../assets/images/Title.png";
+import Rules from "../../Components/Rules/Rules";
 
 
 const beginNight = async (gameId : number): Promise<void> => postData("/startNight", { gameId });

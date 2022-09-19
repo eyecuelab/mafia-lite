@@ -53,8 +53,54 @@
   margin-top: 23.5%;
 }
 
+.Done-button{
+  margin-left: 2.25%;
+  margin-top: 735px;
+  height: 6vh;
+  width: 33vw;
+  background-size: cover;
+  transform: scale(0.8);
+  font-family: 'Bebas Neue';
+  font-size: 2em;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  border-radius: 0;
+  border: 1px solid transparent;
+}
+
+.Done-button:hover {
+  opacity: 0.65;
+  color: black;
+  transition: ease-in-out 0.5s;
+  transition-timing-function: ease-in-out .8s;
+  box-shadow: 2px 2px 7px 2px rgba(236, 236, 236, 0.5);
+  cursor: pointer;
+}
 
 
+@media screen and (max-width: 820px) {
+  .title-Img {
+    width: 80vw;
+    top: 10px;
+    left: 50px;
+    position: absolute;
+  }
+  .winner-header {
+    margin-top: 25.5%;
+    margin-left: 8%;
+    padding-bottom: 3px;
+  }
+  .paragraph {
+    margin-top: 35.5%;
+    margin-left: 8%;
+  }
+  .Done-button {
+    margin-top: 575px;
+    margin-left: -6%;
+    width: 100vw
+  }
+}
 /* .player-list {
   margin-top: 6%;
   display: grid;
