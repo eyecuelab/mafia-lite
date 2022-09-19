@@ -77,6 +77,7 @@ function Game(): JSX.Element {
 			});
 
 			socket.on("start_day", () => {
+				setRandomKill(false);
 				handleGameState({ hasResult: false, isDay: true });
 			});
 
