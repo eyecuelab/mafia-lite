@@ -98,6 +98,18 @@ const getLivingPlayersByGameId = async (gameId: number) => {
 	});
 }
 
+const getDeadPlayersByGameId = async (gameId: number) => {
+	return await prisma.player.findMany({
+		where: {
+			gameId: gameId,
+			OR: [
+				{ status: "murdered" },
+				{ status: "terminated" }
+			]
+		}
+	});
+}
+
 const getPlayersInGameByTeam = async (gameId: number) => {
 	const players = await getPlayersByGameId(gameId);
 
@@ -114,5 +126,5 @@ const getPlayersInGameByTeam = async (gameId: number) => {
 	return playersByTeam;
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getPlayersInGameByTeam };
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam };
 

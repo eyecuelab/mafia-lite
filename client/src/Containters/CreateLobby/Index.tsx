@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
 import { useMutation } from "@tanstack/react-query";
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import CreateLobbyCSS from "./CreateLobby.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
@@ -59,7 +59,7 @@ function CreateLobby() {
 	return (
 		<>
 			<div className={CreateLobbyCSS["create-lobby-title-wrapper"]}>
-				<img src={titleImg} className={CreateLobbyCSS.titleImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={CreateLobbyCSS.titleImage} alt="The Nameless Terror" />
 				<h5>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<div>

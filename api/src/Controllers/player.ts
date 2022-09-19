@@ -2,7 +2,7 @@ import { Player } from '@prisma/client';
 import { getGameById } from '../Models/game';
 import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
 import { getRoleById, getRoleByName } from '../Models/role';
-import { getCurrentRoundByGameId } from '../Models/round';
+import { getCurrentRoundByGameId, getGhostImages } from '../Models/round';
 import { getPlayerTraits } from '../Models/traits';
 import io from '../server';
 import Utility from './Utility';
@@ -85,8 +85,10 @@ const playerControllers = {
 			const game = await getGameById(gameId);
 			const players = await getPlayersByGameId(gameId);
 			const filteredPlayers = await filterPlayersData(playerId, players);
+			const currentRound = await getCurrentRoundByGameId(gameId);
+			const ghostImages = (await getGhostImages(gameId)) ?? [];
 
-			res.status(200).json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound: (await getCurrentRoundByGameId(gameId)) });
+			res.json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound, ghostImages });
 		}
 	}
 }

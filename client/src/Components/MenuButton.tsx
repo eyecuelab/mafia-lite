@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import buttonImg from "../assets/images/ui/image_15.png";
+import { ButtonImage } from "../assets/images/Images";
 import GenericButton from "./GenericButton";
 
 type propTypes = {
 	link?: string,
 	className: string,
 	text: string,
-	onClick?: Function
+	onClick?: () => unknown
 }
 
 function MenuButton(props: propTypes): JSX.Element {
@@ -20,7 +19,7 @@ function MenuButton(props: propTypes): JSX.Element {
 			onClick={onClick}
 			style={
 				{
-					backgroundImage: `url("${buttonImg}")`,
+					backgroundImage: `url("${ButtonImage}")`,
 				}
 			}
 		/>

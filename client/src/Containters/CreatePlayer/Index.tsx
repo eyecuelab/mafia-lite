@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "../../ApiHelper";
 import { useLocation } from "react-router-dom";
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import CreatePlayerCSS from "./CreatePlayer.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
@@ -60,7 +60,7 @@ function CreatePlayer() {
 	return (
 		<>
 			<div className={CreatePlayerCSS["join-game-title-wrapper"]}>
-				<img src={titleImg} className={CreatePlayerCSS.titleImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={CreatePlayerCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={CreatePlayerCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<form onSubmit={onSubmit}>

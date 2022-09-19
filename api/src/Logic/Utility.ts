@@ -1,7 +1,7 @@
 const Utility = {
 	shuffleArray(array: any[]) {
 		for (let i = array.length - 1; i > 0; i--) {
-			const randomIndex = this.getRandomRange(0, i);
+			const randomIndex = this.getRandomRange(0, i + 1);
 
 			const temp = array[i];
 			array[i] = array[randomIndex];

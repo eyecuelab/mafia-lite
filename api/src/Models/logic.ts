@@ -1,4 +1,6 @@
+import { Player } from '@prisma/client';
 import { FilteredPlayer, filterPlayersData } from '../Controllers/player';
+import Utility from '../Logic/Utility';
 import io from '../server';
 import { getLivingPlayersByGameId, getPlayersInGameByTeam } from './player';
 import { getRoleById } from './role';
@@ -7,17 +9,20 @@ const emitStartNight = (gameId: number) => {
 	io.in(gameId.toString()).emit('start_night');
 }
 
-const emitStartDay = (gameId: number) => {
-	io.in(gameId.toString()).emit('start_day');
+const emitStartDay = (gameId: number, ghostImages: number[]) => {
+	io.in(gameId.toString()).emit('start_day', ghostImages);
+}
+
+const emitEndGame = (gameId: number, gameEndData: { cultistsWin: boolean, winners: FilteredPlayer[] }) => {
+	io.in(gameId.toString()).emit('end_game', gameEndData );
 }
 
 const checkEndConditions = async (gameId: number) => {
 	const livingPlayers = await getLivingPlayersByGameId(gameId);
-	const roleIds = livingPlayers.map((player) => player.roleId);
 
 	let numCultists = 0;
-	for (let i = 0; i < roleIds.length; i++) {
-		const role = await getRoleById(roleIds[i]);
+	for (let i = 0; i < livingPlayers.length; i++) {
+		const role = await getRoleById(livingPlayers[i].roleId);
 		if (role?.type === "cultist") {
 			numCultists++;
 		}
@@ -35,12 +40,23 @@ const checkEndConditions = async (gameId: number) => {
 		const filteredWinners = await filterPlayersData(winners[0].id, winners);
 		return { gameOver, cultistsWin, winners: filteredWinners }
 	} else {
-		return { gameOver };
+		return null;
 	}
 }
 
-const emitEndGame = (gameId: number, cultistsWin: boolean, winners: FilteredPlayer[]) => {
-	io.in(gameId.toString()).emit('end_game', cultistsWin, winners );
+const getRandomLivingCultist = async (gameId: number): Promise<Player> => {
+	const livingPlayers = await getLivingPlayersByGameId(gameId);
+	const cultists = [];
+	for (let i = 0; i < livingPlayers.length; i++) {
+		const role = await getRoleById(livingPlayers[i].roleId);
+		if (role?.type === "cultist") {
+			cultists.push(livingPlayers[i]);
+		}
+	}
+	console.log("🚀 ~ file: logic.ts ~ line 50 ~ getRandomLivingCultist ~ cultists", cultists);
+	const shuffled = Utility.shuffleArray(cultists);
+	console.log("🚀 ~ file: logic.ts ~ line 58 ~ getRandomLivingCultist ~ shuffled", shuffled);
+	return shuffled[0];
 }
 
-export { emitStartNight, emitStartDay, checkEndConditions, emitEndGame };
+export { emitStartNight, emitStartDay, checkEndConditions, emitEndGame, getRandomLivingCultist };

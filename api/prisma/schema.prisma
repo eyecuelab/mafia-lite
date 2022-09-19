@@ -39,7 +39,19 @@ model Player {
   roundDiedId Int?
   status      String  @default("alive")
 	traits			PlayerTrait[]
+	ghosts			GhostTarget[] @relation("Ghost")
+	targets			GhostTarget[] @relation("Target")
   avatar      String
+}
+
+model GhostTarget {
+	id          Int     @id @default(autoincrement())
+	ghost				Player  @relation("Ghost", fields: [ghostId], references: [id])
+	ghostId			Int
+	target			Player  @relation("Target", fields: [targetId], references: [id])
+	targetId		Int
+	round				Round  @relation(fields: [roundId], references: [id])
+	roundId			Int
 }
 
 model Round {
@@ -50,6 +62,8 @@ model Round {
   currentPhase String    @default("day")
   createdAt    DateTime  @default(now())
   died         Player[]
+	ghostImages	 Int[]
+	ghostTarget	 GhostTarget[]
   endedAt      DateTime?
 }
 

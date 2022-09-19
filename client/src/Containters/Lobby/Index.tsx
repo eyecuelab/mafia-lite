@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
@@ -77,7 +77,7 @@ const Lobby = (): JSX.Element => {
 	return (
 		<div>
 			<div className={styles.lobbyPageContainer}>
-				<img src={titleImg} className={styles.titleImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
 				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>

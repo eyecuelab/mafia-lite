@@ -48,4 +48,5 @@ export interface GameData {
 	players: Player[]
 	thisPlayer: Player,
 	currentRound: Round
+	ghostImages: number[]
 }

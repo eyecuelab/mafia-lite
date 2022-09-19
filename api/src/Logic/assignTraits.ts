@@ -27,7 +27,7 @@ const getTraitsForGame = (traits: Trait[], numPlayers: number, numMaxRepeat?: nu
 			const traitIndex = Utility.getRandomRange(0, traits.length);
 			let traitId = traits[traitIndex].id;
 			if (usedTraits.has(traitId)) {
-				const newCount = (usedTraits.get(traitId))!! + 1;
+				const newCount = (usedTraits.get(traitId))! + 1;
 				usedTraits.set(traitId, newCount);
 				if (newCount >= numRepeat) {
 					traits = Utility.removeElementFromArray(traits, traitIndex);

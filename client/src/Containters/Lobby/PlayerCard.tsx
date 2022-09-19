@@ -1,7 +1,7 @@
 import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
 import styles from "./Lobby.module.css";
 import { Player } from "../../Types/Types";
-import cultistBadge from "../../assets/images/ui/Cultist_Badge.png";
+import { CultistBadge } from "../../assets/images/Images";
 
 type propTypes = {
 	player: Player
@@ -29,7 +29,7 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : (isPlayer) ? styles.yourPlayerBorder + transitionAnimation : styles.playerCard + transitionAnimation}>
 				<img className={(isMain) ? styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
-				{(team === "cultist" && player.team === "cultist")? <img src={cultistBadge} className={styles.cultistBadge} /> : null}
+				{(team === "cultist" && player.team === "cultist")? <img src={CultistBadge} className={styles.cultistBadge} /> : null}
 				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} canVote={canVote} phase={phase} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{player?.name}</p>

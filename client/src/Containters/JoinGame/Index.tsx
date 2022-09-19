@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getData } from "../../ApiHelper";
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
 import GenericButton from "../../Components/GenericButton";
@@ -37,7 +37,7 @@ function JoinGame() {
 	return (
 		<>
 			<div className={JoinGameCSS["join-game-title-wrapper"]}>
-				<img src={titleImg} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={JoinGameCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 			<div>

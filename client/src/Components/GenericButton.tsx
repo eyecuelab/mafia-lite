@@ -14,8 +14,6 @@ const GenericButton = (props: any): JSX.Element => {
 			<button onClick={onClick} type={type} {...rest}>{text}</button>
 		);
 	}
-
-	
 };
 
-export default GenericButton; 
+export default GenericButton;

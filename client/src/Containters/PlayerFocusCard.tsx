@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./PlayerFocusCard.module.css";
 import { Player } from "../Types/Types";
-import murdered from "../assets/images/ui/image_104.png";
-import jailed from "../assets/images/ui/image_105.png";
-import terminated from "../assets/images/ui/image_180.png";
-
+import { MurderedBadge, JailedBadge, TerminatedBadge } from "../assets/images/Images";
 
 type propTypes = {
 	player: Player | undefined
@@ -13,22 +10,22 @@ type propTypes = {
 }
 
 const PlayerFocusCard = (props: propTypes) => {
-	const { player, tie, nightTie } = props;
+	const { player, nightTie } = props;
 	const [imgPath, setImgPath] = useState("");
 
 
 	useEffect(() => {
 		switch(player?.status) {
-			case "terminated": setImgPath(terminated); break;
-			case "jailed": setImgPath(jailed); break;
-			case "murdered": setImgPath(murdered); break;
+			case "terminated": setImgPath(TerminatedBadge); break;
+			case "jailed": setImgPath(JailedBadge); break;
+			case "murdered": setImgPath(MurderedBadge); break;
 			default: setImgPath("");
 		}
 	}, [player]);
 
 	return (
 		<div className={styles.playerFocusCardContainer}>
-			{(tie) ? 
+			{(!player) ? 
 				<div className={styles.playerFocusTextContainer}>
 					<p className={styles.playerFocusDetails}>Tie.</p>
 					<p className={styles.playerFocusSubDetail}>No one was jailed.</p>
@@ -42,7 +39,7 @@ const PlayerFocusCard = (props: propTypes) => {
 					<div className={styles.playerFocusTextContainer}>
 						{(nightTie) ? 
 							<div>
-								<p className={styles.playerFocusName}>{player?.name} has been randomly {player?.status} by the Cthulhu</p> 
+								<p className={styles.playerFocusName}>{player?.name} has been randomly {player?.status} by Cthulhu</p> 
 								<p className={styles.playerFocusDetails}>{player?.team === "cultist" ? "Cthulhu killed a Cultist!" : "Cthulhu killed an Investigator!"}</p>
 							</div>
 							: 

@@ -1,8 +1,6 @@
-import React from "react";
 import { Player } from "../../Types/Types";
-import PlayerList from "../Lobby/PlayerList";
 import GameOverCSS from "./GameOver.module.css";
-import titleImg from "../../assets/images/image196.png";
+import { TitleImage } from "../../assets/images/Images";
 import MenuButton from "../../Components/MenuButton";
 
 const GameOver = ({
@@ -31,7 +29,7 @@ const GameOver = ({
 
 	return (
 		<div className={GameOverCSS[`${backgroundImg}`]}>
-			<img className={GameOverCSS["title-Img"]} src={titleImg} />
+			<img className={GameOverCSS["title-Img"]} src={TitleImage} />
 			<div className={GameOverCSS["player-list-wrapper"]}>
 				<h1 className={GameOverCSS["winner-header"]}>
 					The {winner} Won...

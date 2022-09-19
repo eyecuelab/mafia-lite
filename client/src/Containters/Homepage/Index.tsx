@@ -1,4 +1,4 @@
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
 import Rules from "../../Components/Rules/Rules";
@@ -8,7 +8,7 @@ function Homepage() {
 	return (
 		<div>
 			<div className={HomepageCSS["homepage-title-wrapper"]}>
-				<img src={titleImg} className={HomepageCSS.titleImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={HomepageCSS.titleImage} alt="The Nameless Terror" />
 				<h5>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 

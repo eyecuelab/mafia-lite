@@ -1,5 +1,4 @@
 import { Player, PrismaClient } from '@prisma/client';
-import { getPlayerById } from './player';
 const prisma = new PrismaClient();
 
 const createNewRound = async (roundNumber: number, gameId: number) => {
@@ -31,15 +30,11 @@ const getRoundById = async (id: number) => {
     throw "Round not found";
   }
 }
-const killPlayer = async (votedPlayer: Player, roundId: number) => {
-	//return await prisma.
-}
+
 const endRound = async (roundId: number,) => {
   return await prisma.round.update({
     where: { id: roundId },
-    data: { 
-      endedAt : new Date(),
-    }
+    data: { endedAt : new Date(), }
   })
 }
 
@@ -55,10 +50,32 @@ const getCurrentRoundByGameId = async (gameId: number) => {
 const updateToNightPhase = async (currentRoundId: number) => {
   return await prisma.round.update({
     where: { id: currentRoundId },
-    data: {
-      currentPhase : "night"
-    }
+    data: { currentPhase : "night" }
   });
 }
 
-export { getRoundByGameID, getRoundById, endRound, killPlayer, createNewRound, getCurrentRoundByGameId, updateToNightPhase }
+const addGhostImage = async (gameId: number, imgIndex: number) => {
+	const currRound = await getCurrentRoundByGameId(gameId);
+	return await prisma.round.update({
+		where: { id: currRound.id },
+		data: { 
+			ghostImages: {
+				push: imgIndex
+			}
+		}
+	})
+}
+
+const getGhostImages = async (gameId: number) => {
+	const rounds = await prisma.round.findMany({
+		where: { 
+			gameId,
+			currentPhase: "night"
+		},
+		orderBy: { roundNumber: "desc" }
+	});
+
+	return rounds[0]?.ghostImages;
+};
+
+export { getRoundByGameID, getRoundById, endRound, createNewRound, getCurrentRoundByGameId, updateToNightPhase, addGhostImage, getGhostImages }

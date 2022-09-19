@@ -10,6 +10,8 @@ import NightTime from "./NightTime";
 import style from "./Game.module.css";
 import GameOver from "./GameOver";
 import Rules from "../../Components/Rules/Rules";
+import PlayerFocusCard from "../PlayerFocusCard";
+import GhostView from "./GhostView";
 
 type VotePayload = {
 	gameId: number,
@@ -26,7 +28,6 @@ type Verdict = {
 }
 
 type GameEndData = {
-	gameOver: boolean
 	cultistsWin: boolean
 	winners: Player[]
 }
@@ -81,8 +82,8 @@ function Game(): JSX.Element {
 				handleGameState({ hasResult: false, isDay: true });
 			});
 
-			socket.on("end_game", (cultistsWin: boolean, winners: Player[]) => {
-				setGameEndData({ gameOver: true, cultistsWin, winners });
+			socket.on("end_game", (gameEndData: { cultistsWin: boolean, winners: Player[] }) => {
+				setGameEndData(gameEndData);
 			});
 		
 			return () => {
@@ -91,6 +92,7 @@ function Game(): JSX.Element {
 				socket.off("vote_results_tie_night");
 				socket.off("start_night");
 				socket.off("start_day");
+				socket.off("end_game");
 			};
 		}
 	});
@@ -131,7 +133,19 @@ function Game(): JSX.Element {
 		}
 	};
 	
-	if (gameEndData?.gameOver) {
+	const focusView = () => {
+		if (gameData) {
+			if (hasResult && votingResults) {
+				return <PlayerFocusCard player={votingResults} nightTie={randomKill} />;
+			} else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated") {
+				return <GhostView gameData={gameData} />;
+			} else {
+				return null;
+			}
+		}
+	};
+
+	if (gameEndData) {
 		return (
 			<GameOver winners={gameEndData.winners} cultistsWin={gameEndData.cultistsWin} />
 		);
@@ -142,7 +156,7 @@ function Game(): JSX.Element {
 				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
 				{gameData ?  (
 					(
-						(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} randomKill={randomKill} />)
+						(isDay) ? (<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} focusView={focusView} />) : (<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} finishVote={finishVote} endRound={endRound} focusView={focusView} />)
 					)
 				) : <p>...loading</p>}
 			</React.Fragment>
