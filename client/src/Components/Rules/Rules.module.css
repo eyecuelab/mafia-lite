@@ -1,0 +1,55 @@
+.homepageFooter{
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  margin: 0 auto;
+  margin-top: 0.5%;
+  font-family: 'American Typewriter', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+	z-index: 600;
+}
+
+.questionMark {
+  flex-direction: right;
+  width: 2vw;
+  margin-left: 1%;
+  color: white;
+  cursor: pointer;
+}
+
+.questionMark:hover {
+	transform: scale(1.2);
+	transition: ease-in-out 0.3s;
+}
+
+.modalContent {
+  align-items: center;
+  height: 70vh;
+  width: 57vw;
+  border-radius: 10px;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: auto;
+}
+
+.modalContent::-webkit-scrollbar {
+  width: 10px;
+	padding-left: 1px;               /* width of the entire scrollbar */
+}
+.modalContent::-webkit-scrollbar-track {
+  background: rgb(0, 0, 0);        /* color of the tracking area */
+}
+.modalContent::-webkit-scrollbar-thumb {
+  background-color: rgba(104, 12, 12);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  /* border: 3px solid rgb(255, 255, 255);  creates padding around scroll thumb */
+}
+
+.headerTwo {
+  color: rgba(104, 12, 12);
+} 
+
+.listHeader {
+  font-size: 20px;
+  font-weight: 400;
+}
