@@ -10,6 +10,8 @@ import traitsRouter from './Routes/traits';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { SessionOptions } from 'express-session';
+import swaggerUi from "swagger-ui-express";
+import * as swaggerDocument from '../swagger.json';
 
 const session = require("express-session")
 const app = express();
@@ -20,6 +22,11 @@ app.use(cors({ origin: [
   'https://nameless-terror-client.fly.dev',
   'https://nameless-terror-api.fly.dev',
 ], credentials: true }));
+
+app.use(
+  "/swagger",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument));
 
 const secret = process.env.SESSION_SECRET || 'default-app-secret';
 

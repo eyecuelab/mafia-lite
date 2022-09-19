@@ -1,8 +1,10 @@
 import { createNewGame, getAllGameDetails, getGameByGameCode, getGames } from "../Models/game";
 import Utility from "./Utility";
+import { Get, Post, Route, Tags } from "tsoa";
 
 const minLobbySize = 4;
 const maxLobbySize = 12;
+
 
 const gameControllers = {
 	async createGame(req: any, res: any) {
@@ -16,13 +18,11 @@ const gameControllers = {
 			}
 		}
 	},
-
-	async getGames(req: any, res: any) {
+	async getGames(req: any, res: any) {		
 		const games = await getGames();
 		res.json(games);
 	},
-
-	async getSingleGame(req: any, res: any) {
+	async getSingleGame(req: any, res: any) {	
 		const { id, code } = req.query;
 		try {
 			let game;
