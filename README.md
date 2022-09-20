@@ -71,7 +71,7 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - _[ViteJS](https://vitejs.dev/)_
 - _[Nodemon](https://www.npmjs.com/package/nodemon)_
 - _[Fly.IO](https://fly.io/)_
-- _[Swagger](https://swagger.io/tools/swaggerhub/?&utm_source=aw&utm_medium=ppcg&utm_campaign=SEM_SwaggerHub_PR_NA_ENG_EXT_Prospecting&utm_term=swagger&utm_content=511173019809&gclid=Cj0KCQjwxveXBhDDARIsAI0Q0x3e0_geAzYA0RbSN9shkknno3LoLnkL-Znnr435LWs-hu7fQ3xct5IaArBmEALw_wcB&gclsrc=aw.ds)_
+- _[Swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)_
 
 ## ⚙️ Installation, Setup, and Running The App <a id="installation-setup-and-running-the-app"></a>
 
