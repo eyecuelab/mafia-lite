@@ -14,7 +14,7 @@
 }
 
 .title-Img  {
-  width: 55vw;
+  width: 30vw;
   top: 10px;
   left: 50px;
   position: absolute;
@@ -54,8 +54,8 @@
 }
 
 .Done-button{
-  margin-left: 2.25%;
-  margin-top: 735px;
+  margin-left: 2%;
+  margin-top: 890px;
   height: 6vh;
   width: 33vw;
   background-size: cover;
