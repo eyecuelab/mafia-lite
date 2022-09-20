@@ -57,7 +57,7 @@
             "in": "query",
             "description": "ID of game to return",
             "required": true,
-            "type": "string"
+            "type": "number"
           }
         ],
         "responses": {
@@ -82,20 +82,27 @@
         "produces": ["application/json"],
         "parameters": [
           {
+            "in": "body", 
             "name": "game",
-            "in": "body",
+            "size": "number",
             "description": "Game object that needs to be added",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Game"
+              "type": "object",
+              "required":
+              "name",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "gameCode": {
+                  "type": "string"
+                }
+              }
             }
-          },
-          {
-            "name": "size",
-            "in": "body",
-            "description": "size of game lobby",
-            "required": true,
-            "type": "number"
           }
         ],
         "responses": {
