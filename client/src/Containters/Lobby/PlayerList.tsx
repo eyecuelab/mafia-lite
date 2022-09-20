@@ -27,6 +27,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 				const voteMap = new Map<number, number>();
 				voteMap.set(playerId, newTotal);
 				setVoteTally(voteMap);
+				console.log(voteTally);
 			});
 
 			return () => {
