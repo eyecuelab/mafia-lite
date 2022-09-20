@@ -38,7 +38,7 @@ const Rules = (): JSX.Element => {
 
 							<li>Once you are killed from the game, you are then allowed to see the identities of all players at night. You will be shocked to see who has been fooling you and will bond will the other players who have been killed. It is almost just as thrilling to watch the game take place—knowing all the identities—as it is to be alive playing. You will talk about it on your walk home and perhaps the next day. That epic game of Mafia you played where you tricked your closest friends and family into thinking you were on their side and then betrayed them for the win.</li> */}
 				</div>
-			)} className={styles.questionMark} alt="The Nameless Terror" />
+			)} className={styles.questionMark} alt="question mark" />
 		</div>
 	);
 };
