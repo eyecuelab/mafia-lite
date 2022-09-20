@@ -26,8 +26,22 @@
     flex-direction: row;
     height: 100vh;
 }
+
+.dayHeader {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: normal;
+    font-weight: 400;
+    font-size: 55px;
+}
+
+.nightHeader {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: normal;
+    font-weight: 400;
+    font-size: 55px;
+}
 .titleImage {
-	width: 25vw;
+	width: 20vw;
     display: block;
     float: left;
     margin-left: 1vw;

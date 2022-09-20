@@ -5,6 +5,7 @@ import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
 import { getData, postData } from "../../ApiHelper";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import styles from "./GhostView.module.css";
 
 const sendGhostImage = (imgIndexPayload: {imgIndex: number}) => postData("/image", imgIndexPayload);
 const getGhostTarget = (): Promise<Player> => getData("/image");
@@ -33,24 +34,30 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 	const isNight = gameData.currentRound.currentPhase === "night";
 	const images = isNight ? GhostImages : filterImages(GhostImages, gameData.ghostImages);
 
+	const targetName = data && isNight ? `Target: ${data.name}` : null;
+
 	return (
 		<React.Fragment>
-			<div style={{ background: `url(${GhostFrame})`, width: "100%" }}>
-				{data && isNight && <p>Target: {data.name}</p>}
-				<img src={images[imageIndex]} />
-				{showControls && <div>
+			<div className={styles.ghostViewContainer}>
+				{<p className={styles.targetName}>{targetName}</p>}
+				<img className={styles.ghostImage} src={images[imageIndex]} />
+				{showControls && <div className={styles.ghostButtonControl}>
 					{imageIndex > 0 && <GenericButton
+						className={styles.arrowButton}
 						onClick={() => { setImageIndex(imageIndex - 1); }}
 						text={"<-"}
 					/>}
-					{imageIndex < (images.length - 1) && <GenericButton
-						onClick={() => { setImageIndex(imageIndex + 1); }}
-						text={"->"}
-					/>}
 					{isNight && <GenericButton
+						className={styles.sendButton}
 						onClick={() => { ghostImageMutation.mutate({ imgIndex: imageIndex }); }}
 						text={"Send"}
 					/>}
+					{imageIndex < (images.length - 1) && <GenericButton
+						className={styles.arrowButton}
+						onClick={() => { setImageIndex(imageIndex + 1); }}
+						text={"->"}
+					/>}
+					
 				</div>}
 			</div>
 		</React.Fragment>

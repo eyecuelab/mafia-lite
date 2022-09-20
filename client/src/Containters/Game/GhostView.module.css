@@ -1,0 +1,64 @@
+.ghostViewContainer {
+    width: 40%;
+    position: absolute;
+    margin-left: 7vh;
+    height: 70vh;
+    bottom: 15%;
+    background: url("../../assets/images/image_118_smoke.png") no-repeat center;
+    background-size: contain;
+    font-family: 'Bebas Neue', sans-serif;
+}
+.targetName {
+    position: relative;
+    font-size: 35px;
+    font-weight: bold;
+    bottom: -94%;
+    min-height: 40px;
+}
+.ghostImage {
+    width: 250px;
+    position: relative;
+    top: 22.5%;
+    /* border-top: 70px rgba(232, 232, 232, 0.605) solid;
+    border-bottom: 70px rgba(232, 232, 232, 0.605) solid; */
+}
+.ghostButtonControl {
+    position: relative;
+    bottom: -58%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+}
+.sendButton {
+    font-family: 'Bebas Neue', sans-serif;
+    height: 50px;
+    width: 120px;
+    border-radius: 5px;
+    margin: 20px;
+    background-color: #000000;
+    color: white;
+    font-weight: bold;
+    font-size: 27px;
+    border: solid gray 1px;
+}
+.sendButton:hover {
+    cursor: pointer;
+    border: 1px solid white;
+}
+.arrowButton {
+    font-family: 'Bebas Neue', sans-serif;
+    width: 70px;
+    height: 50px;
+    background-color: #000000;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    border: solid gray 1px;
+    border-radius: 5px;
+}
+.arrowButton:hover {
+    cursor: pointer;
+    border: 1px solid white;
+}

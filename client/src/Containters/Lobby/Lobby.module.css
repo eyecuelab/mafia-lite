@@ -83,7 +83,7 @@
 	grid-template-columns: 1fr 1fr;
 	width: 100%;
 	padding: 0;
-	max-height: 540px;
+	max-height: 70vh;
 	overflow: auto;
   overflow-x: hidden;
 }
