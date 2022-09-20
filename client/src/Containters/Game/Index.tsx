@@ -98,6 +98,9 @@ function Game(): JSX.Element {
 	});
 
 	const voteMutation = useMutation(sendVote, {
+		onSuccess: () => {
+			console.log("vote sent");
+		},
 		onError: (error) => {
 			if (error instanceof Error) {
 				callModal(error.message);

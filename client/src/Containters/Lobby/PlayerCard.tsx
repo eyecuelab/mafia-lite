@@ -2,10 +2,9 @@ import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverl
 import styles from "./Lobby.module.css";
 import { Player } from "../../Types/Types";
 import cultistBadge from "../../assets/images/ui/Cultist_Badge.png";
-import socket from "../../Hooks/WebsocketHook";
-import {postData } from "../../ApiHelper";
+import { postData } from "../../ApiHelper";
 import { useModal } from "../../ModalContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 type propTypes = {
 	player: Player
@@ -33,10 +32,12 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 			}
 		}
 	});
+
 	const onReadyButtonClick = (e: any) => {
 		// e.target.disabled = true;
 		readyPlayer.mutate({id: player.id, isReady: !player.isReady});
 	};
+	
 	return (
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : (isLobby && player.isReady) ? styles.playerCardLobbyReady + transitionAnimation: (isPlayer) ? styles.yourPlayerBorder + transitionAnimation : styles.playerCard + transitionAnimation}>
@@ -45,13 +46,13 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} canVote={canVote} phase={phase} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{(player.isHost) ? <span className={styles.hostIcon}>&#9812;</span> : null}{player?.name}</p>
-					{(player.isReady && !isMain) ? <p>Player is Ready</p> : null}
+					{(player.isReady && !isMain && isLobby) ? <p>Player is Ready</p> : null}
 					<p className={(isMain) ? styles.playerTraitsMain : styles.playerTraits}>
 						{player.traits.map((trait, index, array) => index === array.length - 1 ? trait : `${trait},`)}
 					</p>
 				</div>
-				{isMain && !player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#10003;</button> : null}
-				{isMain && player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#9747;</button> : null}
+				{isMain && !player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#9747;</button> : null}
+				{isMain && player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#10003;</button> : null}
 			</div>
 		</>
 	);
