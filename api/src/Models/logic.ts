@@ -53,9 +53,7 @@ const getRandomLivingCultist = async (gameId: number): Promise<Player> => {
 			cultists.push(livingPlayers[i]);
 		}
 	}
-	console.log("🚀 ~ file: logic.ts ~ line 50 ~ getRandomLivingCultist ~ cultists", cultists);
 	const shuffled = Utility.shuffleArray(cultists);
-	console.log("🚀 ~ file: logic.ts ~ line 58 ~ getRandomLivingCultist ~ shuffled", shuffled);
 	return shuffled[0];
 }
 
