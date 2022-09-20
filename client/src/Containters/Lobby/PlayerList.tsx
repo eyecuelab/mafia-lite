@@ -12,18 +12,10 @@ type PlayerListProps = {
 	clientPlayer?: Player
 }
 
-type PlayerVotes = {
-  playerId: number,
-  votes: number
-}
-
 const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, phase, clientPlayer }) => {
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [voteCast, setVoteCast] = useState<boolean>(false);
-	const initialVotes = players.map((player) => ({ playerId: player.id, votes: 0 }));
-	const [voteTally, setVoteTally] = useState<Array<PlayerVotes>>(initialVotes);
-	// Add one to include the user, players reads only the other players not yourself
-	// const numberOfPlayersInGame = players.length + 1;
+	const [voteTally, setVoteTally] = useState<Map<number, number>>(new Map<number, number>());
 
 	useEffect(() => {
 		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,18 +24,9 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	useEffect(() => {
 		if (!isLobby) {
 			socket.on("vote_cast", (playerId, newTotal) => {
-				setVoteTally((previousTally) => {
-					return previousTally.map((voteTally) => {
-						if (voteTally.playerId === playerId) {
-							return {
-								...voteTally,
-								votes: newTotal
-							};
-						} else {
-							return voteTally;
-						}
-					});
-				});
+				const voteMap = new Map<number, number>();
+				voteMap.set(playerId, newTotal);
+				setVoteTally(voteMap);
 			});
 
 			return () => {
@@ -58,7 +41,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	};
 
 	const getPlayerVotes = (playerId: number): number => {
-		const voteTotal = voteTally.find((tally: PlayerVotes) => tally.playerId === playerId)?.votes;
+		const voteTotal = voteTally.get(playerId);
 		return voteTotal ?? 0;
 	};
 
