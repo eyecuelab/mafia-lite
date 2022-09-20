@@ -31,7 +31,7 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 		return ghostImages.filter((image, index) => indices.includes(index));
 	};
 
-	const isNight = gameData.currentRound.currentPhase === "night";
+	const isNight = gameData?.currentRound?.currentPhase === "night";
 	const images = isNight ? GhostImages : filterImages(GhostImages, gameData.ghostImages);
 
 	const targetName = data && isNight ? `Target: ${data.name}` : null;
