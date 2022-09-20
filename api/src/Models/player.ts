@@ -57,6 +57,7 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
       isHost,
       name,
       avatar: getUniqueAvatarPath,
+      isReady : false
     }
   });
 }
@@ -74,6 +75,14 @@ const updatePlayerStatus = async (id: number, newStatus: string) => {
 	return await prisma.player.update({
 		where: { id },
 		data: { status: newStatus }
+	});
+}
+
+const updatePlayerIsReady = async (id: number, readyStatus: boolean) => {
+  console.log("readyStatus", readyStatus)
+	return await prisma.player.update({
+		where: { id },
+		data: { isReady: readyStatus }
 	});
 }
 
@@ -126,5 +135,6 @@ const getPlayersInGameByTeam = async (gameId: number) => {
 	return playersByTeam;
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam };
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam, updatePlayerIsReady };
+
 

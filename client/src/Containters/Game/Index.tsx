@@ -136,8 +136,10 @@ function Game(): JSX.Element {
 	const focusView = () => {
 		if (gameData) {
 			if (hasResult && votingResults) {
-				return <PlayerFocusCard player={votingResults} nightTie={randomKill} />;
-			} else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated") {
+				return <PlayerFocusCard player={votingResults} tie={false} nightTie={randomKill} />;
+			}else if(hasResult && !votingResults) {
+				return <PlayerFocusCard player={votingResults} tie={true} nightTie={randomKill} />;
+			}else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated") {
 				return <GhostView gameData={gameData} />;
 			} else {
 				return null;

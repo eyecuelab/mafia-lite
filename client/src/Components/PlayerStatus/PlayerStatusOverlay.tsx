@@ -42,7 +42,6 @@ const PlayerStatusOverlay = ({ playerStatus, isMain, phase, canVote }: { playerS
 	const cursorHovering = (entered: boolean) => {
 		if(canVote) {
 			if (!playerStatus || playerStatus === "alive") {
-				console.log(playerStatus);
 				if (entered) {
 					setRenderBadge(true);
 					(phase === "day") ? setBadgeImagePath(getBadgeImage("accused")) : setBadgeImagePath(getBadgeImage("murder"));

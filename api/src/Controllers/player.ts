@@ -1,6 +1,6 @@
 import { Player } from '@prisma/client';
 import { getGameById } from '../Models/game';
-import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus } from '../Models/player';
+import { updatePlayerById, createPlayer, getPlayerById, getPlayersByGameId, updatePlayerStatus, updatePlayerIsReady } from '../Models/player';
 import { getRoleById, getRoleByName } from '../Models/role';
 import { getCurrentRoundByGameId, getGhostImages } from '../Models/round';
 import { getPlayerTraits } from '../Models/traits';
@@ -17,6 +17,7 @@ export type FilteredPlayer = {
 	status: string
 	traits: string[]
 	avatar: string
+	isReady: boolean 
 }
 
 const playerControllers = {
@@ -90,6 +91,20 @@ const playerControllers = {
 
 			res.json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound, ghostImages });
 		}
+	},
+	async playerIsReady(req: any, res: any) {
+		console.log("Player ENDPOINT HIT");
+		const playerId = req.session.playerId;
+		const { id, isReady } = req.body;
+		if (playerId !== id) {
+			res.status(401).json({error: "You can only ready your own player"});
+		} else {
+			const player = await getPlayerById(playerId);
+			const gameId = player.gameId;
+			const updatedPlayer = await updatePlayerIsReady(player.id, isReady);
+			io.in(gameId.toString()).emit('playerIsReady');
+			res.status(200).json({updatedPlayer});
+		}
 	}
 }
 
@@ -114,7 +129,7 @@ export const filterPlayerData = async (playerId: number, player: Player): Promis
 
 	const traits = await getPlayerTraits(player.id);
 	
-	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, traits, avatar: player.avatar };
+	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, traits, avatar: player.avatar, isReady: player.isReady };
 }
 
 export default playerControllers;

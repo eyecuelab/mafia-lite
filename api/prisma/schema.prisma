@@ -42,6 +42,7 @@ model Player {
 	ghosts			GhostTarget[] @relation("Ghost")
 	targets			GhostTarget[] @relation("Target")
   avatar      String
+  isReady     Boolean @default(false)
 }
 
 model GhostTarget {

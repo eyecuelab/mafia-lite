@@ -10,7 +10,7 @@ type propTypes = {
 }
 
 const PlayerFocusCard = (props: propTypes) => {
-	const { player, nightTie } = props;
+	const { player, nightTie, tie } = props;
 	const [imgPath, setImgPath] = useState("");
 
 
@@ -25,7 +25,7 @@ const PlayerFocusCard = (props: propTypes) => {
 
 	return (
 		<div className={styles.playerFocusCardContainer}>
-			{(!player) ? 
+			{(tie) ? 
 				<div className={styles.playerFocusTextContainer}>
 					<p className={styles.playerFocusDetails}>Tie.</p>
 					<p className={styles.playerFocusSubDetail}>No one was jailed.</p>

@@ -35,14 +35,21 @@
 	flex: row;
 	width: 100%;
 	margin: auto;
+	margin-top: 0;
+	padding-top: 0;
 }
-
-.titleImage {
-	flex: left;
-	width: 15vw;
+.lobbyPageContainer {
+	max-width: 1250px;
+	margin: auto;
 	position: relative;
-	top: -100px;
-	left: -375px;
+}
+.logoImage {
+	flex: left;
+	width: 175px;
+	display: inline;
+	position: absolute;
+	top: -15px;
+	left: 0;
 }
 
 .playerStatus {
@@ -64,8 +71,10 @@
 }
 
 .playerListContainer{
-  max-height: 60%;
-    
+  max-height: 60vh;
+  overflow-y: auto;
+	scrollbar-color: rgb(164, 5, 5) rgb(99, 99, 99) ;
+	scrollbar-width : thin
 }
 
 .playerListGameContainer {
@@ -89,6 +98,15 @@
 .playerListGameContainer::-webkit-scrollbar-thumb {
   background-color: transparent;    
 }
+.playerListContainer::-webkit-scrollbar {
+	width: 10px;
+}
+.playerListContainer::-webkit-scrollbar-track {
+  background-color: rgb(99, 99, 99);         
+}
+.playerListContainer::-webkit-scrollbar-thumb {
+  background-color: rgb(164, 5, 5);    
+} 
 
 .playerListInnerWrap{
 	display: flex;
@@ -116,11 +134,30 @@
 	margin-bottom: 10px;
 	border: 3px solid transparent;
 }
+.playerCardLobbyReady {
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	background-color: rgba(0, 0, 0, 0.75);
+	border-radius: 5px;
+	width: 260px;
+	margin: auto;
+	margin-bottom: 10px;
+	border: 3px solid green;
+}
 .mainPlayerCardImage {
 	width: 180px;
 	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 	transform: rotate(-5.33deg);
 	margin-right: 10px;
+	border: 4px solid transparent;
+}
+.mainPlayerCardImageReady {
+	width: 180px;
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+	transform: rotate(-5.33deg);
+	margin-right: 10px;
+	border: 4px solid green;
 }
 .playerCardImage {
 	width: 100px;
@@ -160,6 +197,10 @@
 	color: white;
 	margin: 0;
 }
+.hostIcon {
+	margin-right: 8px;
+	font-size: 23px;
+}
 .playerDetails {
 	display: flex;
 	flex-direction: column;
@@ -167,7 +208,7 @@
 }
 .gameCodeInput {
 	background-color: #000000;
-	width: 48%;
+	width: 70%;
 	margin: auto;
 	padding: 10px;
 	margin-top: 30px;
@@ -179,11 +220,11 @@
 	opacity: 0.8;
 }
 .gameCodeInput p {
-    font-family: 'American Typewriter', sans-serif;
+    font-family: sans-serif;
 		color: white;
     font-weight: 700;
     width: 75%;
-    font-size: 25px;
+    font-size: 17px;
 }
 
 .copyButton {
@@ -193,7 +234,7 @@
 		padding: 8px;
 		margin: 3px;
 		color: white;
-		font-size: 24px;
+		font-size: 20px;
 		font-weight: 700;
 		font-family: 'Bebas Neue', sans-serif;
 		border-radius: 5px;
@@ -292,6 +333,24 @@
 	width: 260px;
 	margin: auto;
 	margin-bottom: 10px;
+}
+.readyButtonMain {
+	background-color: #000000;
+	border: solid gray 1px;
+	color: white;
+	font-size: 24px;
+	font-weight: 700;
+	font-family: 'Bebas Neue', sans-serif;
+	border-radius: 5px;
+	cursor: pointer;
+	height: 30px;
+	width: 40px;
+	padding: 1px;
+	text-align: center;
+	margin-left: 20px;
+}
+.playerReadyBorder {
+	border: 2px solid green;
 }
 
 

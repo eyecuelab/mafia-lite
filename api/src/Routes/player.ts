@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('/players/:gameId', playerControllers.getPlayers);
 router.get('/player/game', playerControllers.getPlayerGame);
 router.get('/player', playerControllers.getSinglePlayer);
+router.post('/readyPlayer', playerControllers.playerIsReady);
 
 router.post('/player', playerControllers.createPlayer);
 

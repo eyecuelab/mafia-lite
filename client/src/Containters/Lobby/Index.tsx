@@ -1,8 +1,9 @@
+import Rules from "../../Components/Rules/Rules";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
-import { TitleImage } from "../../assets/images/Images";
+import titleImg from "../../assets/images/Title.png";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
@@ -12,7 +13,6 @@ import PlayerList from "./PlayerList";
 import { useModal } from "../../ModalContext";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
-import Rules from "../../Components/Rules/Rules";
 
 const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
@@ -38,13 +38,17 @@ const Lobby = (): JSX.Element => {
 			navigate("/game");
 		});
 
+		socket.on("playerIsReady", () => {
+			console.log("Recieved Server Message");
+			queryClient.invalidateQueries(["games"]);
+		});
+
 		socket.on("player_joined_lobby", () => {
 			queryClient.invalidateQueries(["games"]);
 		});
 
-		return () => { socket.off("game_start"); };
+		return () => { socket.off("game_start"); socket.off("playerIsReady"); };
 	});
-
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
 		setCodeIsCopied(true);
@@ -77,7 +81,7 @@ const Lobby = (): JSX.Element => {
 	return (
 		<div>
 			<div className={styles.lobbyPageContainer}>
-				<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
+				<img src={titleImg} className={styles.logoImage} alt="The Nameless Terror" />
 				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>
@@ -100,7 +104,14 @@ const Lobby = (): JSX.Element => {
 									className={styles["cancel-game-btn"]}
 									text={"CANCEL GAME"}
 								/>
-							</div> : null}
+							</div> : 
+							<div>
+								<MenuButton
+									onClick={() => console.log("Leaving game")}
+									className={styles["start-game-btn"]}
+									text={"LEAVE GAME"}
+								/>
+							</div>}
 					</div> : null}
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />

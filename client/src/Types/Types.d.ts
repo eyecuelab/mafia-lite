@@ -7,6 +7,7 @@ export type Player = {
 	status: string
 	traits: string[]
 	avatar: string
+	isReady: boolean
 }
 
 export type Round = {
@@ -50,3 +51,4 @@ export interface GameData {
 	currentRound: Round
 	ghostImages: number[]
 }
+
