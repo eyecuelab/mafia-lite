@@ -6,6 +6,7 @@ import { TitleImage } from "../../assets/images/Images";
 import CreateLobbyCSS from "./CreateLobby.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
+import SubTitle from "../../Components/Titles/SubTitle";
 import { useModal } from "../../ModalContext";
 
 type GameCreateInput = {
@@ -61,6 +62,9 @@ function CreateLobby() {
 			<div className={CreateLobbyCSS["create-lobby-title-wrapper"]}>
 				<img src={TitleImage} className={CreateLobbyCSS.titleImage} alt="The Nameless Terror" />
 				<h5>A Lovecraftian Inspired Mafia Game</h5>
+			</div>
+			<div className={CreateLobbyCSS["subtitle-wrapper"]}>
+				<SubTitle title="HOST A NEW GAME" />
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>

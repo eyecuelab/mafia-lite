@@ -19,7 +19,11 @@ h5 {
   font-style: normal;
   font-size: 1.6rem;
   margin: 0;
-  margin-right: 42%;
+  margin-left: -27%;
+  margin-top: -3%;
+}
+
+.subtitle-wrapper {
   margin-top: -3%;
 }
 
@@ -30,7 +34,7 @@ form {
 }
 
 .user-selection-input {
-  /* margin: 1%; */
+  Margin-top: -2%;
   height: 6vh;
   width: 33vw;
   background-color: #ffffff;
@@ -39,7 +43,6 @@ form {
   font-size: 1.7em;
   font-weight: 700;
   color: #5B5B5B;
-  
   text-align: center;
   border-radius: 15px; 
 }
