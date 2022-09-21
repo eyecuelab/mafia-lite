@@ -140,9 +140,9 @@ function Game(): JSX.Element {
 		if (gameData) {
 			if (hasResult && votingResults) {
 				return <PlayerFocusCard player={votingResults} tie={false} nightTie={randomKill} />;
-			}else if(hasResult && !votingResults) {
+			} else if(hasResult && !votingResults) {
 				return <PlayerFocusCard player={votingResults} tie={true} nightTie={randomKill} />;
-			}else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated") {
+			} else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated" || isDay) {
 				return <GhostView gameData={gameData} />;
 			} else {
 				return null;

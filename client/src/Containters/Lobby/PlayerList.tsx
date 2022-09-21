@@ -18,17 +18,21 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	const [voteTally, setVoteTally] = useState<Map<number, number>>(new Map<number, number>());
 
 	useEffect(() => {
-		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
+		if (isLobby) {
+			playerListRef.current?.scrollIntoView({ behavior: "smooth" });	
+		} else {
+			playerListRef.current?.scrollTo({ top: 10, behavior: "smooth" });
+		}
+		
 	}, [players]);
 
 	useEffect(() => {
 		if (!isLobby) {
 			socket.on("vote_cast", (playerId, newTotal) => {
-				const voteMap = new Map<number, number>();
-				voteMap.set(playerId, newTotal);
-				setVoteTally(voteMap);
+				voteTally.set(playerId, newTotal);
+				setVoteTally(new Map(voteTally));
+				
 			});
-
 			return () => {
 				socket.off("vote_cast");
 			};
@@ -40,16 +44,11 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 		castVote?.(playerId);
 	};
 
-	const getPlayerVotes = (playerId: number): number => {
-		const voteTotal = voteTally.get(playerId);
-		return voteTotal ?? 0;
-	};
-
 	return (
 		<ul className={isLobby ? styles.playerListContainer : styles.playerListGameContainer}>
 			<>
 				{players?.map((player: Player) => {
-					const numberOfVotes = getPlayerVotes(player.id);
+					const numberOfVotes = voteTally.get(player.id);
 					return (
 						<PlayerCardWrapper
 							key={player.id}
@@ -57,7 +56,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 							isLobby={isLobby}
 							handleCastVote={handleCastVote}
 							voteCast={voteCast}
-							numberOfVotes={numberOfVotes}
+							numberOfVotes={numberOfVotes ?? 0}
 							clientPlayer={clientPlayer}
 							phase={phase}
 						/>

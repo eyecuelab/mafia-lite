@@ -19,9 +19,13 @@ const handleResponse = async (response: Response) => {
 };
 
 export const getData = async (endpoint: string) => {
-	const url = `${API_ENDPOINT}${endpoint}`;
-	const response = await fetch(url, { ...BASE_HEADERS , method: "GET" });
-	return await handleResponse(response);
+	try {
+		const url = `${API_ENDPOINT}${endpoint}`;
+		const response = await fetch(url, { ...BASE_HEADERS , method: "GET" });
+		return await handleResponse(response);
+	} catch(error) {
+		console.log(error);
+	}
 };
 
 export const postData = async (endpoint: string, payload: unknown) => {

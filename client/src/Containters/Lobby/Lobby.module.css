@@ -45,11 +45,10 @@
 }
 .logoImage {
 	flex: left;
-	width: 175px;
-	display: inline;
 	position: absolute;
-	top: -15px;
+	width: 275px;
 	left: 0;
+	margin-top: -75px;
 }
 
 .playerStatus {
@@ -65,9 +64,12 @@
 
 .playerCount {
 	font-family: 'American Typewriter', serif;
-	font-size: 1rem;
-	margin-top: -4.5%;
+	font-size: 1.25rem;
+	margin-top: -11.5%;
 	font-weight: 500;
+	margin-left: 40%;
+	border-bottom: solid white 1px;
+	width: 20%;
 }
 
 .playerListContainer{
@@ -83,7 +85,7 @@
 	grid-template-columns: 1fr 1fr;
 	width: 100%;
 	padding: 0;
-	max-height: 540px;
+	max-height: 70vh;
 	overflow: auto;
   overflow-x: hidden;
 }
@@ -220,11 +222,12 @@
 	opacity: 0.8;
 }
 .gameCodeInput p {
-    font-family: sans-serif;
-		color: white;
-    font-weight: 700;
-    width: 75%;
-    font-size: 17px;
+	font-family: 'American Typewriter';
+	font-style: normal;
+	color: white;
+	font-weight: 700;
+	width: 75%;
+	font-size: 17px;
 }
 
 .copyButton {
@@ -290,14 +293,11 @@
   cursor: pointer;
 }
 
-
-
 .voteCounter {
 	position: absolute;
-	/* right: -13%; */
-	bottom: -20%;
+	bottom: -10%;
 	font-size: 25px;
-	width: 90%;
+	width: 122%;
 	margin: auto;
 	font-family: 'American Typewriter', sans-serif;
 	font-weight: 700;
@@ -338,16 +338,19 @@
 	background-color: #000000;
 	border: solid gray 1px;
 	color: white;
-	font-size: 24px;
-	font-weight: 700;
+	font-size: 20px;
+	font-weight: 550;
 	font-family: 'Bebas Neue', sans-serif;
 	border-radius: 5px;
 	cursor: pointer;
-	height: 30px;
-	width: 40px;
-	padding: 1px;
-	text-align: center;
+	height: 32px;
+	width: 60px;
+	padding: 1px 1px;
 	margin-left: 20px;
+}
+.readyButtonMain:hover {
+	background-color: #535252;
+	transition: 0.3s;
 }
 .playerReadyBorder {
 	border: 2px solid green;

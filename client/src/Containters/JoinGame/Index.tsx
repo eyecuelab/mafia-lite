@@ -5,6 +5,7 @@ import { TitleImage } from "../../assets/images/Images";
 import JoinGameCSS from "./JoinGame.module.css";
 import MenuButton from "../../Components/MenuButton";
 import GenericButton from "../../Components/GenericButton";
+import SubTitle from "../../Components/Titles/SubTitle";
 import { useModal } from "../../ModalContext";
 
 const getGameId = async (gameCode: string) => getData(`/game?code=${gameCode}`);
@@ -39,6 +40,9 @@ function JoinGame() {
 			<div className={JoinGameCSS["join-game-title-wrapper"]}>
 				<img src={TitleImage} className={JoinGameCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={JoinGameCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
+			</div>
+			<div className={JoinGameCSS["subtitle-wrapper"]}>
+				<SubTitle title="JOIN A GAME" />
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>

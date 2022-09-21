@@ -33,14 +33,14 @@ const DayTime = ({ gameData, hasResult, finishVote, endRound, focusView }: { gam
 			<div className={styles.gameScreenContainer}>
 				<div className={styles.gameScreen}>
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
-					<h1>Day</h1>
+					<h1 className={styles.dayHeader}>Day {gameData?.currentRound?.roundNumber ?? null}</h1>
 					{gameData ? <PlayerList players={gameData.players} castVote={finishVote} isLobby={false} clientPlayer={gameData.thisPlayer} phase={"day"} /> : <p>...loading</p> }
 					{hasResult ? <GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} /> : <GenericButton text="End Round" onClick={endRound} />}
 				</div>
 				{/* // <div className={styles.voteResults}>
 				// 	{hasResult && votingResults ? <PlayerFocusCard player={votingResults} tie={false} /> : null}
 				// 	{hasResult && !votingResults ? <PlayerFocusCard player={undefined} tie={true} /> : null} */}
-				<div className={styles.voteResultsNight}>
+				<div className={styles.voteResults}>
 					{focusView()}
 				</div>
 			</div>

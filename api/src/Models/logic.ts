@@ -2,7 +2,7 @@ import { Player } from '@prisma/client';
 import { FilteredPlayer, filterPlayersData } from '../Controllers/player';
 import Utility from '../Logic/Utility';
 import io from '../server';
-import { getLivingPlayersByGameId, getPlayersInGameByTeam } from './player';
+import { getAlivePlayersByGameId, getLivingPlayersByGameId, getPlayersInGameByTeam } from './player';
 import { getRoleById } from './role';
 
 const emitStartNight = (gameId: number) => {
@@ -18,7 +18,7 @@ const emitEndGame = (gameId: number, gameEndData: { cultistsWin: boolean, winner
 }
 
 const checkEndConditions = async (gameId: number) => {
-	const livingPlayers = await getLivingPlayersByGameId(gameId);
+	const livingPlayers = await getAlivePlayersByGameId(gameId);
 
 	let numCultists = 0;
 	for (let i = 0; i < livingPlayers.length; i++) {
@@ -53,9 +53,7 @@ const getRandomLivingCultist = async (gameId: number): Promise<Player> => {
 			cultists.push(livingPlayers[i]);
 		}
 	}
-	console.log("🚀 ~ file: logic.ts ~ line 50 ~ getRandomLivingCultist ~ cultists", cultists);
 	const shuffled = Utility.shuffleArray(cultists);
-	console.log("🚀 ~ file: logic.ts ~ line 58 ~ getRandomLivingCultist ~ shuffled", shuffled);
 	return shuffled[0];
 }
 

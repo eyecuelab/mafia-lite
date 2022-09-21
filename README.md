@@ -1,6 +1,6 @@
-# ![Title Header](../mafia-lite/client/src/assets/images/image132.png)
+# <a href="https://fontmeme.com/28-days-later-font/"><img src="https://fontmeme.com/permalink/220921/5ac21dc9e124a866294624f7adbab248.png" alt="28-days-later-font" border="0"></a>
 
-## Summer Internship 2022
+## _Summer Internship 2022_
 
 ### 🧑🏽‍🤝‍🧑🏼 Maintainers
 
@@ -11,10 +11,11 @@
 
 ## 📂 Table Of Contents
 
-* [Description](#description)
+- [Description](#description)
   - [Summary](#summary)
   - [MVP](#mvp)
   - [Stretch Goals](#stretch-goals)
+
 - [Technologies Used](#technologies-used)
 - [Installation, Setup, and Running The App](#installation-setup-and-running-the-app)
   - [Installation](#installation)
@@ -43,7 +44,7 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - A clean & easy UI to interact with
 - A manual "ready" button to move game forward
 - A tooltip for roles to help remind players what their role can/can't do
-- A group of user should be able to successfully start and complete a game
+- A group of users should be able to successfully start and complete a game
 
 ### ⭐ Stretch Goals <a id="stretch-goals"></a>
 
@@ -54,7 +55,6 @@ _This is a web application that will allow a group of users to play a lovecrafti
 [] A timer
 [] Custom Themes
 [] In-game communication/Chat
-
 
 ## 🖥️ Technologies Used <a id="technologies-used"></a>
 
@@ -83,10 +83,11 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - See below for required .env files
 - You will also need to have your database setup in PostgreSQL
 - To ensure the prisma schema has been updated to PostgreSQL, Run a migration to create your database tables with Prisma Migrate:
-    - `npx prisma migrate dev --name init`
-    - `npm run seed` to seed the database with the default roles
-- Also, Prisma Studio is a visual editor for the data in your database. 
+  - `npx prisma migrate dev --name init`
+  - `npm run seed` to seed the database with the default roles
+- Also, Prisma Studio is a visual editor for the data in your database.
   - Run `npx prisma studio` in your terminal.
+
 ### Required .env Files <a id="required-files"></a>
 
 - In the `/api` directory, create an .env file and insert the following: `DATABASE_URL="postgresql://postgres:yourPasswordGoesHere@localhost:5432/yourDatabaseNameGoesHere?schema=yourSchemaNameGoesHere"` & `SESSION_SECRET="yourSecretGoesHere"`
@@ -101,35 +102,52 @@ _This is a web application that will allow a group of users to play a lovecrafti
 - Navigate the second terminal into the `/client` directory and run `npm run dev` as well. If your browser does not automatically load, type `http://localhost:5173/` manually in the browser
 
 ## The Nameless Terror API Reference <a id="the-mafia-api-reference"></a>
-Everything you need to interact with our API.
-### Making Requests
-- In progress
 
-- User:
-  - GET `/user` retrieves all users.
-  - GET `/user/:id` retrieves a single user by id.
-  - POST `/user/` creates a new user.
-  - PUT `/user/:id` updates a single user.
-  - DELETE `user/:id` deletes a single user.
+- Everything you need to interact with our API.
+- If you want to access our API directly, you can use the following base URL: `http://localhost:3000/swagger` after running the app locally.
+
+### Making Requests
+
+- All requests should be made to the base URL: `http://localhost:3000/` and use Postman/Thunderclient and requests should be made using the HTTP verbs `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
+
+- Player:
+  - GET `/player` retrieves a single player by Id.
+  - GET `/player/:gameId` retrieves all players by gameId.
+  - POST `/player/` creates a new player.
+  - PUT `/player/:id` updates a single player by Id.
 
 - Game:
-  - GET `/game` retrieves all games.
-  - GET `/game/:id` retrieves a single game.
+  - GET `/games` retrieves all games.
+  - GET `/game/:id` retrieves a single game by Id.
   - POST `/game/:id` creates a new game.
 
 - Round:
   - GET `/round/:id` retrieves specific round from game.
   - GET `/rounds/:gameID` retrieves all rounds from game.
 
+- Role:
+  - GET `/roles` retrieves all roles.
+  - GET `/role/:id` retrieves a single role by Id.
+  - POST `/role/` creates a new role.
+
+- Vote:
+  - GET `/vote/:id` retrieves a single vote by Id.
+  - GET `/votes/:gameId` retrieves all votes by gameId.
+  - POST `/vote/` creates a new vote.
+  - POST `/tallyVote` Counts casted votes and tally them.
+  - POST `/vote/` casted votes are collected.
+
 ### The Request Body
+
 - In progress
+
 ### Models
+
 - In progress
-### [How to play](https://www.kqed.org/pop/10178/how-to-play-mafia-an-in-depth-guide-to-the-perfect-holiday-game#:~:text=Simply%20put%2C%20the%20objective%20of,happens%2C%20the%20game%20is%20over.)
 
 ## Known 🐛 Bugs <a id="bugs"></a>
 
-* _No Known Issues_
+- _No Known Issues_
 
 ## 🎫License <a id="license"></a>
 

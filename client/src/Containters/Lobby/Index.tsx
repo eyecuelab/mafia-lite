@@ -56,7 +56,7 @@ const Lobby = (): JSX.Element => {
 	};
 
 	const copyLinkToClipBoard = (gameCode: string) => {
-		navigator.clipboard.writeText(`${CLIENT_ENDPOINT}/join/${gameCode}`);
+		navigator.clipboard.writeText(`${window.location.origin}/join/${gameCode}`);
 		setLinkIsCopied(true);
 		setTimeout(() => setLinkIsCopied(false), 600);
 	};

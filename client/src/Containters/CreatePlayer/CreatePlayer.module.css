@@ -19,12 +19,16 @@
   font-style: normal;
   font-size: 1.6rem;
   margin: 0;
-  margin-right: 42%;
+  margin-left: -27%;
+  margin-top: -3%;
+}
+
+.subtitle-wrapper {
   margin-top: -3%;
 }
 
 .user-selection-input {
-  margin-top: 1%;
+  margin-top: -3%;
   height: 6vh;
   width: 33vw;
   background-color: #ffffff;
