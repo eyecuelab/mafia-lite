@@ -9,7 +9,7 @@ function Homepage() {
 		<div>
 			<div className={HomepageCSS["homepage-title-wrapper"]}>
 				<img src={TitleImage} className={HomepageCSS.titleImage} alt="The Nameless Terror" />
-				<h5>A Lovecraftian Inspired Mafia Game</h5>
+				<h5 className={HomepageCSS["h5Header"]}>A Lovecraftian Inspired Mafia Game</h5>
 			</div>
 
 			<div className={HomepageCSS["hostOrJoinBtns-wrapper"]}>

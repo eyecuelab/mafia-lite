@@ -29,14 +29,14 @@
   animation-duration: 3s;
 }
 
-h5 {
+.h5Header {
   color: white;
   font-family: 'American Typewriter', sans-serif;
   font-weight: 800;
   font-size: 1.6rem;
   margin: 0;
-  margin-right: 42%;
   margin-top: -3%;
+  margin-left: -27%;
 }
 
 .titleImage {
@@ -126,7 +126,6 @@ h5 {
 .modalContent::-webkit-scrollbar-thumb {
   background-color: rgba(104, 12, 12);    /* color of the scroll thumb */
   border-radius: 20px;       /* roundness of the scroll thumb */
-  /* border: 3px solid rgb(255, 255, 255);  creates padding around scroll thumb */
 }
 
 .headerTwo {

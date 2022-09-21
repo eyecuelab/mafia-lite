@@ -18,7 +18,12 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	const [voteTally, setVoteTally] = useState<Map<number, number>>(new Map<number, number>());
 
 	useEffect(() => {
-		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
+		if (isLobby) {
+			playerListRef.current?.scrollIntoView({ behavior: "smooth" });	
+		} else {
+			playerListRef.current?.scrollTo({ top: 10, behavior: "smooth" });
+		}
+		
 	}, [players]);
 
 	useEffect(() => {

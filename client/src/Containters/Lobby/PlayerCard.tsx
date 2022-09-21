@@ -51,7 +51,7 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 						{player.traits.map((trait, index, array) => index === array.length - 1 ? trait : `${trait},`)}
 					</p>
 				</div>
-				{isMain && !player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#9747;</button> : null}
+				{isMain && !player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>Ready</button> : null}
 				{isMain && player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#10003;</button> : null}
 			</div>
 		</>

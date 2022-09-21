@@ -7,7 +7,9 @@ import { TitleImage } from "../../assets/images/Images";
 import CreatePlayerCSS from "./CreatePlayer.module.css";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
+import SubTitle from "../../Components/Titles/SubTitle";
 import { useModal } from "../../ModalContext";
+
 
 type PlayerCreateInput = {
 	gameId: number,
@@ -62,6 +64,9 @@ function CreatePlayer() {
 			<div className={CreatePlayerCSS["join-game-title-wrapper"]}>
 				<img src={TitleImage} className={CreatePlayerCSS.titleImage} alt="The Nameless Terror" />
 				<h5 className={CreatePlayerCSS["header"]}>A Lovecraftian Inspired Mafia Game</h5>
+			</div>
+			<div className={CreatePlayerCSS["subtitle-wrapper"]}>
+				<SubTitle title="YOUR CHARACTER" />
 			</div>
 			<form onSubmit={onSubmit}>
 				<input
