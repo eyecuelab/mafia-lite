@@ -29,8 +29,10 @@ const getSocketRooms = (socket: Socket) => {
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number) => {
 		socket.join(gameId.toString());
-		console.log(socket.id + " joined " + gameId);
 	});
+	socket.on("disconnect", () => {
+		console.log("disconnect")
+	})
 
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);

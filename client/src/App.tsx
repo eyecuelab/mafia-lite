@@ -1,15 +1,15 @@
 import { ReactNode, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Lobby from "./Containters/Lobby/Index";
-import Homepage from "./Containters/Homepage/Index";
-import CreateLobby from "./Containters/CreateLobby/Index";
-import JoinGame from "./Containters/JoinGame/Index";
-import CreatePlayer from "./Containters/CreatePlayer/Index";
-import JoinURL from "./Containters/JoinGame/JoinURL";
+import Lobby from "./Containers/Lobby/Index";
+import Homepage from "./Containers/Homepage/Index";
+import CreateLobby from "./Containers/CreateLobby/Index";
+import JoinGame from "./Containers/JoinGame/Index";
+import CreatePlayer from "./Containers/CreatePlayer/Index";
+import JoinURL from "./Containers/JoinGame/JoinURL";
 import { ModalContext } from "./ModalContext";
 import { Modal } from "./Components/Modal/Modal";
-import Game from "./Containters/Game/Index";
+import Game from "./Containers/Game/Index";
 
 
 function App() {

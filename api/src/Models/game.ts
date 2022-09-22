@@ -52,4 +52,10 @@ const getGameByGameCode = async (gameCode: string) => {
   }
 }
 
-export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode };
+const deletePlayerFromGame = async(playerId: number) => {
+    return await prisma.player.delete({
+      where: { id: playerId } ,
+    });
+}
+
+export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode, deletePlayerFromGame};

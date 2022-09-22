@@ -14,8 +14,8 @@ import { useModal } from "../../ModalContext";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
 
-const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
-const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
+const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame);
+const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload); 
 
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
@@ -37,9 +37,12 @@ const Lobby = (): JSX.Element => {
 		socket.on("game_start", () => {
 			navigate("/game");
 		});
+		socket.on("player_left", () => {
+			console.log("Player is Leaving");
+			queryClient.invalidateQueries(["games"]);
+		});
 
 		socket.on("playerIsReady", () => {
-			console.log("Recieved Server Message");
 			queryClient.invalidateQueries(["games"]);
 		});
 
@@ -47,7 +50,7 @@ const Lobby = (): JSX.Element => {
 			queryClient.invalidateQueries(["games"]);
 		});
 
-		return () => { socket.off("game_start"); socket.off("playerIsReady"); };
+		return () => { socket.off("game_start"); socket.off("playerIsReady"); socket.off("player_left");};
 	});
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
@@ -60,7 +63,23 @@ const Lobby = (): JSX.Element => {
 		setLinkIsCopied(true);
 		setTimeout(() => setLinkIsCopied(false), 600);
 	};
-
+	const onLeaveGameButtonClick = () => {
+		if(gameData) {
+			playerLeaveMutation.mutate({gameId: gameData?.game.id, id: gameData?.thisPlayer.id });
+			navigate("/", {replace : true});
+		}
+	};
+	const playerLeaveMutation = useMutation(playerLeave, {
+		onSuccess: () => {
+			console.log("player");
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				console.log(error);
+				callModal(error.message);
+			}
+		}	
+	});
 	const newGameMutation = useMutation(startNewGame, {
 		onSuccess: () => {
 			socket.emit("start_new_game");
@@ -107,7 +126,7 @@ const Lobby = (): JSX.Element => {
 							</div> : 
 							<div>
 								<MenuButton
-									onClick={() => console.log("Leaving game")}
+									onClick={onLeaveGameButtonClick}
 									className={styles["start-game-btn"]}
 									text={"LEAVE GAME"}
 								/>

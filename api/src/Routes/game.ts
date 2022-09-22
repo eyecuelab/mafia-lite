@@ -7,5 +7,6 @@ router.get('/games', gameControllers.getGames);
 router.get("/game", gameControllers.getSingleGame);
 
 router.post('/game', gameControllers.createGame);
+router.post('/game/leave', gameControllers.playerLeaveGame);
 
 export default router;
