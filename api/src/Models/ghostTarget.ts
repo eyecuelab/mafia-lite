@@ -15,7 +15,7 @@ const createGhostTarget = async (gameId: number, ghostId: number) => {
 	})
 };
 
-const getGhostTarget = async (ghostId: number) => {
+const findGhostTarget = async (ghostId: number) => {
 	const targets = await prisma.ghostTarget.findMany({
 		where: { ghostId },
 		orderBy: { round: { roundNumber: "desc" } }
@@ -24,4 +24,4 @@ const getGhostTarget = async (ghostId: number) => {
 	return targets[0];
 };
 
-export { createGhostTarget, getGhostTarget };
+export { createGhostTarget, findGhostTarget };

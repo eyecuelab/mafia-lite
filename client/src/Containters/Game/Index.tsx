@@ -72,7 +72,6 @@ function Game(): JSX.Element {
 		});
 
 		socket.on("start_night", () => {
-			console.log("start_night");
 			handleGameState({ hasResult: false });
 		});
 
@@ -84,20 +83,6 @@ function Game(): JSX.Element {
 		socket.on("end_game", (gameEndData: { cultistsWin: boolean, winners: Player[] }) => {
 			setGameEndData(gameEndData);
 		});
-
-		socket.onAny((eventName: string) => {
-			console.log(socket.id + " incoming " + eventName);
-			// if (eventName === "start_day") {
-			// 	setRandomKill(false);
-			// 	handleGameState({ hasResult: false });	
-			// } else if (eventName === "start_night") {
-			// 	handleGameState({ hasResult: false });	
-			// }
-		});
-	
-		socket.onAnyOutgoing((eventName: string) => {
-			console.log(socket.id + " outgoing " + eventName);
-		});
 		
 		return () => {
 			socket.off("vote_results");
@@ -107,7 +92,7 @@ function Game(): JSX.Element {
 			socket.off("start_day");
 			socket.off("end_game");
 		};
-	});
+	}, []);
 
 	const voteMutation = useMutation(sendVote, {
 		onSuccess: () => {

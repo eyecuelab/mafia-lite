@@ -1,32 +1,29 @@
 import Rules from "../../Components/Rules/Rules";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
-import titleImg from "../../assets/images/Title.png";
+import { TitleImage } from "../../assets/images/Images";
 import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
-import PlayerCard from "./PlayerCard";
 import { useModal } from "../../ModalContext";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
 import LobbyPlayerList from "./PlayerList/LobbyPlayerList";
 import MainPlayerCard from "./MainPlayerCard";
 
-const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
 
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 
 	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 
-	const [codeIsCopied, setCodeIsCopied] = useState(false);
-	const [linkIsCopied, setLinkIsCopied] = useState(false);
+	const [ codeIsCopied, setCodeIsCopied ] = useState(false);
+	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
 	useEffect(() => {
 		if (gameData) {
@@ -74,7 +71,7 @@ const Lobby = (): JSX.Element => {
 	return (
 		<div>
 			<div className={styles.lobbyPageContainer}>
-				<img src={titleImg} className={styles.logoImage} alt="The Nameless Terror" />
+				<img src={TitleImage} className={styles.logoImage} alt="The Nameless Terror" />
 				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>

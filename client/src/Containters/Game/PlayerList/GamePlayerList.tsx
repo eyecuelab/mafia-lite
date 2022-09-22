@@ -30,22 +30,12 @@ const GamePlayerList: React.FC<PropTypes> = ({ castVote }) => {
 			}
 		});
 
-		socket.on("start_night", () => {
-			setVoteTally(new Map<number, number>());
-		});
-
-		socket.on("start_day", () => {
-			setVoteTally(new Map<number, number>());
-		});
-
 		return () => {
 			socket.off("vote_cast");
-			socket.off("start_night");
-			socket.off("start_day");
 		};
 	});
 
-	// Can vote if voter is alive, phase is day or voter is cultist, and they are not voting for themselves
+	// Can vote if voter is alive, phase is day or voter is cultist and not voting for another cultist, and they are not voting for themselves
 	const handleCastVote = (player: Player) => {
 		if (gameData?.thisPlayer.status === "alive" && (gameData.currentRound?.currentPhase === "day" || (gameData.thisPlayer.team === "cultist" && player.team !== "cultist")) && player.id !== gameData?.thisPlayer.id) {
 			castVote(player.id);

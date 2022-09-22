@@ -26,6 +26,7 @@ const getSocketRooms = (socket: Socket) => {
 
 	return rooms;
 };
+
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number) => {
 		socket.join(gameId.toString());
@@ -43,18 +44,6 @@ io.sockets.on('connection', (socket: Socket) => {
 			io.in(rooms[0]).emit("game_start");
 		}
 	});
-
-	socket.onAny((eventName: string) => {
-		console.log(socket.id + " incoming " + eventName);
-	});
-
-	socket.onAnyOutgoing((eventName: string) => {
-		console.log(socket.id + " outgoing " + eventName);
-	});
-});
-
-io.sockets.on("disconnect", (socket: Socket) => {
-	console.log(socket.id + " disconnected");
 });
 
 export default io;
