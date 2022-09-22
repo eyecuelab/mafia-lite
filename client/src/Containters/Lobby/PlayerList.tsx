@@ -16,6 +16,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	const playerListRef = useRef<HTMLDivElement>(null);
 	const [voteCast, setVoteCast] = useState<boolean>(false);
 	const [voteTally, setVoteTally] = useState<Map<number, number>>(new Map<number, number>());
+	const [selectedPlayer, setSelectedPlayer] = useState(0);
+	console.log("🚀 ~ file: PlayerList.tsx ~ line 20 ~ selectedPlayer", selectedPlayer);
 
 	useEffect(() => {
 		playerListRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,8 +28,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 			socket.on("vote_cast", (playerId, newTotal) => {
 				voteTally.set(playerId, newTotal);
 				setVoteTally(new Map(voteTally));
-				
 			});
+
 			return () => {
 				socket.off("vote_cast");
 			};
@@ -35,6 +37,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 	}, [isLobby]);
 
 	const handleCastVote = (playerId: number) => {
+		setSelectedPlayer(playerId);
 		setVoteCast(true);
 		castVote?.(playerId);
 	};
@@ -53,6 +56,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, castVote, isLobby, pha
 							voteCast={voteCast}
 							numberOfVotes={numberOfVotes ?? 0}
 							clientPlayer={clientPlayer}
+							selected={player.id === selectedPlayer}
 							phase={phase}
 						/>
 					);

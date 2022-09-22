@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GameData, Player } from "../../Types/Types";
-import { GhostFrame, GhostImages } from "../../assets/images/Images";
+import { GhostImages } from "../../assets/images/Images";
 import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
 import { getData, postData } from "../../ApiHelper";
@@ -14,7 +14,9 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 	const { callModal } = useModal();
 	const [imageIndex, setImageIndex] = useState(0);
 	const [showControls, setShowControls] = useState(true);
-	const { isLoading, error, data } = useQuery(["ghost"], getGhostTarget);
+	
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const { isLoading, error, data } = gameData?.currentRound?.currentPhase === "night" ? useQuery(["ghost"], getGhostTarget) : { isLoading: undefined, error: undefined, data: undefined };
 
 	const ghostImageMutation = useMutation(sendGhostImage, {
 		onSuccess: () => {

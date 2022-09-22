@@ -1,8 +1,9 @@
 import { getPlayerById, getPlayersByGameId } from "../Models/player";
-import { createVote, emitVoteResult, getAllVotes } from "../Models/vote";
+import { playerVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { getCurrentRoundByGameId } from "../Models/round";
 import { unjailPrevJailedPlayer, updateEndOfRoundStatus, randomlyKillPlayer } from "../Logic/changePlayerStatus";
 import { Player, Vote } from "@prisma/client";
+import { getRolesbyType } from "../Models/role";
 
 type VoteResult = {
   id: number
@@ -15,38 +16,37 @@ const votingControllers = {
     const player = await getPlayerById(req.session.playerId);
 
     if(req.session.playerId === undefined || player.gameId !== gameId) {
-      res.status(401).json({error : "Not allowed to vote on this game"});
+      res.status(401).json({ error: "Not allowed to vote on this game" });
     } else {
-			const currentRound = await getCurrentRoundByGameId(gameId);
-			const votes = await getAllVotes(gameId, currentRound.id, currentRound.currentPhase);
-
-			let voted = false;
-			votes.forEach((vote) => {
-				if(vote.voterId === player.id)
-				{
-					voted = true;
-				}
-			})
-			if (voted) {
-				res.status(401).json({error: "You have already voted"});
+			if (player.id === candidateId) {
+				res.status(403).json({ error: "Cannot vote for oneself" });
 			} else {
-				const vote = await createVote(gameId, currentRound.currentPhase, candidateId, player.id, currentRound.roundNumber);
-				res.status(201).json({ vote });
+				const cultistRoles = await getRolesbyType("cultist");
+				const cultistRoleIds = cultistRoles.map((role) => role.id);
+
+				const candidate = await getPlayerById(candidateId);
+				const candidateIsCultist = cultistRoleIds.includes(candidate.roleId ?? 1); // Temporary default to investigator
+
+				const currentRound = await getCurrentRoundByGameId(gameId);
+				if (candidateIsCultist && currentRound.currentPhase === "night") {
+					res.status(403).json({ error: "Cannot vote to sacrafice cultist" });
+				} else {
+					const vote = await playerVote(gameId, currentRound.currentPhase, candidateId, player.id, currentRound.roundNumber);
+					res.status(201).json({ vote });
+				}
 			}
 		}
 	},
 
   async tallyVotes(req: any, res: any) {
     const { gameId } = req.body;
-    
 		const round = await getCurrentRoundByGameId(gameId);
     const votes = await getAllVotes(gameId, round.id, round.currentPhase);
     const players = await getPlayersByGameId(gameId);
-    const isNight = round.currentPhase === "night"
-		console.log(isNight)
+    const isNight = round.currentPhase === "night";
 		const voteResults = countVotes(players, votes);
+		
     if(voteResults.length > 0 && voteResults[0].count !== voteResults[1].count) {
-			console.log("Not a Tie", voteResults)
 			try {
 				res.status(200).json((await updateEndOfRoundStatus(gameId, voteResults[0].id)));
 				emitVoteResult(gameId, voteResults[0].id);
@@ -61,7 +61,7 @@ const votingControllers = {
         const chosenPlayer = await randomlyKillPlayer(gameId);
         res.status(200).json((await updateEndOfRoundStatus(gameId, chosenPlayer.id)));
         await emitVoteResult(gameId, chosenPlayer.id, true)
-      }else {
+      } else {
         res.status(200).json({ sentence: "Tie" });
         await emitVoteResult(gameId);
       }

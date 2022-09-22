@@ -9,10 +9,11 @@ import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
 import PlayerCard from "./PlayerCard";
-import PlayerList from "./PlayerList";
 import { useModal } from "../../ModalContext";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
+import LobbyPlayerList from "./PlayerList/LobbyPlayerList";
+import MainPlayerCard from "./MainPlayerCard";
 
 const CLIENT_ENDPOINT = import.meta.env.VITE_CLIENT_ENDPOINT;
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame); 
@@ -38,17 +39,9 @@ const Lobby = (): JSX.Element => {
 			navigate("/game");
 		});
 
-		socket.on("playerIsReady", () => {
-			console.log("Recieved Server Message");
-			queryClient.invalidateQueries(["games"]);
-		});
-
-		socket.on("player_joined_lobby", () => {
-			queryClient.invalidateQueries(["games"]);
-		});
-
-		return () => { socket.off("game_start"); socket.off("playerIsReady"); };
+		return () => { socket.off("game_start"); };
 	});
+	
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
 		setCodeIsCopied(true);
@@ -86,7 +79,7 @@ const Lobby = (): JSX.Element => {
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>
 						<SubTitle title={"Your Character"} />
-						<PlayerCard player={gameData.thisPlayer} isMain={true} isLobby={true} canVote={false} />
+						<MainPlayerCard player={gameData?.thisPlayer} />
 						<div className={styles.gameCodeInput}>
 							<p>Your game code: {gameData.game.gameCode}</p>
 							<button className={styles.copyButton} onClick={() => copyToClipBoard(gameData.game.gameCode)}>{(codeIsCopied) ? "Copied" : "Copy Code"} </button>
@@ -116,15 +109,7 @@ const Lobby = (): JSX.Element => {
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />
 						<h3 className={styles.playerCount}>Player Count: {gameData?.players.length}</h3>
-						{!!(gameData?.players.length) && 
-						<PlayerList 
-							players={
-								gameData.players.filter((player) => {
-									return player.id !== gameData.thisPlayer.id;
-								})
-							}
-							isLobby={true} 
-						/>}
+						<LobbyPlayerList />
 					</div>
 				</div>
 			</div>

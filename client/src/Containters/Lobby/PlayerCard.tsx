@@ -1,4 +1,4 @@
-import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
+//import PlayerStatusOverlay from "../../Components/PlayerStatus/PlayerStatusOverlay";
 import styles from "./Lobby.module.css";
 import { Player } from "../../Types/Types";
 import cultistBadge from "../../assets/images/ui/Cultist_Badge.png";
@@ -15,15 +15,17 @@ type propTypes = {
 	canVote: boolean
 	phase?: string
 	isPlayer? : boolean
+	selected?: boolean
 }
 
-const playerIsReady = async (payload: {id: number, isReady: boolean}) => postData("/readyPlayer", payload); 
-const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby, team, canVote, phase, isPlayer}) => {
+const playerIsReady = async (payload: {id: number, isReady: boolean}) => postData("/readyPlayer", payload);
+
+const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby, team, canVote, phase, isPlayer, selected }) => {
 	const transitionAnimation = ` ${styles["player-card-entrance"]}`;
 	const { callModal } = useModal();
 
 	const readyPlayer = useMutation(playerIsReady, {
-		onSuccess: (player: any) => {
+		onSuccess: (player: Player) => {
 			console.log("updated player", player);
 		},
 		onError: (error) => {
@@ -35,15 +37,29 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 
 	const onReadyButtonClick = (e: any) => {
 		// e.target.disabled = true;
-		readyPlayer.mutate({id: player.id, isReady: !player.isReady});
+		readyPlayer.mutate({ id: player.id, isReady: !player.isReady });
 	};
+
+	/*
+		if (isMain) {
+			styles.mainPlayerCard
+		} else {
+			if (isLobby && player.isReady) {
+				styles.playerCardLobbyReady + transitionAnimation 
+			} else if (isPlayer) {
+				styles.yourPlayerBorder + transitionAnimation
+			} else {
+				styles.playerCard + transitionAnimation
+			}
+		}
+	*/
 	
 	return (
 		<>
 			<div className={(isMain) ? styles.mainPlayerCard : (isLobby && player.isReady) ? styles.playerCardLobbyReady + transitionAnimation: (isPlayer) ? styles.yourPlayerBorder + transitionAnimation : styles.playerCard + transitionAnimation}>
-				<img className={(isMain) ? (player.isReady) ? styles.mainPlayerCardImageReady : styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
+				{/* <img className={(isMain) ? (player.isReady) ? styles.mainPlayerCardImageReady : styles.mainPlayerCardImage : styles.playerCardImage} src={player?.avatar} alt="player avatar" />
 				{(team === "cultist" && player.team === "cultist")? <img src={cultistBadge} className={styles.cultistBadge} /> : null}
-				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} canVote={canVote} phase={phase} /> : null}
+				{!isLobby ? <PlayerStatusOverlay isMain={isMain ? true : false} playerStatus={playerStatus} canVote={canVote} phase={phase} selected={selected ?? false} /> : null}
 				<div className={styles.playerDetails}>
 					<p className={(isMain) ? styles.playerNameMain : styles.playerName}>{(player.isHost) ? <span className={styles.hostIcon}>&#9812;</span> : null}{player?.name}</p>
 					{(player.isReady && !isMain && isLobby) ? <p>Player is Ready</p> : null}
@@ -52,7 +68,7 @@ const PlayerCard: React.FC<propTypes> = ({ player, playerStatus, isMain, isLobby
 					</p>
 				</div>
 				{isMain && !player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#9747;</button> : null}
-				{isMain && player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#10003;</button> : null}
+				{isMain && player.isReady ? <button className={styles.readyButtonMain} onClick={onReadyButtonClick}>&#10003;</button> : null} */}
 			</div>
 		</>
 	);

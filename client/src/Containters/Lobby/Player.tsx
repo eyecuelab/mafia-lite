@@ -11,10 +11,11 @@ type PlayerProps = {
   handleCastVote: (playerId: number) => void,
 	phase?: string,
 	clientPlayer?: Player
+	selected?: boolean
 }
 
 
-const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, clientPlayer }) => {
+const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastVote, voteCast, numberOfVotes, phase, clientPlayer, selected }) => {
 	const team = clientPlayer?.team;
 	const isAlive = clientPlayer?.status === "alive";
 	const isPlayer = (player.id === clientPlayer?.id);
@@ -22,17 +23,17 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 	const [playerStatus, setPlayerStatus] = useState("alive");
 
 	useEffect(() => {
-		setCanVote(!!(isAlive) && (phase === "day" || team === "cultist"));
+		setCanVote(isAlive && (phase === "day" || team === "cultist"));
 	}, [isAlive, phase, team]);
 
 	const handleAccusePlayer = () => {
 		handleCastVote(player.id);
 
-		if (phase === "day") {
-			setPlayerStatus("accused");
-		} else {
-			setPlayerStatus("murder");
-		}
+		// if (phase === "day") {
+		// 	setPlayerStatus("accused");
+		// } else {
+		// 	setPlayerStatus("murder");
+		// }
 	};
 
 	return (
@@ -41,11 +42,11 @@ const PlayerCardWrapper: React.FC<PlayerProps> = ({ player, isLobby, handleCastV
 				id={String(player.id)}
 				className={styles.playerListInnerWrap}
 				onClick={() => {
-					if (!isLobby && !voteCast && canVote) {
+					if (!isLobby && canVote) {
 						handleAccusePlayer();
 					}
 				}} >
-				<PlayerCard isPlayer={isPlayer} player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase}/>
+				<PlayerCard isPlayer={isPlayer} player={player} playerStatus={player.status === "alive" ? playerStatus : player.status} isLobby={isLobby} team={team} canVote={canVote} phase={phase} selected={selected} />
 				{(canVote) ? (!!numberOfVotes && (
 					<h5 className={`${styles.voteCounter} ${phase === "day" ? styles.dayVoteCounter : styles.nightVoteCounter}`}>Votes: {numberOfVotes}</h5>
 				)) : null }

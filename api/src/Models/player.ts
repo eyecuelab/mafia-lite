@@ -79,7 +79,6 @@ const updatePlayerStatus = async (id: number, newStatus: string) => {
 }
 
 const updatePlayerIsReady = async (id: number, readyStatus: boolean) => {
-  console.log("readyStatus", readyStatus)
 	return await prisma.player.update({
 		where: { id },
 		data: { isReady: readyStatus }
