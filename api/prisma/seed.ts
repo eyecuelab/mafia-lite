@@ -3,26 +3,40 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const traits: string[] = [
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"10",
-	"11",
-	"12",
-	"13",
-	"14",
-	"15",
-	"16",
-	"17",
-	"18",
-	"19",
-	"20",
+	"Hopeful",
+	"Wistful",
+	"Shady",
+	"Boring",
+	"Disciplined",
+	"Quiet",
+	"Loud",
+	"Wild",
+	"Energetic",
+	"Literal",
+	"Impolite",
+	"Bossy",
+	"Charismatic",
+	"Sneaky",
+	"Devious",
+	"Clever",
+	"Open",
+	"Envious",
+	"Orderly",
+	"Mischievous",
+	"Gullible",
+	"Cowardly",
+	"Superstitious",
+	"Foolish",
+	"Extravagant",
+	"Logical",
+	"Defensive",
+	"Ignorant",
+	"Naive",
+	"Arrogant",
+	"Skeptical",
+	"Honest",
+	"Trustworthy",
+	"Thoughtless"
 ];
 
 async function main() {
@@ -45,8 +59,8 @@ async function main() {
 			id: 2,
 			name: "Cultist",
 			type: "cultist",
-			nightTimePrompt: "Select a sacrafice",
-			roleDesc: "Sacrfice players to your dark god without being discovered, lest you be sacraficed yourself"
+			nightTimePrompt: "Select a sacrifice",
+			roleDesc: "Sacrifice players to your dark god without being discovered, lest you be sacrificed yourself"
 		}
 	});
 
