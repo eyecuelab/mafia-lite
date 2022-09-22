@@ -20,7 +20,8 @@ const HoverStatus: React.FC<PropTypes> = ({ selected, team }) => {
 	}
 
 	const isDay = gameData?.currentRound?.currentPhase === "day";
-	const canHover = isDay || (gameData?.thisPlayer.team === "cultist" && team !== "cultist");
+	const isAlive = gameData?.thisPlayer.status === "alive";
+	const canHover = (isDay || (gameData?.thisPlayer.team === "cultist" && team !== "cultist")) && isAlive;
 	const hoverBadge = isDay ? AccuseBadge : MurderBadge;
 
 	return (
