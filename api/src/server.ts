@@ -29,14 +29,35 @@ const getSocketRooms = (socket: Socket) => {
 
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number) => {
+		console.log("join game", socket.id);
+		console.log("Game id: ", gameId);
+		if (socket.rooms.size > 0) {
+			const rooms = getSocketRooms(socket);
+			rooms.forEach((room) => {
+				socket.leave(room);
+			});
+		}
 		socket.join(gameId.toString());
 	});
+
+	socket.on("leave_game", (gameId: number) => {
+		console.log("Leave Game Hit", gameId);
+		console.log(socket.id);
+		// io.socketsLeave(gameId.toString());
+		socket.leave(gameId.toString());
+		const rooms = getSocketRooms(socket);
+		console.log(rooms);
+	});
+
 	socket.on("disconnect", () => {
-		console.log("disconnect")
+		console.log("disconnect", socket.id);
 	})
 
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);
+		console.log("starting game...");
+		console.log(socket.id);
+		console.log(rooms);
 		if (rooms.length !== 1) { 
 			if (rooms.length === 0)
 				throw new Error("Start game on unassigned socket");

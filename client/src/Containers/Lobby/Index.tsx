@@ -28,6 +28,7 @@ const Lobby = (): JSX.Element => {
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
 	useEffect(() => {
+		console.log(gameData);
 		if (gameData) {
 			socket.emit("join", gameData.game.id);
 		}

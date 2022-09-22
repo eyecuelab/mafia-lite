@@ -2,14 +2,22 @@ import { Player } from "../../Types/Types";
 import GameOverCSS from "./GameOver.module.css";
 import { TitleImage } from "../../assets/images/Images";
 import MenuButton from "../../Components/MenuButton";
+import useGameStateQuery from "../../Hooks/GameDataHook";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../ApiHelper";
+import { useModal } from "../../ModalContext";
+import { useNavigate } from "react-router-dom";
+import socket from "../../Hooks/WebsocketHook";
 
-const GameOver = ({
-	// winners,
-	cultistsWin,
-}: {
-  winners: Player[];
-  cultistsWin: boolean;
-}) => {
+const gameLeave = async (payload: { gameId: number, id: number }) => postData("/game/end", payload); 
+
+const GameOver = ({ cultistsWin,}: { winners: Player[]; cultistsWin: boolean; }) => {
+	const { callModal } = useModal();
+	const navigate = useNavigate();
+	const {gameQueryIsLoading, gameQueryError, gameData} = useGameStateQuery();
+
+	
+
 	let backgroundImg = "";
 	let winner = "";
 	let paragraph = "";
@@ -27,6 +35,31 @@ const GameOver = ({
 		paragraph2 = "For a moment, you take a deep sigh of relief. But deep down inside you’ve always known that this is just the beginning...";
 	}
 
+	const onDoneClick = () => {
+		if(gameData) {
+			gameLeaveMutation.mutate({gameId: gameData?.game.id, id: gameData?.thisPlayer.id });
+			navigate("/", {replace: true});
+		}
+	};
+
+	const gameLeaveMutation = useMutation(gameLeave, {
+		onSuccess: () => {
+			console.log("Game is over");
+			socket.emit("leave_game", gameData?.game.id);
+		},
+		onError: (error) => {
+			if (error instanceof Error) {
+				callModal(error.message);
+			}
+		}
+	});
+	
+	if (gameQueryIsLoading) return <p>Loading ....</p>;
+
+	if (gameQueryError instanceof Error) {
+		callModal(gameQueryError.message);
+	}
+
 	return (
 		<div className={GameOverCSS[`${backgroundImg}`]}>
 			<img className={GameOverCSS["title-Img"]} src={TitleImage} />
@@ -34,17 +67,12 @@ const GameOver = ({
 				<h1 className={GameOverCSS["winner-header"]}>
 					The {winner} Won...
 				</h1>
-				{/* <div className={GameOverCSS["player-list"]}>
-						<PlayerList
-							players={winners}
-							isLobby={true} />
-					</div> */}
 				<p className={GameOverCSS["paragraph"]}>
 					{paragraph}<br/>
 					<br/>{paragraph2}
 				</p>
 				<MenuButton
-					link={"/"}
+					onClick={onDoneClick}
 					className={GameOverCSS["Done-button"]}
 					text={"Done"}
 				/>

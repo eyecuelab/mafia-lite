@@ -1,6 +1,8 @@
 import { createNewGame, getAllGameDetails, getGameByGameCode, getGames, getGameById, deletePlayerFromGame } from "../Models/game";
 import Utility from "./Utility";
 import io from '../server';
+import { Socket } from "socket.io";
+import { disconnect } from "process";
 
 const minLobbySize = 4;
 const maxLobbySize = 12;
@@ -33,6 +35,17 @@ const gameControllers = {
 		io.in(gameId.toString()).emit('player_left', deletedPlayer.name);
 		req.session.destroy();
 		res.status(200).json({message: "Deleted"})
+	},
+
+	async endGameLeave(req: any, res: any) {
+		const {id, gameId} = req.body;
+		const playerId = req.session.playerId;
+		if(playerId !== id || playerId === undefined){
+			res.status(401).json({error: 'You can only edit your own player'})
+		}
+		// const deletedPlayer = await deletePlayerFromGame(id);
+		req.session.destroy();
+		res.status(200).json({message:"PlaYER HAS LEFT"})
 	},
 
 	async getSingleGame(req: any, res: any) {
