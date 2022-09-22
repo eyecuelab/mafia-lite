@@ -75,6 +75,8 @@ model Vote {
   voterId     Int
   candidateId Int
   phase       String
+
+	@@unique([gameId, roundNumber, voterId, phase])
 }
 
 model Session {

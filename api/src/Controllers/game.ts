@@ -1,7 +1,6 @@
 import { createNewGame, getAllGameDetails, getGameByGameCode, getGames, getGameById, deletePlayerFromGame } from "../Models/game";
 import Utility from "./Utility";
 import io from '../server';
-import { getPlayerById } from "../Models/player";
 
 const minLobbySize = 4;
 const maxLobbySize = 12;

@@ -26,6 +26,7 @@ const getSocketRooms = (socket: Socket) => {
 
 	return rooms;
 };
+
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number) => {
 		socket.join(gameId.toString());
@@ -46,6 +47,7 @@ io.sockets.on('connection', (socket: Socket) => {
 		}
 	});
 });
+
 export default io;
 
 const PORT = process.env.PORT || 3000;

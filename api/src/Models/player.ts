@@ -1,12 +1,10 @@
 import { Player, PrismaClient } from '@prisma/client';
-import { getGameById } from './game';
 import { getRoleById } from './role';
-import { getRoundById } from './round';
 
 
 const prisma = new PrismaClient();
 
-const getPlayerById = async (id: number) => {	
+const getPlayerById = async (id: number) => {
   try {
     return await prisma.player.findUniqueOrThrow({
       where: { id: Number(id) },
@@ -79,7 +77,6 @@ const updatePlayerStatus = async (id: number, newStatus: string) => {
 }
 
 const updatePlayerIsReady = async (id: number, readyStatus: boolean) => {
-  console.log("readyStatus", readyStatus)
 	return await prisma.player.update({
 		where: { id },
 		data: { isReady: readyStatus }

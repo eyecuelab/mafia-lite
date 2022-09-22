@@ -93,7 +93,6 @@ const playerControllers = {
 		}
 	},
 	async playerIsReady(req: any, res: any) {
-		console.log("Player ENDPOINT HIT");
 		const playerId = req.session.playerId;
 		const { id, isReady } = req.body;
 		if (playerId !== id) {

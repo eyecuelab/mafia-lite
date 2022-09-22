@@ -8,7 +8,7 @@ import { assignTrait, getTraits } from "../Models/traits";
 import { getTraitsForGame } from "../Logic/assignTraits";
 import { getGameById } from "../Models/game";
 import { filterPlayerData } from "./player";
-import { createGhostTarget } from "../Models/ghostTarget";
+import { createGhostTarget, findGhostTarget } from "../Models/ghostTarget";
 
 const NUM_TRAIT_REPEATS = 2;
 const NUM_TRAITS_PER_PLAYER = 3;
@@ -127,9 +127,13 @@ const logicControllers = {
 		if (!player || (player.status !== "terminated" && player.status !== "murdered")) {
 			res.status(401).json({ error: "You are not a ghost" });
 		} else {
-			const target = await getRandomLivingCultist(player.gameId);
-			const filteredTarget = await filterPlayerData(playerId, target);
-			res.json(filteredTarget);
+			const ghostTarget = await findGhostTarget(playerId);
+			if (!ghostTarget || !ghostTarget.targetId) {
+				res.status(404).send({ error: "Target not found" });
+			} else {
+				const target = await getPlayerById(ghostTarget?.targetId);
+				res.json(target);
+			}
 		}
 	}
 }
