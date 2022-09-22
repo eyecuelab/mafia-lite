@@ -87,12 +87,12 @@ function Game(): JSX.Element {
 
 		socket.onAny((eventName: string) => {
 			console.log(socket.id + " incoming " + eventName);
-			if (eventName === "start_day") {
-				setRandomKill(false);
-				handleGameState({ hasResult: false });	
-			} else if (eventName === "start_night") {
-				handleGameState({ hasResult: false });	
-			}
+			// if (eventName === "start_day") {
+			// 	setRandomKill(false);
+			// 	handleGameState({ hasResult: false });	
+			// } else if (eventName === "start_night") {
+			// 	handleGameState({ hasResult: false });	
+			// }
 		});
 	
 		socket.onAnyOutgoing((eventName: string) => {
