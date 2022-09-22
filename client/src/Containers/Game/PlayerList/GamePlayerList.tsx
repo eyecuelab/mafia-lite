@@ -43,7 +43,9 @@ const GamePlayerList: React.FC<PropTypes> = ({ castVote }) => {
 		}
 	};
 
-	const playerCards = gameData?.players.map((player) => {
+	const sortedPlayers = gameData?.players.sort((player1: Player, player2: Player) => player1.id - player2.id);
+
+	const playerCards = sortedPlayers?.map((player) => {
 		const numVotes = voteTally.get(player.id) ?? 0;
 		return <VoteCountWrapper key={player.id} player={player} numVotes={numVotes} handleCastVote={handleCastVote} selected={selectedId === player.id} />;
 	});
