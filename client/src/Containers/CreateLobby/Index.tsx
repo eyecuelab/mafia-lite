@@ -77,8 +77,6 @@ function CreateLobby() {
 						className={CreateLobbyCSS["drop-selection-input"]}  
 						onChange={e => setLobbySize(parseInt(e.target.value))}>
 						<option value="default">Select player count</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
 						<option value="6">6</option>
 						<option value="7">7</option>
 						<option value="8">8</option>

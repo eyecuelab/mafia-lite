@@ -7,26 +7,21 @@ import { getRolesbyType } from "../Models/role";
 import { assignTrait, getTraits } from "../Models/traits";
 import { getTraitsForGame } from "../Logic/assignTraits";
 import { getGameById } from "../Models/game";
-import { filterPlayerData } from "./player";
 import { createGhostTarget, findGhostTarget } from "../Models/ghostTarget";
 import { playerVote, emitVoteResult, getAllVotes } from "../Models/vote";
 import { unjailPrevJailedPlayer, updateEndOfRoundStatus, randomlyKillPlayer } from "../Logic/changePlayerStatus";
 import { Player, Vote } from "@prisma/client";
 import io from '../server';
 
-
-const NUM_TRAIT_REPEATS = 2;
+const NUM_TRAIT_REPEATS = 4;
 const NUM_TRAITS_PER_PLAYER = 3;
 const DAYTIMER = 20000;
 const NIGHTTIMER = 20000;
-
 
 type VoteResult = {
 	id: number
 	count: number
   }
-  
-
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
