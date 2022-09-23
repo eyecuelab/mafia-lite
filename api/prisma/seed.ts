@@ -67,7 +67,7 @@ async function main() {
 	for (let i = 0; i < traits.length; i++) {
 		await prisma.trait.upsert({
 			where: { id: i },
-			update: {},
+			update: { name: traits[i] },
 			create: { id: i, name: traits[i] }
 		});
 	}

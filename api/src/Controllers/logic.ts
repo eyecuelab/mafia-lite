@@ -10,8 +10,8 @@ import { getGameById } from "../Models/game";
 import { filterPlayerData } from "./player";
 import { createGhostTarget, findGhostTarget } from "../Models/ghostTarget";
 
-const NUM_TRAIT_REPEATS = 2;
-const NUM_TRAITS_PER_PLAYER = 3;
+const NUM_TRAIT_REPEATS = 4;
+const NUM_TRAITS_PER_PLAYER = 1;
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
@@ -48,7 +48,7 @@ const logicControllers = {
 
 			for (let i = 0; i < players.length; i++) {
 				await updatePlayerById(players[i].id, roles[i]);
-				for (let j = 0; j < 3; j++) {
+				for (let j = 0; j < NUM_TRAITS_PER_PLAYER; j++) {
 					await assignTrait(playerTraits[i][j], players[i].id);
 				}
 			}

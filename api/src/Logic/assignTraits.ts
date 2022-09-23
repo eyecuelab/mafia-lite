@@ -24,8 +24,13 @@ const getTraitsForGame = (traits: Trait[], numPlayers: number, numMaxRepeat?: nu
 	for (let i = 0; i < numPlayers; i++) {
 		assignedTraits[i] = []
 		for (let j = 0; j < traitsPerPlayer; j++) {
-			const traitIndex = Utility.getRandomRange(0, traits.length);
+			let traitIndex = Utility.getRandomRange(0, traits.length);
 			let traitId = traits[traitIndex].id;
+      while (assignedTraits[i].includes(traitId)) {
+				traitIndex = Utility.getRandomRange(0, traits.length);
+        traitId = traits[traitIndex].id;
+      }
+      
 			if (usedTraits.has(traitId)) {
 				const newCount = (usedTraits.get(traitId))! + 1;
 				usedTraits.set(traitId, newCount);
@@ -35,7 +40,6 @@ const getTraitsForGame = (traits: Trait[], numPlayers: number, numMaxRepeat?: nu
 			} else {
 				usedTraits.set(traitId, 1);
 			}
-
 			assignedTraits[i][j] = traitId;
 		}
 	}
