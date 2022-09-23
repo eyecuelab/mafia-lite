@@ -8,9 +8,10 @@ import { Player } from "../../../Types/Types";
 
 type PropTypes = {
 	castVote: (candidateId: number) => void
+	hasResult: boolean
 }
 
-const GamePlayerList: React.FC<PropTypes> = ({ castVote }) => {
+const GamePlayerList: React.FC<PropTypes> = ({ castVote, hasResult }) => {
 	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
 
@@ -35,9 +36,16 @@ const GamePlayerList: React.FC<PropTypes> = ({ castVote }) => {
 		};
 	});
 
-	// Can vote if voter is alive, phase is day or voter is cultist and not voting for another cultist, and they are not voting for themselves
+	// Can vote if:
+	// - voter is alive
+	// - phase is day or voter is cultist and not voting for another cultist
+	// - they are not voting for themselves
 	const handleCastVote = (player: Player) => {
-		if (gameData?.thisPlayer.status === "alive" && (gameData.currentRound?.currentPhase === "day" || (gameData.thisPlayer.team === "cultist" && player.team !== "cultist")) && player.id !== gameData?.thisPlayer.id) {
+		const isAlive = gameData?.thisPlayer.status === "alive";
+		const eligiblePhase = gameData?.currentRound?.currentPhase === "day" || (gameData?.thisPlayer.team === "cultist" && player.team !== "cultist");
+		const notSelfVoting = player.id !== gameData?.thisPlayer.id;
+
+		if (isAlive && eligiblePhase && notSelfVoting && !hasResult) {
 			castVote(player.id);
 			setSelectedId(player.id);
 		}
@@ -47,7 +55,7 @@ const GamePlayerList: React.FC<PropTypes> = ({ castVote }) => {
 
 	const playerCards = sortedPlayers?.map((player) => {
 		const numVotes = voteTally.get(player.id) ?? 0;
-		return <VoteCountWrapper key={player.id} player={player} numVotes={numVotes} handleCastVote={handleCastVote} selected={selectedId === player.id} />;
+		return <VoteCountWrapper key={player.id} player={player} numVotes={numVotes} handleCastVote={handleCastVote} selected={selectedId === player.id} hasResult={hasResult} />;
 	});
 
 	if (gameQueryIsLoading) {

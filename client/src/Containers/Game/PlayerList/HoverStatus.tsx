@@ -7,9 +7,10 @@ import { useModal } from "../../../ModalContext";
 type PropTypes = {
 	selected: boolean
 	team: string
+	hasResult: boolean
 };
 
-const HoverStatus: React.FC<PropTypes> = ({ selected, team }) => {
+const HoverStatus: React.FC<PropTypes> = ({ selected, team, hasResult }) => {
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
 
@@ -21,7 +22,7 @@ const HoverStatus: React.FC<PropTypes> = ({ selected, team }) => {
 
 	const isDay = gameData?.currentRound?.currentPhase === "day";
 	const isAlive = gameData?.thisPlayer.status === "alive";
-	const canHover = (isDay || (gameData?.thisPlayer.team === "cultist" && team !== "cultist")) && isAlive;
+	const canHover = (isDay || (gameData?.thisPlayer.team === "cultist" && team !== "cultist")) && isAlive && !hasResult;
 	const hoverBadge = isDay ? AccuseBadge : MurderBadge;
 
 	return (

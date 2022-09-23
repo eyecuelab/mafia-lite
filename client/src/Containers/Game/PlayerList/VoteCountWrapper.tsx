@@ -10,9 +10,10 @@ type PropTypes = {
 	numVotes: number
 	handleCastVote: (player: Player) => void
 	selected: boolean
+	hasResult: boolean
 }
 
-const VoteCountWrapper: React.FC<PropTypes> = ({ player, numVotes, handleCastVote, selected }) => {
+const VoteCountWrapper: React.FC<PropTypes> = ({ player, numVotes, handleCastVote, selected, hasResult }) => {
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
 
@@ -23,7 +24,7 @@ const VoteCountWrapper: React.FC<PropTypes> = ({ player, numVotes, handleCastVot
 	return (
 		<React.Fragment>
 			<div className={styles.playerListInnerWrap} onClick={() => handleCastVote(player)}>
-				<GamePlayerCard player={player} selected={selected} />
+				<GamePlayerCard player={player} selected={selected} hasResult={hasResult} />
 				{numVotes > 0 && <h5 className={`${styles.voteCounter} ${gameData?.currentRound?.currentPhase === "day" ? styles.dayVoteCounter : styles.nightVoteCounter}`}>Votes: {numVotes}</h5>}
 			</div>
 		</React.Fragment>

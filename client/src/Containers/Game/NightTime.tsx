@@ -34,7 +34,7 @@ const NightTime = ({ gameData, hasResult, castVote, endRound, focusView }: { gam
 				<div className={styles.gameScreen}>
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
 					<h1 className={styles.nightHeader}>Night {gameData?.currentRound?.roundNumber}</h1>
-					{gameData ? <GamePlayerList castVote={castVote} /> : <p>...loading</p> }
+					{gameData ? <GamePlayerList castVote={castVote} hasResult={hasResult} /> : <p>...loading</p> }
 					{hasResult ? 
 						<GenericButton text="Start Day" onClick={() => startDay(gameData.game.id)} />
 						:

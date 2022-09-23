@@ -10,6 +10,7 @@ import HoverStatus from "./HoverStatus";
 type PropTypes = {
 	player: Player
 	selected: boolean
+	hasResult: boolean
 }
 
 const getBadgeImage = (status: string | undefined) => {
@@ -25,7 +26,7 @@ const getBadgeImage = (status: string | undefined) => {
 	}
 };
 
-const GamePlayerCard: React.FC<PropTypes> = ({ player, selected }) => {
+const GamePlayerCard: React.FC<PropTypes> = ({ player, selected, hasResult }) => {
 	const { gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
 	const formatter = new Intl.ListFormat("en", { style: "long", type: "unit" });
@@ -56,7 +57,7 @@ const GamePlayerCard: React.FC<PropTypes> = ({ player, selected }) => {
 					{showStatus ?
 						<img className={StatusStyles["player-card-badge"]} src={getBadgeImage(player.status)} alt={"Player Status Badge"} />
 						:
-						!isThisPlayer && <HoverStatus selected={selected} team={player.team ?? "investigator"} />
+						!isThisPlayer && <HoverStatus selected={selected} team={player.team ?? "investigator"} hasResult={hasResult} />
 					}
 				</div>
 				<div className={styles.playerDetails}>
