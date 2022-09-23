@@ -9,22 +9,38 @@ import { getTraitsForGame } from "../Logic/assignTraits";
 import { getGameById } from "../Models/game";
 import { filterPlayerData } from "./player";
 import { createGhostTarget, findGhostTarget } from "../Models/ghostTarget";
+import { playerVote, emitVoteResult, getAllVotes } from "../Models/vote";
+import { unjailPrevJailedPlayer, updateEndOfRoundStatus, randomlyKillPlayer } from "../Logic/changePlayerStatus";
+import { Player, Vote } from "@prisma/client";
+import io from '../server';
 
-const NUM_TRAIT_REPEATS = 4;
-const NUM_TRAITS_PER_PLAYER = 1;
+
+const NUM_TRAIT_REPEATS = 2;
+const NUM_TRAITS_PER_PLAYER = 3;
+const DAYTIMER = 20000;
+const NIGHTTIMER = 20000;
+
+
+type VoteResult = {
+	id: number
+	count: number
+  }
+  
+
 
 const logicControllers = {
 	async startGame(req: any, res: any) {
 		const { gameId } = req.body;
 		const playerId = req.session.playerId;
-
+		const timer = 180;
+		
 		if (Utility.validateInputs(res, "Invalid game or player id", gameId, playerId)) {
 			const player = await getPlayerById(playerId);
 			if(player.gameId !== gameId || !player.isHost) {
 				return res.status(401).json({ error: "You are not allowed to start the game" });
 			}
 
-			await createNewRound(1, gameId);
+			await createNewRound(0, gameId);
 
 			if(process.env.CREATE_FULL_LOBBY === "true") {
 				const checkPlayers = await getPlayersByGameId((gameId));
@@ -52,60 +68,9 @@ const logicControllers = {
 					await assignTrait(playerTraits[i][j], players[i].id);
 				}
 			}
-
+			io.in(gameId.toString()).emit('start_timer', timer);
+			await startDay(gameId);
 			res.json({ players: (await getPlayersByGameId(gameId)) });
-		}
-	},
-
-	async startNight(req: any, res: any) {
-		const playerId = req.session.playerId;
-
-		if (Utility.validateInputs(res, "Invalid player id", playerId)) {
-			const player = await getPlayerById(playerId);
-			const gameId = player.gameId;
-
-			if(player.gameId !== gameId) {
-				return res.status(401).json({ error: "You are not allowed to start the night" });
-			}
-
-			const gameEndData = await checkEndConditions(gameId);
-			if (gameEndData) {
-				emitEndGame(gameId, gameEndData);
-				res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
-			} else {
-				const round = await getCurrentRoundByGameId(gameId);
-				await updateToNightPhase(round.id);
-
-				emitStartNight(gameId);
-				const ghosts = await getDeadPlayersByGameId(gameId);
-				for (let i = 0; i < ghosts.length; i++) {
-					await createGhostTarget(gameId, ghosts[i].id);
-				}
-
-				res.json({ message: "Night phase started" });
-			}
-
-			
-		}
-	},
-
-	async startDay(req: any, res: any) {
-		const playerId = req.session.playerId;
-		const player = await getPlayerById(playerId);
-		if (!player) {
-			return res.status(401).json({ error: "You are not allowed to start the next round" });
-		} else {
-			const gameEndData = await checkEndConditions(player.gameId);
-			if (gameEndData) {
-				emitEndGame(player.gameId, gameEndData);
-				res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
-			} else {
-				const currentRound = await getCurrentRoundByGameId(player.gameId);
-				await createNewRound(currentRound.roundNumber + 1, player.gameId);
-
-				emitStartDay(player.gameId, currentRound.ghostImages);
-				res.json({ message: "Day phase started" });
-			}
 		}
 	},
 
@@ -135,7 +100,119 @@ const logicControllers = {
 				res.json(target);
 			}
 		}
+	
 	}
-}
 
+}
 export default logicControllers;
+const startDay = async (gameId: number) => {
+	console.log("Running START DAY")
+	// const playerId = req.session.playerId;
+	// const player = await getPlayerById(playerId);
+	// if (!player) {
+	// 	return res.status(401).json({ error: "You are not allowed to start the next round" });
+	// } else {
+	const gameEndData = await checkEndConditions(gameId);
+	if (gameEndData) {
+		emitEndGame(gameId, gameEndData);
+		// res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
+	} else {
+		const currentRound = await getCurrentRoundByGameId(gameId);
+		await createNewRound(currentRound.roundNumber + 1, gameId);
+
+		emitStartDay(gameId, currentRound.ghostImages);
+		setTimeout(async () => {
+			await tallyVotes(gameId);
+		}, DAYTIMER)
+		// res.json({ message: "Day phase started" });
+	}
+}	// }
+const startNight = async (gameId: number) => {
+	// const playerId = req.session.playerId;
+
+	// if (Utility.validateInputs(res, "Invalid player id", playerId)) {
+		// const player = await getPlayerById(playerId);
+		// const gameId = player.gameId;
+
+		// if(player.gameId !== gameId) {
+		// 	return res.status(401).json({ error: "You are not allowed to start the night" });
+		// }
+		const gameEndData = await checkEndConditions(gameId);
+		if (gameEndData) {
+			emitEndGame(gameId, gameEndData);
+			// res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
+		} else {
+			const round = await getCurrentRoundByGameId(gameId);
+			await updateToNightPhase(round.id);
+
+			emitStartNight(gameId);
+			setTimeout(async () => {
+				await tallyVotes(gameId);
+			}, NIGHTTIMER)
+			const ghosts = await getDeadPlayersByGameId(gameId);
+			for (let i = 0; i < ghosts.length; i++) {
+				await createGhostTarget(gameId, ghosts[i].id);
+			}
+
+			// res.json({ message: "Night phase started" });
+		}
+	// }
+}
+const tallyVotes = async (gameId : number) => {
+	const round = await getCurrentRoundByGameId(gameId);
+	const votes = await getAllVotes(gameId, round.id, round.currentPhase);
+	const players = await getPlayersByGameId(gameId);
+	const isNight = round.currentPhase === "night";
+		const voteResults = countVotes(players, votes);
+		
+	if(voteResults.length > 0 && voteResults[0].count !== voteResults[1].count) {
+			try {
+				await updateEndOfRoundStatus(gameId, voteResults[0].id)
+				emitVoteResult(gameId, voteResults[0].id);
+				setTimeout(async () => {
+					if(isNight) {
+						startDay(gameId);
+					}else {
+						startNight(gameId);	
+					}
+				}, 5000)
+			} catch (error) {
+				console.log(error);
+			}
+	}
+	else {
+			await unjailPrevJailedPlayer(gameId);
+	  if(isNight)
+	  {
+		const chosenPlayer = await randomlyKillPlayer(gameId);
+		await updateEndOfRoundStatus(gameId, chosenPlayer.id);
+		await emitVoteResult(gameId, chosenPlayer.id, true);
+		setTimeout(async () => {
+			startDay(gameId);		
+		}, 5000)
+	  } else {
+		  await emitVoteResult(gameId);
+		  setTimeout(async () => {
+			startNight(gameId);		
+		}, 5000)
+			// {sentence: "Tie" };
+	  }
+	}
+  }
+const countVotes = (players: Player[], votes: Vote[]) => {
+	let voteResults: VoteResult[] = [];
+	players.forEach((player) => {
+		let playerVoteCount : number = 0;
+		votes.forEach((vote) => {
+			if(vote.candidateId === player.id) playerVoteCount++;
+		})
+		const voteResult = {id : player.id, count: playerVoteCount}
+		voteResults.push(voteResult)
+	});
+
+	voteResults.sort((a: VoteResult, b: VoteResult) => {
+		return b.count - a.count;
+	});
+
+	return voteResults;
+}

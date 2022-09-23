@@ -5,12 +5,16 @@ import io from '../server';
 import { getAlivePlayersByGameId, getLivingPlayersByGameId, getPlayersInGameByTeam } from './player';
 import { getRoleById } from './role';
 
+// if you are changing timer change on both Game Index and logic controller
+
 const emitStartNight = (gameId: number) => {
-	io.in(gameId.toString()).emit('start_night');
+	const timer = 20;
+	io.in(gameId.toString()).emit('start_night', timer);
 }
 
 const emitStartDay = (gameId: number, ghostImages: number[]) => {
-	io.in(gameId.toString()).emit('start_day', ghostImages);
+	const timer = 20;
+	io.in(gameId.toString()).emit('start_day', timer);
 }
 
 const emitEndGame = (gameId: number, gameEndData: { cultistsWin: boolean, winners: FilteredPlayer[] }) => {
