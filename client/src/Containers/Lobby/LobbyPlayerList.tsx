@@ -40,7 +40,7 @@ const LobbyPlayerList: React.FC = () => {
 			<ul className={styles.playerListContainer}>
 				{gameData?.players.map((player) => {
 					if (player.id !== gameData?.thisPlayer.id) {
-						return <LobbyPlayerCard key={player.id} player={player} />;
+						return <LobbyPlayerCard key={player.id} player={player} thisPlayer={gameData.thisPlayer} />;
 					}
 				}
 				)}

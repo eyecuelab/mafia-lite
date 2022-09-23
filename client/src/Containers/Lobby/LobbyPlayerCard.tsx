@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Player } from "../../Types/Types";
 import styles from "./Lobby.module.css";
 import { useModal } from "../../ModalContext";
@@ -8,28 +8,30 @@ import { postData } from "../../ApiHelper";
 
 type propTypes = {
 	player: Player
+	thisPlayer: Player
 }
+const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload); 
 
-const playerIsReady = async (payload: {id: number, isReady: boolean}) => postData("/readyPlayer", payload);
-
-const LobbyPlayerCard: React.FC<propTypes> = ({ player }) => {
+const LobbyPlayerCard: React.FC<propTypes> = ({ player, thisPlayer }) => {
 	const { callModal } = useModal();
 	const formatter = new Intl.ListFormat("en", { style: "long", type: "unit" });
-
-	const readyPlayer = useMutation(playerIsReady, {
-		onSuccess: (player: Player) => {
-			console.log("updated player", player);
+	const [hoverKick, setHoverKick] = useState(false);
+	const kickPlayer = () => {
+		if(player.gameId) {
+			playerLeaveMutation.mutate({gameId: player.gameId, id: player.id });
+		}
+	};
+	const playerLeaveMutation = useMutation(playerLeave, {
+		onSuccess: () => {
+			console.log("player kicked");
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
+				console.log(error);
 				callModal(error.message);
 			}
-		}
+		}	
 	});
-
-	const onReadyButtonClick = () => {
-		readyPlayer.mutate({ id: player.id, isReady: !player.isReady });
-	};
 
 	const getCardStyle = () => {
 		let style = `${styles.playerCard} ${styles["player-card-entrance"]}`;
@@ -42,16 +44,24 @@ const LobbyPlayerCard: React.FC<propTypes> = ({ player }) => {
 
 	
 	return (
-		<React.Fragment>
+		<div className={styles.cardControlContainer}>
+			{thisPlayer.isHost && 
+			<button onClick={kickPlayer} 
+				onMouseEnter={() => setHoverKick(true)} 
+				onMouseLeave={() => setHoverKick(false)} 
+				className={styles.kickButton}
+			>&#10006;
+			</button>}
 			<div className={ getCardStyle() }>
 				<img className={styles.playerCardImage} src={player.avatar} alt="player avatar" />
 				<div className={styles.playerDetails}>
 					<p className={styles.playerName}>{player.isHost && <span className={styles.hostIcon}>&#9812;</span>}{player.name}</p>
-					{player.isReady && <p>Player is Ready</p>}
+					{player.isReady && <p className={styles.readyPlayerText}>Player is Ready</p>}
+					{hoverKick && <p className={styles.kickPlayerText}>Kick player</p>}
 					<p className={styles.playerTraits}>{formatter.format(player.traits)}</p>
 				</div>
 			</div>
-		</React.Fragment>
+		</div>
 	);
 };
 

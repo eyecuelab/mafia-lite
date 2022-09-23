@@ -2,9 +2,26 @@ import { TitleImage } from "../../assets/images/Images";
 import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
 import Rules from "../../Components/Rules/Rules";
+import {useLocation } from "react-router-dom";
+import { useModal } from "../../ModalContext";
+import { useEffect } from "react";
 
+interface CustomizedState {
+	isKicked: boolean | undefined
+}
 
 function Homepage() {
+	const { callModal } = useModal();
+	const location = useLocation();
+	const state = location.state as CustomizedState;
+	useEffect(() => {
+		if(state) {
+			const { isKicked } = state;
+			console.log(state);
+			console.log(isKicked);
+			if(isKicked) callModal("You have been kicked from the lobby.");
+		}
+	}, []);
 	return (
 		<div>
 			<div className={HomepageCSS["homepage-title-wrapper"]}>

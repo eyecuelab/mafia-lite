@@ -39,9 +39,12 @@ const Lobby = (): JSX.Element => {
 			navigate("/game");
 		});
 
-		socket.on("player_left", () => {
-			console.log("Player is Leaving");
-			queryClient.invalidateQueries(["games"]);
+		socket.on("player_left", (playerId: number) => {
+			if(playerId === gameData?.thisPlayer.id) {
+				navigate("/", {replace: true, state: {isKicked : true}});
+			}else {
+				queryClient.invalidateQueries(["games"]);
+			}
 		});
 
 		return () => { 

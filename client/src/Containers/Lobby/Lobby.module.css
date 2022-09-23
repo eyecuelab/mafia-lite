@@ -355,6 +355,42 @@
 .playerReadyBorder {
 	border: 2px solid green;
 }
+.kickButton {
+	background-color: rgb(182, 8, 8);
+	border-radius: 10px;
+	font-size: 23px;
+	padding: 4px;
+	border: 4.5px solid transparent;
+	transition: all 0.3s;
+	position: relative;
+	height: 40px;
+	left: 90px;
+}
+.kickButton:hover {
+	cursor: pointer;
+	border: 4.5px solid rgb(105, 0, 0);
+}
+.kickPlayerText {
+	color: rgb(182, 8, 8);
+	font-size: 20px;
+	font-family: 'Bebas Neue', sans-serif;
+	font-weight: bold;
+	animation: showKickText 0.4s forwards ease-in;
+	margin: 0;
+	margin-top: 15px;
+	padding: 0;
+}
+.readyPlayerText {
+	animation: showKickText 0.4s forwards ease-in;
+	margin: 0;
+	padding: 0;
+}
+.cardControlContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
 
 
 @media screen and (max-width: 1920px) {
@@ -389,4 +425,15 @@
 	.cancel-game-btn {
 		width: 45vw;
 	}
+}
+
+@keyframes showKickText {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
 }
