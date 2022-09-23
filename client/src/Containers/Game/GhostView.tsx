@@ -29,6 +29,12 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 		}
 	});
 
+	if (isLoading) return <p>Loading ....</p>;
+
+	if (error instanceof Error) {
+		callModal(error.message);
+	}
+
 	const filterImages = (ghostImages: string[], indices: number[]) => {
 		return ghostImages.filter((image, index) => indices.includes(index));
 	};

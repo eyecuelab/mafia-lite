@@ -41,6 +41,7 @@ function Game(): JSX.Element {
 	const [ randomKill, setRandomKill ] = useState(false);
 	const [ gameEndData, setGameEndData ] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
+	const [ timer, setTimer ] = useState(20);
 	const queryClient = useQueryClient();
 
 	if (gameQueryError instanceof Error) {
@@ -69,13 +70,22 @@ function Game(): JSX.Element {
 			handleGameState({ hasResult: true, votingResults: player });
 		});
 
-		socket.on("start_night", () => {
+		socket.on("start_night", (timer: number) => {
+			setTimer(timer);
 			handleGameState({ hasResult: false });
 		});
 
-		socket.on("start_day", () => {
+		socket.on("start_day", (timer: number) => {
+			console.log("start timer");
+			console.log(timer);
+			setTimer(timer);
 			setRandomKill(false);
 			handleGameState({ hasResult: false });
+		});
+
+		socket.on("start_timer", (timer: number) => {
+			console.log("start timer", timer);
+			setTimer(timer);
 		});
 
 		socket.on("end_game", (gameEndData: { cultistsWin: boolean, winners: Player[] }) => {
@@ -89,6 +99,7 @@ function Game(): JSX.Element {
 			socket.off("start_night");
 			socket.off("start_day");
 			socket.off("end_game");
+			socket.off("start_timer");
 		};
 	}, []);
 
@@ -157,9 +168,9 @@ function Game(): JSX.Element {
 				{gameData ?  (
 					(
 						(gameData.currentRound?.currentPhase === "day") ? 
-							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} />) 
+							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />) 
 							: 
-							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} />)
+							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />)
 					)
 				) : <p>...loading</p>}
 			</React.Fragment>
