@@ -11,6 +11,10 @@ import style from "./Game.module.css";
 import GameOver from "./GameOver";
 import PlayerFocusCard from "../PlayerFocusCard";
 import GhostView from "./GhostView";
+import AllChat from "../../Components/Chat/AllChat";
+import CultistChat from "../../Components/Chat/CultistChat";
+import GhostChat from "../../Components/Chat/GhostChat";
+import ChatContainer from "../../Components/Chat/ChatContainer";
 
 
 type VotePayload = {
@@ -42,7 +46,7 @@ function Game(): JSX.Element {
 	const [ randomKill, setRandomKill ] = useState(false);
 	const [ gameEndData, setGameEndData ] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
-	const [ timer, setTimer ] = useState(20);
+	const [ timer, setTimer ] = useState(30);
 	const queryClient = useQueryClient();
 
 	if (gameQueryError instanceof Error) {
@@ -166,6 +170,7 @@ function Game(): JSX.Element {
 		return (
 			<React.Fragment>
 				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
+				{gameData && <ChatContainer sender={gameData?.thisPlayer} />}
 				{gameData ?  (
 					(
 						(gameData.currentRound?.currentPhase === "day") ? 

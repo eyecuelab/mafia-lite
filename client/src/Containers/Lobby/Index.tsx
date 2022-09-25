@@ -13,9 +13,10 @@ import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
 import LobbyPlayerList from "./LobbyPlayerList";
 import MainPlayerCard from "./MainPlayerCard";
+import LobbyChat from "../../Components/Chat/LobbyChat";
 
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame);
-const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload); 
+const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload);
 
 const Lobby = (): JSX.Element => {
 	const { callModal } = useModal();
@@ -106,6 +107,7 @@ const Lobby = (): JSX.Element => {
 			<div className={styles.lobbyPageContainer}>
 				<img src={TitleImage} className={styles.logoImage} alt="The Nameless Terror" />
 				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
+				{gameData && <LobbyChat sender={gameData?.thisPlayer}/>}
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>
 						<SubTitle title={"Your Character"} />

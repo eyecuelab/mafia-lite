@@ -53,9 +53,14 @@ const getGameByGameCode = async (gameCode: string) => {
 }
 
 const deletePlayerFromGame = async(playerId: number) => {
-    return await prisma.player.delete({
-      where: { id: playerId } ,
-    });
+    try {
+      return await prisma.player.delete({
+        where: { id: playerId } ,
+      });
+    }
+    catch {
+      throw "Player Could not be deleted";
+    }
 }
 
 export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode, deletePlayerFromGame};

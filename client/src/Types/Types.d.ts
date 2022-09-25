@@ -52,3 +52,9 @@ export interface GameData {
 	ghostImages: number[]
 }
 
+export interface ChatData {
+	message: string
+	senderId:number
+	senderName: string
+}
+

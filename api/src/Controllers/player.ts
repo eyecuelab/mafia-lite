@@ -29,6 +29,8 @@ const playerControllers = {
 			req.session.playerId = newPlayer.id;
 
 			io.to(gameId.toString()).emit("player_joined_lobby");
+			console.log("Emitting Player Joing Message To Lobby for :", name)
+			io.to(gameId.toString()).emit("player_joined_lobby_chat", name);
 			res.status(201).json(newPlayer);
 		}
 	},

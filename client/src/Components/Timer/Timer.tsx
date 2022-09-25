@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styles from "./Timer.module.css";
 
 const Timer = ({timer} : {timer: number}) => {
-	console.log(timer);
 	const [time, setTime] = useState<number>(timer); //Max time limit
 	const [startTimer, setStartTimer] = useState<boolean>(false);
 
@@ -18,13 +17,11 @@ const Timer = ({timer} : {timer: number}) => {
 		} else {
 			clearTimeout(timer);
 			setStartTimer(false);
-			console.log("timer off");
 		}
 		return () => setStartTimer(false);
 
 	}, [time]);
 
-	console.log(time);
 
 	return (
 		<h1 style={{

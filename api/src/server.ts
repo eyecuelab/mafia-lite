@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
 import app from "./app";
+import { getPlayerById } from "./Models/player";
 
 /*** Socket setup ***/
 const http = require('http');
@@ -51,8 +52,8 @@ io.sockets.on('connection', (socket: Socket) => {
 
 	socket.on("disconnect", () => {
 		console.log("disconnect", socket.id);
+		console.log("disconectRoom", socket.rooms)
 	})
-
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);
 		console.log("starting game...");
@@ -67,6 +68,17 @@ io.sockets.on('connection', (socket: Socket) => {
 			io.in(rooms[0]).emit("game_start");
 		}
 	});
+	// socket.on("send_chat", async (playerId: number, message: string) => {
+	// 	// console.log("SEND CHAT HIT");
+	// 	// console.log("message", message);
+	// 	// console.log("playerId", playerId);
+	// 	const player = await getPlayerById(playerId);
+	// 	// console.log("player-name", player.name);
+	// 	// let clientMessage = `${player.name} : ${message}`
+	// 	console.log(player.id);
+	// 	io.in(player.gameId.toString()).emit("all_chat_message", message, player);
+	// })
+	
 });
 
 export default io;
