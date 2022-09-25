@@ -81,24 +81,22 @@
 
 .playerListGameContainer {
 	display: grid;
-	gap: 30px 10px;
-	grid-template-columns: 1fr 1fr;
+	gap: 30px;
+	grid-template-columns: 500px 500px;
 	width: 100%;
-	padding: 0;
 	max-height: 70vh;
 	overflow: auto;
   overflow-x: hidden;
 }
 
 .playerListGameContainer::-webkit-scrollbar {
-  width: 10px;
-	padding-left: 1px;            
+  width: 5px;          
 }
 .playerListGameContainer::-webkit-scrollbar-track {
-  background: transparent;         
+  background: rgb(99, 99, 99);        
 }
 .playerListGameContainer::-webkit-scrollbar-thumb {
-  background-color: transparent;    
+  background-color:  rgb(208, 0, 9);     
 }
 .playerListContainer::-webkit-scrollbar {
 	width: 10px;
@@ -107,7 +105,7 @@
   background-color: rgb(99, 99, 99);         
 }
 .playerListContainer::-webkit-scrollbar-thumb {
-  background-color: rgb(164, 5, 5);    
+  background-color: rgb(208, 0, 9);    
 } 
 
 .playerListInnerWrap{
@@ -131,7 +129,7 @@
 	justify-content: left;
 	background-color: rgba(0, 0, 0, 0.75);
 	border-radius: 5px;
-	width: 260px;
+	width: 360px;
 	margin: auto;
 	margin-bottom: 10px;
 	border: 3px solid transparent;
@@ -171,11 +169,13 @@
 	color: white;
 	font-size: 25px;
 	margin: 0;
+	text-align: left;
 }
 .playerTraitsMain {
 	font-weight: bold;
 	font-family: 'Bebas Neue', sans-serif;
 	color: white;
+	text-align: left;
 	font-size: 35px;
 	margin: 0;
 }
@@ -313,7 +313,7 @@
 
 .playerStatusOverlayImage {
 	position: absolute;
-	left: 20%;
+	left: 30%;
 	top: 30%;
 	max-width: 200px;
 }
@@ -324,13 +324,13 @@
 	width: 50px;
 }
 .yourPlayerBorder {
-	border: 3px solid red;
+	border: 3px solid greenyellow;
 	border-radius: 5px;
 	display: flex;
 	flex-direction: row;
 	justify-content: left;
 	background-color: rgba(0, 0, 0, 0.75);
-	width: 260px;
+	width: 360px;
 	margin: auto;
 	margin-bottom: 10px;
 }

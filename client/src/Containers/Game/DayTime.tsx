@@ -7,6 +7,7 @@ import styles from "./Game.module.css";
 import { TitleImage } from "../../assets/images/Images";
 import GamePlayerList from "./PlayerList/GamePlayerList";
 import Timer from "../../Components/Timer/Timer";
+import Rules from "../../Components/Rules/Rules";
 
 const beginNight = async (gameId: number): Promise<void> => postData("/startNight", { gameId });
 
@@ -34,13 +35,17 @@ const DayTime = ({ gameData, hasResult, castVote, endRound, focusView, timer }: 
 			<div className={styles.gameScreenContainer}>
 				<div className={styles.gameScreen}>
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
-					<h1 className={styles.dayHeader}>Day {gameData?.currentRound?.roundNumber ?? null}</h1>
-					<Timer timer={timer}/>
+					<div className={styles.roundTimerContainer}>
+						<h1 className={styles.dayHeader}>Day {gameData?.currentRound?.roundNumber ?? null}</h1>
+						<Timer timer={timer}/>
+						
+					</div>
 					{gameData ? <GamePlayerList castVote={castVote} hasResult={hasResult} /> : <p>...loading</p> }
-					{hasResult ? 
+					{/* {hasResult ? 
 						<GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} />
 						:
-						<GenericButton text="End Round" onClick={endRound} />}
+						<GenericButton text="End Round" onClick={endRound} />} */}
+					<Rules />
 				</div>
 				<div className={styles.voteResults}>
 					{focusView()}

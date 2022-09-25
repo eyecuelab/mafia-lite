@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import styles from "./Timer.module.css";
 
 const Timer = ({timer} : {timer: number}) => {
 	console.log(timer);
 	const [time, setTime] = useState<number>(timer); //Max time limit
 	const [startTimer, setStartTimer] = useState<boolean>(false);
+
 
 	useEffect(() => {
 		let timer = 0; //initialize 
@@ -25,9 +27,13 @@ const Timer = ({timer} : {timer: number}) => {
 	console.log(time);
 
 	return (
-		<div className={"timer"} >
-			<h1>{startTimer ? time : "Time over"}</h1>
-		</div>
+		<h1 style={{
+			fontSize: "55px",
+			fontFamily: "Bebas Neue",
+			fontWeight: 400,
+			color: (time <= 5 ? "red" : "green" && time <= 10 ? "Orange" : "green")
+		}}>
+			Timer: {startTimer? time : "Round Over"}</h1>
 	);
 };
 

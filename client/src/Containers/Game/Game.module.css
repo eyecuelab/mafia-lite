@@ -32,6 +32,7 @@
     font-size: normal;
     font-weight: 400;
     font-size: 55px;
+    margin-right: 25px;
 }
 
 .nightHeader {
@@ -39,6 +40,7 @@
     font-size: normal;
     font-weight: 400;
     font-size: 55px;
+    margin-right: 25px;
 }
 .titleImage {
 	width: 15vw;
@@ -46,6 +48,13 @@
     float: left;
     margin-left: 1vw;
     margin-bottom: 2vh;
+}
+.roundTimerContainer{
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
 }
 .playerContainer {
     display: flex;

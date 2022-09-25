@@ -12,6 +12,7 @@ import GameOver from "./GameOver";
 import PlayerFocusCard from "../PlayerFocusCard";
 import GhostView from "./GhostView";
 
+
 type VotePayload = {
 	gameId: number,
 	candidateId: number

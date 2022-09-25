@@ -38,12 +38,11 @@
   border-radius: 7px;
   padding: 0.25em 2em;
   margin-top: 1rem;
-  /* width: 11vw; */
   font-family: 'Bebas Neue';
-  font-weight:600;
-  font-size: 20px;
+  font-weight: 1000;
+  font-size: 30px;
   background: transparent;
-  background-color: rgba(104, 12, 12);
+  background-color: rgb(208, 0, 9, 0.8);
 }
 
 .modal-button:hover {
