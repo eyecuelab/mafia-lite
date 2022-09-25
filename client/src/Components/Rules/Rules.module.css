@@ -7,7 +7,6 @@
   font-family: 'American Typewriter', sans-serif;
   font-size: 20px;
   font-weight: 800;
-	z-index: 600;
 }
 
 .questionMark {
@@ -40,16 +39,20 @@
   background: rgb(0, 0, 0);        /* color of the tracking area */
 }
 .modalContent::-webkit-scrollbar-thumb {
-  background-color: rgba(104, 12, 12);    /* color of the scroll thumb */
-  border-radius: 20px;       /* roundness of the scroll thumb */
-  /* border: 3px solid rgb(255, 255, 255);  creates padding around scroll thumb */
+  background-color: rgb(208, 0, 9);    
+  border-radius: 20px;     
 }
 
 .headerTwo {
-  color: rgba(104, 12, 12);
+  color: rgb(208, 0, 9);
+  font-weight: 400;
 } 
 
 .listHeader {
   font-size: 20px;
+  font-weight: 400;
+}
+
+.smallHeader {
   font-weight: 400;
 }
