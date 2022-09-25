@@ -8,7 +8,7 @@ import TerminatedBadge from "./ui/image_180.png";
 import TitleImage from "./Title.png";
 import ButtonImage from "./ui/image_15.png";
 
-const NUM_GHOST_IMAGES = 19;
+const NUM_GHOST_IMAGES = 30;
 
 const GhostImages = (() => {
 	const images: string[] = [];
