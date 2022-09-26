@@ -14,7 +14,8 @@ import socket from "../../Hooks/WebsocketHook";
 import LobbyPlayerList from "./LobbyPlayerList";
 import MainPlayerCard from "./MainPlayerCard";
 import LobbyChat from "../../Components/Chat/LobbyChat";
-import { initiateConnectionToCall , hangUpCall, setRoomId } from "../../Voice/voice";
+import { connectToRoom, initiateConnectionToCall, hangUpAllCalls, hangUpCall, setRoomId, setPlayerId } from "../../Voice/voice";
+import { Player } from "../../Types/Types";
 
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame);
 const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload);
@@ -29,10 +30,30 @@ const Lobby = (): JSX.Element => {
 	const [ codeIsCopied, setCodeIsCopied ] = useState(false);
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
+	const getAllOtherPlayerIds = (players: Player[], thisPlayerId: number) => {
+		const playerIds: number[] = [];
+		players.forEach((player) => {
+			if (player.id !== thisPlayerId) {
+				playerIds.push(player.id);
+			}
+		});
+
+		return playerIds;
+	};
+
+	const callEntireLobby = (players: Player[], thisPlayerId: number) => {
+		const playerIds = getAllOtherPlayerIds(players, thisPlayerId);
+		if (playerIds.length > 0) {
+			connectToRoom(playerIds);
+		}
+	};
+
 	useEffect(() => {
 		if (gameData) {
 			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
 			setRoomId(gameData.game.id);
+			setPlayerId(gameData.thisPlayer.id);
+			callEntireLobby(gameData.players, gameData.thisPlayer.id);
 		}
 	}, [gameData?.game.id]);
 
@@ -42,6 +63,7 @@ const Lobby = (): JSX.Element => {
 		});
 
 		socket.on("player_left", (playerId: number) => {
+			hangUpCall(playerId);
 			if(playerId === gameData?.thisPlayer.id) {
 				navigate("/", {replace: true, state: {isKicked : true}});
 			}else {
@@ -52,6 +74,22 @@ const Lobby = (): JSX.Element => {
 		return () => { 
 			socket.off("game_start");
 			socket.off("player_left");
+		};
+	});
+
+	useEffect(() => {
+		socket.on("playerIsReady", () => {
+			queryClient.invalidateQueries(["games"]);
+		});
+
+		socket.on("player_joined_lobby", (playerId: number) => {
+			// initiateConnectionToCall(playerId);
+			queryClient.invalidateQueries(["games"]);
+		});
+
+		return () => {
+			socket.off("playerIsReady");
+			socket.off("player_joined_lobby");
 		};
 	});
 	
@@ -146,8 +184,8 @@ const Lobby = (): JSX.Element => {
 				</div>
 			</div>
 			{gameData && <div>
-				<button onClick={() => initiateConnectionToCall()}>Open Call</button>
-				<button onClick={() => hangUpCall()}>Close Call</button>
+				{/* <button onClick={() => callEntireLobby(gameData.players, gameData.thisPlayer.id)}>Open Call</button> */}
+				<button onClick={() => hangUpAllCalls()}>Close Call</button>
 			</div>}
 			<Rules />
 		</div >

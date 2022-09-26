@@ -29,7 +29,7 @@ const playerControllers = {
 			const newPlayer = await createPlayer(gameId, isHost, name);
 			req.session.playerId = newPlayer.id;
 
-			io.to(gameId.toString()).emit("player_joined_lobby");
+			io.to(gameId.toString()).emit("player_joined_lobby", newPlayer.id);
 			io.to(gameId.toString()).emit("player_joined_lobby_chat", name);
 			res.status(201).json(newPlayer);
 		}

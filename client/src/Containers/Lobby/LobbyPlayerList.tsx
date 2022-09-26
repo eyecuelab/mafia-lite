@@ -1,31 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./Lobby.module.css";
-import socket from "../../Hooks/WebsocketHook";
 import useGameStateQuery from "../../Hooks/GameDataHook";
 import { useModal } from "../../ModalContext";
-import { useQueryClient } from "@tanstack/react-query";
 import LobbyPlayerCard from "./LobbyPlayerCard";
 
 
 const LobbyPlayerList: React.FC = () => {
 	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
-	const queryClient = useQueryClient();
 
-	useEffect(() => {
-		socket.on("playerIsReady", () => {
-			queryClient.invalidateQueries(["games"]);
-		});
 
-		socket.on("player_joined_lobby", () => {
-			queryClient.invalidateQueries(["games"]);
-		});
-
-		return () => {
-			socket.off("playerIsReady");
-			socket.off("player_joined_lobby");
-		};
-	});
 	
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);

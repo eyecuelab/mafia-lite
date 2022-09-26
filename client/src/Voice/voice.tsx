@@ -1,10 +1,24 @@
 import socket from "../Hooks/WebsocketHook";
 
-// Probably needs to be array or set to handle group calls
-let peerConnection: RTCPeerConnection;
-let roomId: number;
+type VCMessage = {
+	to: number
+	from: number
+	target: number
+	type: string
+	data: any
+}
 
-const audioHTML = document.getElementsByTagName("audio")[0];
+type Connection = {
+	peerConnection: RTCPeerConnection
+	audioTag: HTMLAudioElement
+}
+
+const connections: Map<number, Connection> = new Map<number, Connection>();
+const audioDiv = document.getElementById("audio");
+
+let connectionBusy = false;
+let roomId: number;
+let playerId: number;
 
 // Audio only
 const mediaConstraints: MediaStreamConstraints = {
@@ -12,28 +26,37 @@ const mediaConstraints: MediaStreamConstraints = {
 	video: false
 };
 
-type VCMessage = {
-	target: number
-	type: string
-	data: any
-}
-
-socket.on("voice-offer", (message: VCMessage) => { console.log("recieved offer"); handleConnectionOfferMessage(message); });
-socket.on("voice-answer", (message: VCMessage) => { console.log("recieved answer"); handleConnectionAnswerMessage(message); });
-socket.on("new-ice-candidate", (message: VCMessage) => { console.log("recieved ice"); handleNewICECandidateMessage(message); });
-socket.on("hang-up", (message: VCMessage) => { console.log("recieved hang-up"); handleHangUpMessage(message); });
-
 const setRoomId = (id: number) => {
 	roomId = id;
 };
+
+const setPlayerId = (id: number) => {
+	playerId = id;
+};
+
+const handleIncomingMessage = (message: VCMessage, handler: (message: VCMessage) => any) => {
+	console.log(`recieved ${message.type}: ${message.from}`);
+	console.log("🚀 ~ file: voice.tsx ~ line 39 ~ handleIncomingMessage ~ if check", message.to === playerId && ((message.type === "voice-offer") === (!connections.has(message.from))));
+	if (message.to === playerId && ((message.type === "voice-offer") === (!connections.has(message.from)))) {
+		console.log(`handling ${message.type}: ${message.from}`);
+		handler(message);
+	}
+};
+
+socket.on("voice-offer", (message: VCMessage) => handleIncomingMessage(message, handleConnectionOfferMessage));
+socket.on("voice-answer", (message: VCMessage) => handleIncomingMessage(message, handleConnectionAnswerMessage));
+socket.on("new-ice-candidate", (message: VCMessage) => handleIncomingMessage(message, handleNewICECandidateMessage));
+socket.on("hang-up", (message: VCMessage) => handleIncomingMessage(message, handleHangUpMessage));
 
 const sendToServer = (message: VCMessage) => {
 	console.log("vc_message", message);
 	socket.emit("vc_message", message);
 };
 
-const createRTCPeerConnection = () => {
-	peerConnection = new RTCPeerConnection({
+const createRTCPeerConnection = (id: number) => {
+	console.log(connections);
+	connectionBusy = true;
+	const peerConnection = new RTCPeerConnection({
 		iceServers: [
 			{
 				urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"]
@@ -42,18 +65,46 @@ const createRTCPeerConnection = () => {
 		iceCandidatePoolSize: 10
 	});
 
-	peerConnection.onicecandidate = handleICECandidateEvent;
-	peerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-	peerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
-	peerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
-	peerConnection.ontrack = handleTrackEvent;
+	peerConnection.oniceconnectionstatechange = () => handleICEConnectionStateChangeEvent(id);
+	peerConnection.onsignalingstatechange =  () => handleSignalingStateChangeEvent(id);
+	peerConnection.onnegotiationneeded = () => handleNegotiationNeededEvent(id);
+
+	peerConnection.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+		if (event.candidate) {
+			sendToServer({
+				to: id,
+				from: playerId,
+				type: "new-ice-candidate",
+				target: roomId,
+				data: event.candidate
+			});
+		}
+	};
+
+	peerConnection.ontrack = (event: RTCTrackEvent) => {
+		const audioTag = connections.get(id)?.audioTag;
+		if (audioTag && audioTag.srcObject) {
+			if (audioTag.srcObject !== event.streams[0]) {
+				audioTag.srcObject = event.streams[0];
+			}
+			console.log("Got remote stream");
+			audioTag.play();
+		}
+	};
+
+	const audioTag = audioDiv!.appendChild(document.createElement("audio"));
+
+	connections.set(id, {peerConnection, audioTag});
 };
 
-const handleNegotiationNeededEvent = async () => {
-	peerConnection.createOffer()
+const handleNegotiationNeededEvent = async (id: number) => {
+	const peerConnection = connections.get(id)?.peerConnection;
+	peerConnection?.createOffer()
 		.then((offer: RTCSessionDescriptionInit) => peerConnection.setLocalDescription(offer))
 		.then(() => {
 			sendToServer({
+				to: id,
+				from: playerId,
 				target: roomId,
 				type: "voice-offer",
 				data: peerConnection.localDescription
@@ -62,77 +113,83 @@ const handleNegotiationNeededEvent = async () => {
 		.catch(reportError);
 };
 
-const handleICECandidateEvent = (event: any) => {
-	if (event.candidate) {
-		sendToServer({
-			type: "new-ice-candidate",
-			target: roomId,
-			data: event.candidate
-		});
-	}
-};
-
-const handleICEConnectionStateChangeEvent = (event: any) => {
-	switch(peerConnection.iceConnectionState) {
+const handleICEConnectionStateChangeEvent = (id: number) => {
+	const peerConnection = connections.get(id)?.peerConnection;
+	switch(peerConnection?.iceConnectionState) {
 		case "closed":
 		case "failed":
 		case "disconnected":
-			closeCall();
+			closeCall(id);
 			break;
 	}
 };
 
-const handleSignalingStateChangeEvent = (event: any) => {
-	switch(peerConnection.signalingState) {
+const handleSignalingStateChangeEvent = (id: number) => {
+	const peerConnection = connections.get(id)?.peerConnection;
+	switch(peerConnection?.signalingState) {
 		case "closed":
-			closeCall();
+			closeCall(id);
 			break;
 	}
 };
 
 const handleConnectionOfferMessage = (message: VCMessage) => {
+	connectionBusy = true;
 	let localStream: MediaStream;
-	createRTCPeerConnection();
+	createRTCPeerConnection(message.from);
 
 	const desc = new RTCSessionDescription(message.data);
+	const peerConnection = connections.get(message.from)?.peerConnection;
 
-	peerConnection.setRemoteDescription(desc)
+	peerConnection?.setRemoteDescription(desc)
 		.then(() => navigator.mediaDevices.getUserMedia(mediaConstraints))
 		.then((stream) => {
 			localStream = stream;
 			localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+			const audioTag = connections.get(message.from)?.audioTag;
+			if (audioTag) {
+				audioTag.srcObject = localStream;
+				audioTag.play();
+			}
 		})
 		.then(() => peerConnection.createAnswer())
 		.then((answer) => peerConnection.setLocalDescription(answer))
 		.then(() => {
-			const message = {
+			const outMessage = {
+				to: message.from,
+				from: playerId,
 				target: roomId,
 				type: "voice-answer",
 				data: peerConnection.localDescription
 			};
 
-			console.log("target: ", message.target);
-			sendToServer(message);
+			console.log("target: ", outMessage.target);
+			sendToServer(outMessage);
 		})
 		.catch(handleGetUserMediaError);
 };
 
 const handleConnectionAnswerMessage = async (message: VCMessage) => {
 	const desc = new RTCSessionDescription(message.data);
-	await peerConnection.setRemoteDescription(desc).catch(reportError);
+	const peerConnection = connections.get(message.from)?.peerConnection;
+	await peerConnection?.setRemoteDescription(desc).catch(reportError);
 };
 
 const handleNewICECandidateMessage = async (message: VCMessage) => {
 	const candidate = new RTCIceCandidate(message.data);
+	const peerConnection = connections.get(message.from)?.peerConnection;
 
 	try {
-		await peerConnection.addIceCandidate(candidate);
+		await peerConnection?.addIceCandidate(candidate);
 	} catch(error) {
 		reportError(error);
 	}
 };
 
-const closeCall = () => {
+const closeCall = (id: number) => {
+	const peerConnection = connections.get(id)?.peerConnection;
+	const audioTag = connections.get(id)?.audioTag;
+
 	if (peerConnection) {
 		peerConnection.onicecandidate = null;
 		peerConnection.oniceconnectionstatechange = null;
@@ -143,9 +200,9 @@ const closeCall = () => {
 			transceiver.stop();
 		});
 
-		if (audioHTML.srcObject) {
-			audioHTML.pause();
-			(audioHTML.srcObject as MediaStream).getTracks().forEach((track) => {
+		if (audioTag?.srcObject) {
+			audioTag.pause();
+			(audioTag.srcObject as MediaStream).getTracks().forEach((track) => {
 				track.stop();
 			});
 		}
@@ -155,7 +212,7 @@ const closeCall = () => {
 };
 
 const handleHangUpMessage = (message: VCMessage) => {
-	closeCall();
+	closeCall(message.from);
 };
 
 const handleGetUserMediaError = (error: Error) => {
@@ -171,37 +228,53 @@ const handleGetUserMediaError = (error: Error) => {
 			break;
 	}
 
-	closeCall();
+	connections.forEach((connection, key) => closeCall(key));
 };
 
-const handleTrackEvent = (event: any) => {
-	if (audioHTML.srcObject !== event.streams[0])
-		audioHTML.srcObject = event.streams[0];
-	console.log("Got remote stream");
-	audioHTML.play();
-};
+const initiateConnectionToCall = (id: number) => {
+	createRTCPeerConnection(id);
 
-const initiateConnectionToCall = () => {
-	createRTCPeerConnection();
+	const audioTag = connections.get(id)?.audioTag;
 
 	navigator.mediaDevices.getUserMedia(mediaConstraints)
 		.then((localStream: MediaStream) => {
-			audioHTML.srcObject = localStream;
+			if (audioTag) {
+				audioTag.srcObject = localStream;
+				audioTag.play();
+			}
+
 			localStream.getTracks().forEach((track: MediaStreamTrack) => {
-				peerConnection.addTrack(track, localStream);
+				connections.get(id)?.peerConnection.addTrack(track, localStream);
 			});
 		})
 		.catch(handleGetUserMediaError);
 };
 
-const hangUpCall = () => {
-	closeCall();
+const hangUpCall = (id: number) => {
+	closeCall(id);
 
 	sendToServer({
+		to: id,
+		from: playerId,
 		target: roomId,
 		type: "hang-up",
 		data: null
 	});
 };
 
-export { initiateConnectionToCall, hangUpCall, setRoomId };
+const hangUpAllCalls = () => {
+	console.log("hang-up all");
+	connections.forEach((connection, id) => {
+		hangUpCall(id);
+	});
+};
+
+const connectToRoom = (ids: number[]) => {
+	ids.forEach((id) => {
+		if (!connections.has(id)) {
+			initiateConnectionToCall(id);
+		}
+	});
+};
+
+export { connectToRoom, initiateConnectionToCall, hangUpAllCalls, hangUpCall, setRoomId, setPlayerId };
