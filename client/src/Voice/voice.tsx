@@ -18,10 +18,10 @@ type VCMessage = {
 	data: any
 }
 
-socket.on("voice-offer", (message: VCMessage) => { console.log("recieved"); handleConnectionOfferMessage(message); });
-socket.on("voice-answer", (message: VCMessage) => { console.log("recieved"); handleConnectionAnswerMessage(message); });
+socket.on("voice-offer", (message: VCMessage) => { console.log("recieved offer"); handleConnectionOfferMessage(message); });
+socket.on("voice-answer", (message: VCMessage) => { console.log("recieved answer"); handleConnectionAnswerMessage(message); });
 socket.on("new-ice-candidate", (message: VCMessage) => { console.log("recieved ice"); handleNewICECandidateMessage(message); });
-socket.on("hang-up", (message: VCMessage) => { console.log("recieved"); handleHangUpMessage(message); });
+socket.on("hang-up", (message: VCMessage) => { console.log("recieved hang-up"); handleHangUpMessage(message); });
 
 const setRoomId = (id: number) => {
 	roomId = id;
@@ -178,6 +178,7 @@ const handleTrackEvent = (event: any) => {
 	if (audioHTML.srcObject !== event.streams[0])
 		audioHTML.srcObject = event.streams[0];
 	console.log("Got remote stream");
+	audioHTML.play();
 };
 
 const initiateConnectionToCall = () => {
