@@ -7,6 +7,10 @@ import { getRoleById } from './role';
 
 // if you are changing timer change on both Game Index and logic controller
 
+const emitTimerTick = (gameId: number, timeRemaining: number) => {
+	io.in(gameId.toString()).emit('tick', timeRemaining);
+}
+
 const emitStartNight = (gameId: number) => {
 	const timer = 20;
 	io.in(gameId.toString()).emit('start_night', timer);
@@ -61,4 +65,4 @@ const getRandomLivingCultist = async (gameId: number): Promise<Player> => {
 	return shuffled[0];
 }
 
-export { emitStartNight, emitStartDay, checkEndConditions, emitEndGame, getRandomLivingCultist };
+export { emitTimerTick, emitStartNight, emitStartDay, checkEndConditions, emitEndGame, getRandomLivingCultist };

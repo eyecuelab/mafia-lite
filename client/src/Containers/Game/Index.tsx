@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "../../ApiHelper";
 import { useModal } from "../../ModalContext";
@@ -16,6 +16,10 @@ import CultistChat from "../../Components/Chat/CultistChat";
 import GhostChat from "../../Components/Chat/GhostChat";
 import ChatContainer from "../../Components/Chat/ChatContainer";
 
+type VoteResults = {
+	result: "tie" | "success",
+	player: Player | null,
+}
 
 type VotePayload = {
 	gameId: number,
@@ -46,49 +50,58 @@ function Game(): JSX.Element {
 	const [ randomKill, setRandomKill ] = useState(false);
 	const [ gameEndData, setGameEndData ] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
-	const [ timer, setTimer ] = useState(30);
+	const [ timeRemaining, setTimeRemaining ] = useState(180);
 	const queryClient = useQueryClient();
 
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);
 	}
 
-	const handleGameState = ({ votingResults, hasResult }: { votingResults?: Player, hasResult: boolean }) => {
-		if (votingResults) { setVotingResults(votingResults); }
+	const handleGameState = useCallback(({ votingResults, hasResult }: { votingResults?: Player, hasResult: boolean }) => {
+		if (votingResults) {
+			setVotingResults(votingResults);
+		}
+
 		setHasResult(hasResult);
 
 		queryClient.invalidateQueries(["games"]);
-	};
+	}, [queryClient]);
+
+	const gameId = gameData?.game?.id;
+	const thisPlayerId = gameData?.thisPlayer.id;
+	const thisPlayerDisconnected = gameData?.thisPlayer.isDisconnected;
 
 	useEffect(() => {
-		socket.on("vote_results", (player: Player) => {
-			handleGameState({ votingResults: player, hasResult: true });
+		if (thisPlayerDisconnected) {
+			socket.emit("reconnect", gameId, thisPlayerId);
+		}
+
+		socket.on("vote_results", (voteResults: VoteResults) => {
+			if (voteResults.result === "tie") {
+				if (voteResults.player) {
+					setRandomKill(true);
+					handleGameState({ hasResult: true, votingResults: voteResults.player });
+				} else {
+					setVotingResults(undefined);
+					handleGameState({ hasResult: true });
+				}
+			} else if (voteResults.player) {
+				handleGameState({ hasResult: true, votingResults: voteResults.player });
+			}
 		});
 
-		socket.on("vote_results_tie", () => {
-			setVotingResults(undefined);
-			handleGameState({ hasResult: true, votingResults: undefined });
-		});
-
-		socket.on("vote_results_tie_night", (player: Player) => {
-			setRandomKill(true);
-			handleGameState({ hasResult: true, votingResults: player });
-		});
-
-		socket.on("start_night", (timer: number) => {
-			setTimer(timer);
+		socket.on("start_night", () => {
 			handleGameState({ hasResult: false });
 		});
 
-		socket.on("start_day", (timer: number) => {
-			console.log("start timer");
-			setTimer(timer);
+		socket.on("tick", (timeRemaining: number) => {
+			console.log("timer tick", { timeRemaining });
+			setTimeRemaining(timeRemaining);
+		});
+
+		socket.on("start_day", () => {
 			setRandomKill(false);
 			handleGameState({ hasResult: false });
-		});
-
-		socket.on("start_timer", (timer: number) => {
-			setTimer(timer);
 		});
 
 		socket.on("game_player_disconnect", () => {
@@ -101,15 +114,13 @@ function Game(): JSX.Element {
 		
 		return () => {
 			socket.off("vote_results");
-			socket.off("vote_results_tie");
-			socket.off("vote_results_tie_night");
+			socket.off("tick");
 			socket.off("start_night");
 			socket.off("start_day");
 			socket.off("end_game");
-			socket.off("start_timer");
 			socket.off("game_player_disconnect");
 		};
-	}, []);
+	}, [gameId, handleGameState, queryClient, thisPlayerDisconnected, thisPlayerId]);
 
 	const voteMutation = useMutation(sendVote, {
 		onSuccess: () => {
@@ -154,7 +165,7 @@ function Game(): JSX.Element {
 		if (gameData) {
 			if (hasResult && votingResults) {
 				return <PlayerFocusCard player={votingResults} tie={false} nightTie={randomKill} />;
-			} else if(hasResult && !votingResults) {
+			} else if (hasResult && !votingResults) {
 				return <PlayerFocusCard player={votingResults} tie={true} nightTie={randomKill} />;
 			} else if (gameData.thisPlayer.status === "murdered" || gameData.thisPlayer.status === "terminated" || gameData.currentRound?.currentPhase === "day") {
 				return <GhostView gameData={gameData} />;
@@ -177,9 +188,9 @@ function Game(): JSX.Element {
 				{gameData ?  (
 					(
 						(gameData.currentRound?.currentPhase === "day") ? 
-							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />) 
+							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timeRemaining={timeRemaining} />) 
 							: 
-							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />)
+							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timeRemaining={timeRemaining} />)
 					)
 				) : <p>...loading</p>}
 			</React.Fragment>
