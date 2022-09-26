@@ -28,11 +28,15 @@ const Lobby = (): JSX.Element => {
 	const [ codeIsCopied, setCodeIsCopied ] = useState(false);
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
+	const gameId = gameData?.game?.id;
+	const thisPlayerId = gameData?.thisPlayer.id;
+
 	useEffect(() => {
-		if (gameData) {
-			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
+		if (gameId) {
+			socket.emit("join", gameId, thisPlayerId);
 		}
-	}, [gameData?.game.id]);
+	}, [gameId, thisPlayerId]);
+  
 
 	useEffect(() => {
 		socket.on("game_start", () => {

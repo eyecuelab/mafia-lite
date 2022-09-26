@@ -29,17 +29,22 @@ const getSocketRooms = (socket: Socket) => {
 	return rooms;
 };
 
+// TODO: Update 'any' usage here
+const handleJoinGame = (socket: any, gameId: any, playerId: any) => {
+  console.log("join game", socket.id);
+  setPlayerSocketId(playerId, socket.id);
+  if (socket.rooms.size > 0) {
+    const rooms = getSocketRooms(socket);
+    rooms.forEach((room) => {
+      socket.leave(room);
+    });
+  }
+  socket.join(gameId.toString());
+}
+
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number, playerId: number)  => {
-		console.log("join game", socket.id);
-		setPlayerSocketId(playerId, socket.id);
-		if (socket.rooms.size > 0) {
-			const rooms = getSocketRooms(socket);
-			rooms.forEach((room) => {
-				socket.leave(room);
-			});
-		}
-		socket.join(gameId.toString());
+    handleJoinGame(socket, gameId, playerId);
 	});
 
 	socket.on("leave_game", (gameId: number) => {
@@ -48,6 +53,12 @@ io.sockets.on('connection', (socket: Socket) => {
 		socket.leave(gameId.toString());
 		const rooms = getSocketRooms(socket);
 	});
+
+  socket.on("reconnect", async (gameId: number, playerId: number) => {
+		handleJoinGame(socket, gameId, playerId);
+    // TODO: Implement reconnection
+    // handleReconnect();
+  })
 
 	socket.on("disconnect", async () => {
 		console.log("disconnect", socket.id);
@@ -74,6 +85,7 @@ io.sockets.on('connection', (socket: Socket) => {
 			}
 		}
 	})
+
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);
 		console.log("starting game...");
