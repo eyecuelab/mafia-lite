@@ -1,5 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Player } from '@prisma/client';
 import RoomCode from '../GenerateRoomCode';
+import Utility from '../Logic/Utility';
+import { getPlayersByGameId, updatePlayerIsHost } from './player';
 const prisma = new PrismaClient();
 
 const getGames = async () => {
@@ -63,4 +65,15 @@ const deletePlayerFromGame = async(playerId: number) => {
     }
 }
 
-export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode, deletePlayerFromGame};
+const reassignHost = async(gameId: number, oldHostId: number) => {
+    const players = await getPlayersByGameId(gameId);
+    const eligiblePlayers = players.filter((player : Player) => {
+      return !player.isDisconnected && player.id !== oldHostId
+    })
+    const shuffledPlayers = Utility.shuffleArray(eligiblePlayers);
+	  const newHost = await updatePlayerIsHost(shuffledPlayers[0].id, oldHostId);
+    return newHost;
+}
+
+
+export { getGames, getGameById, getAllGameDetails, createNewGame, getGameByGameCode, deletePlayerFromGame, reassignHost};

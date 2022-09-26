@@ -29,9 +29,8 @@ const Lobby = (): JSX.Element => {
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
 	useEffect(() => {
-		console.log(gameData);
 		if (gameData) {
-			socket.emit("join", gameData.game.id);
+			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
 		}
 	}, [gameData?.game.id]);
 
@@ -73,7 +72,6 @@ const Lobby = (): JSX.Element => {
 		},
 		onError: (error) => {
 			if (error instanceof Error) {
-				console.log(error);
 				callModal(error.message);
 			}
 		}	

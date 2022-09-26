@@ -43,6 +43,8 @@ model Player {
 	targets			GhostTarget[] @relation("Target")
   avatar      String
   isReady     Boolean @default(false)
+  socketId    String?
+  isDisconnected Boolean @default(false)
 }
 
 model GhostTarget {

@@ -8,6 +8,7 @@ export type Player = {
 	traits: string[]
 	avatar: string
 	isReady: boolean
+	isDisconnected: boolean
 }
 
 export type Round = {

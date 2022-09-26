@@ -36,6 +36,7 @@ const gameControllers = {
 		}
 		const deletedPlayer = await deletePlayerFromGame(id);
 		io.in(gameId.toString()).emit('player_left', deletedPlayer.id);
+		io.in(gameId.toString()).emit('player_left_chat', deletedPlayer.name);
 		if(!player.isHost){
 			req.session.destroy();
 		}

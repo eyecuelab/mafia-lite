@@ -36,7 +36,7 @@ const GamePlayerCard: React.FC<PropTypes> = ({ player, selected, hasResult }) =>
 	}
 
 	const showCultistBadge = (player.team === "cultist") && (gameData?.thisPlayer.team === "cultist");
-	const showStatus = player.status !== "alive";
+	const showStatus = player.status !== "alive" && player.status !== "disconnected";
 	const isThisPlayer = player.id === gameData?.thisPlayer.id;
 
 	const getCardStyle = () => {
@@ -51,6 +51,7 @@ const GamePlayerCard: React.FC<PropTypes> = ({ player, selected, hasResult }) =>
 	return (
 		<React.Fragment>
 			<div className={ getCardStyle() }>
+				{ player.isDisconnected && <div className={styles.disconnectedOverlay}><h3>Disconnected</h3></div>}
 				<img className={styles.playerCardImage} src={player.avatar} alt="player avatar" />
 				{showCultistBadge && <img src={CultistBadge} className={styles.cultistBadge} alt="cultist badge" />}
 				<div className={StatusStyles["player-status-overlay"]}>

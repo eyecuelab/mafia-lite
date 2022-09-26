@@ -82,15 +82,17 @@ function Game(): JSX.Element {
 
 		socket.on("start_day", (timer: number) => {
 			console.log("start timer");
-			console.log(timer);
 			setTimer(timer);
 			setRandomKill(false);
 			handleGameState({ hasResult: false });
 		});
 
 		socket.on("start_timer", (timer: number) => {
-			console.log("start timer", timer);
 			setTimer(timer);
+		});
+
+		socket.on("game_player_disconnect", () => {
+			queryClient.invalidateQueries(["games"]);
 		});
 
 		socket.on("end_game", (gameEndData: { cultistsWin: boolean, winners: Player[] }) => {
@@ -105,6 +107,7 @@ function Game(): JSX.Element {
 			socket.off("start_day");
 			socket.off("end_game");
 			socket.off("start_timer");
+			socket.off("game_player_disconnect");
 		};
 	}, []);
 

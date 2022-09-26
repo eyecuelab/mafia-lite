@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import app from "./app";
-import { getPlayerById } from "./Models/player";
+import { setPlayerSocketId, getPlayerBySocketId, disconnectPlayer } from "./Models/player";
+import { reassignHost, getAllGameDetails, deletePlayerFromGame } from "./Models/game";
 
 /*** Socket setup ***/
 const http = require('http');
@@ -29,9 +30,9 @@ const getSocketRooms = (socket: Socket) => {
 };
 
 io.sockets.on('connection', (socket: Socket) => {
-	socket.on("join", (gameId: number) => {
+	socket.on("join", (gameId: number, playerId: number)  => {
 		console.log("join game", socket.id);
-		console.log("Game id: ", gameId);
+		setPlayerSocketId(playerId, socket.id);
 		if (socket.rooms.size > 0) {
 			const rooms = getSocketRooms(socket);
 			rooms.forEach((room) => {
@@ -43,22 +44,39 @@ io.sockets.on('connection', (socket: Socket) => {
 
 	socket.on("leave_game", (gameId: number) => {
 		console.log("Leave Game Hit", gameId);
-		console.log(socket.id);
 		// io.socketsLeave(gameId.toString());
 		socket.leave(gameId.toString());
 		const rooms = getSocketRooms(socket);
-		console.log(rooms);
 	});
 
-	socket.on("disconnect", () => {
+	socket.on("disconnect", async () => {
 		console.log("disconnect", socket.id);
-		console.log("disconectRoom", socket.rooms)
+		const player = await getPlayerBySocketId(socket.id);
+		if(player) {
+			const disconnectedPlayer = await disconnectPlayer(player.id);
+			const game = await getAllGameDetails(player.gameId);
+			if(game) {
+				if(player.isHost &&  game.players.length > 1) {
+					const newHost = await reassignHost(player.gameId, player.id);
+					socket.in(player.gameId.toString()).emit('lobby_host_change', newHost.name);
+				}
+				if(game.rounds.length === 0) {
+					deletePlayerFromGame(player.id);
+					socket.in(player.gameId.toString()).emit('player_left_chat', player.name);
+					socket.in(player.gameId.toString()).emit('player_left', player.id);
+				}else {
+					socket.in(player.gameId.toString()).emit('game_player_disconnect');
+					socket.in(player.gameId.toString()).emit('game_player_disconnect_chat', disconnectedPlayer.name);
+				}
+			}else {
+				socket.in(player.gameId.toString()).emit('game_player_disconnect');
+				socket.in(player.gameId.toString()).emit('game_player_disconnect_chat', disconnectedPlayer.name);
+			}
+		}
 	})
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);
 		console.log("starting game...");
-		console.log(socket.id);
-		console.log(rooms);
 		if (rooms.length !== 1) { 
 			if (rooms.length === 0)
 				throw new Error("Start game on unassigned socket");
@@ -68,17 +86,6 @@ io.sockets.on('connection', (socket: Socket) => {
 			io.in(rooms[0]).emit("game_start");
 		}
 	});
-	// socket.on("send_chat", async (playerId: number, message: string) => {
-	// 	// console.log("SEND CHAT HIT");
-	// 	// console.log("message", message);
-	// 	// console.log("playerId", playerId);
-	// 	const player = await getPlayerById(playerId);
-	// 	// console.log("player-name", player.name);
-	// 	// let clientMessage = `${player.name} : ${message}`
-	// 	console.log(player.id);
-	// 	io.in(player.gameId.toString()).emit("all_chat_message", message, player);
-	// })
-	
 });
 
 export default io;

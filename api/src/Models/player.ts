@@ -55,9 +55,24 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
       isHost,
       name,
       avatar: getUniqueAvatarPath,
-      isReady : false
+      isReady : false,
+			isDisconnected: false
     }
   });
+}
+
+const setPlayerSocketId = async (playerId: number, socketId: string) => {
+	return await prisma.player.update({
+    where: { id: playerId },
+    data: {
+      socketId: socketId
+    }
+  });
+}
+const getPlayerBySocketId = async (sockedId: string) => {
+	return await prisma.player.findFirst({
+			where: {socketId : sockedId}
+	})
 }
 
 const updatePlayerById = async (id: number, roleId: number) => {
@@ -80,6 +95,16 @@ const updatePlayerIsReady = async (id: number, readyStatus: boolean) => {
 	return await prisma.player.update({
 		where: { id },
 		data: { isReady: readyStatus }
+	});
+}
+const updatePlayerIsHost = async (newHostId: number, oldHostId: number) => {
+	await prisma.player.update({
+		where: { id: oldHostId },
+		data: { isHost: false }
+	});
+	return await prisma.player.update({
+		where: { id: newHostId },
+		data: { isHost: true }
 	});
 }
 
@@ -143,6 +168,13 @@ const getPlayersInGameByTeam = async (gameId: number) => {
 	return playersByTeam;
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam, updatePlayerIsReady, getAlivePlayersByGameId };
+const disconnectPlayer = async(playerId: number) => {
+	return await prisma.player.update({
+		where: { id: playerId },
+		data: { isDisconnected: true }
+	});
+}
+
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam, updatePlayerIsReady, getAlivePlayersByGameId, setPlayerSocketId, getPlayerBySocketId, updatePlayerIsHost, disconnectPlayer };
 
 

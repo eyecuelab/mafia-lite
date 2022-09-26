@@ -25,9 +25,12 @@ const AllChat = ({sender, activeChat, setNotificationCount, notificationCount}: 
 		socket.on("all_chat_message", (message: string, senderId : number, senderName : string) => {
 			setMessages(messages => [...messages, {message: message, senderId: senderId, senderName: senderName}]);
 		});
-    
+		socket.on("game_player_disconnect_chat", (name: string) => {
+			setMessages(messages => [...messages, {message: `${name} has left`, senderId: -1, senderName: name}]);
+		});
 		return () => { 
 			socket.off("all_chat_message");
+			socket.off("game_player_disconnect_chat");
 		};
 	});
 	return (

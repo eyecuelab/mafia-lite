@@ -46,9 +46,19 @@ const LobbyChat = ({sender}: {sender: Player}) => {
 		socket.on("player_joined_lobby_chat", (name: string) => {
 			setMessages(messages => [...messages, {message: `${name} has joined`, senderId: -1, senderName: name}]);
 		});
+		socket.on("player_left_chat", (name: string) => {
+			setMessages(messages => [...messages, {message: `${name} has left`, senderId: -1, senderName: name}]);
+		});
+		socket.on("lobby_host_change", (name: string) => {
+			setTimeout(() => {
+				setMessages(messages => [...messages, {message: `${name} is the new Host`, senderId: -1, senderName: name}]);
+			},200);
+		});
 		return () => { 
 			socket.off("lobby_chat_message");
 			socket.off("player_joined_lobby_chat");
+			socket.off("player_left_chat");
+			socket.off("lobby_host_change");
 		};
 	});
 	return (

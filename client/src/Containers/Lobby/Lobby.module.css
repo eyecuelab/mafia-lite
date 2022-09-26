@@ -323,6 +323,19 @@
 	right: 120px;
 	width: 50px;
 }
+.disconnectedOverlay{
+	position: absolute;
+	background-color: #000000ad;
+	width: 73%;
+	color: white;
+	font-weight: bold;
+	text-align: left;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-items: center;
+}
 .yourPlayerBorder {
 	border: 3px solid greenyellow;
 	border-radius: 5px;
@@ -363,7 +376,7 @@
 	border: 4.5px solid transparent;
 	transition: all 0.3s;
 	position: relative;
-	height: 40px;
+	height: 130px;
 	left: 90px;
 }
 .kickButton:hover {
@@ -389,7 +402,6 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	align-items: center;
 }
 
 

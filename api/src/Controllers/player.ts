@@ -18,18 +18,18 @@ export type FilteredPlayer = {
 	traits: string[]
 	avatar: string
 	isReady: boolean 
+	isDisconnected: boolean
 }
 
 const playerControllers = {
 	async createPlayer(req: any, res: any) {
-		const { gameId, name, isHost } = req.body;
+		const { gameId, name, isHost, socketId } = req.body;
 
 		if (Utility.validateInputs(res, "Invalid body parameters", gameId, name, isHost)) {
 			const newPlayer = await createPlayer(gameId, isHost, name);
 			req.session.playerId = newPlayer.id;
 
 			io.to(gameId.toString()).emit("player_joined_lobby");
-			console.log("Emitting Player Joing Message To Lobby for :", name)
 			io.to(gameId.toString()).emit("player_joined_lobby_chat", name);
 			res.status(201).json(newPlayer);
 		}
@@ -61,7 +61,7 @@ const playerControllers = {
 	},
 
 	async updatePlayer(req: any, res: any) {
-		const { id, newRoleName, newStatus } = req.body;
+		const { id, newRoleName, newStatus} = req.body;
 		if (newRoleName) {
 			const newRole = await getRoleByName(newRoleName);
 			if (newRole) {
@@ -130,7 +130,7 @@ export const filterPlayerData = async (playerId: number, player: Player): Promis
 
 	const traits = await getPlayerTraits(player.id);
 	
-	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, traits, avatar: player.avatar, isReady: player.isReady };
+	return { id: player.id, isHost: player.isHost, name: player.name, team: role?.type, gameId: player.gameId, roundDiedId: player.roundDiedId, status: player.status, traits, avatar: player.avatar, isReady: player.isReady, isDisconnected: player.isDisconnected };
 }
 
 export default playerControllers;
