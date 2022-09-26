@@ -5,6 +5,9 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+		"types": [
+			"webrtc"
+		]
   }
 }

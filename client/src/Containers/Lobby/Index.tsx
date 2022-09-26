@@ -13,6 +13,7 @@ import useGameStateQuery from "../../Hooks/GameDataHook";
 import socket from "../../Hooks/WebsocketHook";
 import LobbyPlayerList from "./LobbyPlayerList";
 import MainPlayerCard from "./MainPlayerCard";
+import { initiateConnectionToCall , hangUpCall, setRoomId } from "../../Voice/voice";
 
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame);
 const playerLeave = async (payload: { gameId: number, id: number }) => postData("/game/leave", payload); 
@@ -28,9 +29,9 @@ const Lobby = (): JSX.Element => {
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 
 	useEffect(() => {
-		console.log(gameData);
 		if (gameData) {
 			socket.emit("join", gameData.game.id);
+			setRoomId(gameData.game.id);
 		}
 	}, [gameData?.game.id]);
 
@@ -143,6 +144,10 @@ const Lobby = (): JSX.Element => {
 					</div>
 				</div>
 			</div>
+			{gameData && <div>
+				<button onClick={() => initiateConnectionToCall()}>Open Call</button>
+				<button onClick={() => hangUpCall()}>Close Call</button>
+			</div>}
 			<Rules />
 		</div >
 	);

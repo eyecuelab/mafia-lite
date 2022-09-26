@@ -67,6 +67,14 @@ io.sockets.on('connection', (socket: Socket) => {
 			io.in(rooms[0]).emit("game_start");
 		}
 	});
+
+	/************************** Voice Chat **************************/
+
+	socket.on("vc_message", (message: { target: number, type: string, data: any }) => {
+		const { target, type } = message;
+		console.log("vc_message: ", type, socket.id);
+		socket.to(target.toString()).emit(type, message);
+	});
 });
 
 export default io;
