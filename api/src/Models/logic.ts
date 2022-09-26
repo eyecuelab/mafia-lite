@@ -11,11 +11,13 @@ const emitStartNight = (gameId: number) => {
 	const timer = 20;
 	io.in(gameId.toString()).emit('start_night', timer);
 }
+console.log("🚀 ~ file: logic.ts ~ line 14 ~ emitStartNight ~ emitStartNight", emitStartNight)
 
 const emitStartDay = (gameId: number, ghostImages: number[]) => {
 	const timer = 20;
 	io.in(gameId.toString()).emit('start_day', timer);
 }
+console.log("🚀 ~ file: logic.ts ~ line 19 ~ emitStartDay ~ emitStartDay", emitStartDay)
 
 const emitEndGame = (gameId: number, gameEndData: { cultistsWin: boolean, winners: FilteredPlayer[] }) => {
 	io.in(gameId.toString()).emit('end_game', gameEndData );
