@@ -118,9 +118,11 @@ const startDay = async (gameId: number) => {
 	// 	return res.status(401).json({ error: "You are not allowed to start the next round" });
 	// } else {
 	const gameEndData = await checkEndConditions(gameId);
+	console.log("🚀 ~ file: logic.ts ~ line 121 ~ startDay ~ gameEndData", gameEndData)
 	if (gameEndData) {
 		console.log("🚀 ~ file: logic.ts ~ line 122 ~ startDay ~ game is over",)
 		emitEndGame(gameId, gameEndData);
+		console.log("🚀 ~ file: logic.ts ~ line 125 ~ startDay ~ emitEndGame", emitEndGame)
 		// res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
 	} else {
 		const currentRound = await getCurrentRoundByGameId(gameId);
@@ -149,6 +151,7 @@ const startNight = async (gameId: number) => {
 		// 	return res.status(401).json({ error: "You are not allowed to start the night" });
 		// }
 		const gameEndData = await checkEndConditions(gameId);
+		console.log("🚀 ~ file: logic.ts ~ line 152 ~ startNight ~ gameEndData", gameEndData)
 		if (gameEndData) {
 			console.log("🚀 ~ file: logic.ts ~ line 153 ~ startNight ~ game is over")
 			emitEndGame(gameId, gameEndData);
@@ -176,7 +179,7 @@ const startNight = async (gameId: number) => {
 	// }
 }
 const tallyVotes = async (gameId : number) => {
-	console.log("Talling Votes ran")
+	console.log("Tallying Votes ran")
 	const round = await getCurrentRoundByGameId(gameId);
 	console.log("🚀 ~ file: logic.ts ~ line 181 ~ tallyVotes ~ round", round)
 	const votes = await getAllVotes(gameId, round.id, round.currentPhase);

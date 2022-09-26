@@ -25,6 +25,7 @@ const emitEndGame = (gameId: number, gameEndData: { cultistsWin: boolean, winner
 
 const checkEndConditions = async (gameId: number) => {
 	const livingPlayers = await getAlivePlayersByGameId(gameId);
+	console.log("🚀 ~ file: logic.ts ~ line 28 ~ checkEndConditions ~ livingPlayers", livingPlayers)
 
 	let numCultists = 0;
 	for (let i = 0; i < livingPlayers.length; i++) {
@@ -36,8 +37,11 @@ const checkEndConditions = async (gameId: number) => {
 
 	// return `gameOver = true` if no living cultists or if investigators do not outnumber cultists
 	const cultistsWin = numCultists >= (livingPlayers.length - numCultists);
+	console.log("🚀 ~ file: logic.ts ~ line 40 ~ checkEndConditions ~ cultistsWin", cultistsWin)
 	const investWin = numCultists === 0;
+	console.log("🚀 ~ file: logic.ts ~ line 42 ~ checkEndConditions ~ investWin", investWin)
 	const gameOver = investWin || cultistsWin;
+	console.log("🚀 ~ file: logic.ts ~ line 44 ~ checkEndConditions ~ gameOver", gameOver)
 
 	if (gameOver) {
 		const playersByTeam = await getPlayersInGameByTeam(gameId);
