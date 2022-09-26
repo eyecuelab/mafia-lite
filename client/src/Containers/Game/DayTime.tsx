@@ -1,4 +1,3 @@
-import GenericButton from "../../Components/GenericButton";
 import { GameData, Player } from "../../Types/Types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useModal } from "../../ModalContext";
@@ -11,7 +10,17 @@ import Rules from "../../Components/Rules/Rules";
 
 const beginNight = async (gameId: number): Promise<void> => postData("/startNight", { gameId });
 
-const DayTime = ({ gameData, hasResult, castVote, endRound, focusView, timer }: { gameData: GameData, hasResult: boolean, votingResults?: Player, timer: number, castVote: (candidateId: number) => void, endRound: () => void, focusView: () => JSX.Element | null | undefined }) => {
+type DayTimeProps = {
+  gameData: GameData,
+  hasResult: boolean,
+  votingResults?: Player,
+  timeRemaining: number,
+  castVote: (candidateId: number) => void,
+  endRound: () => void,
+  focusView: () => JSX.Element | null | undefined,
+}
+
+const DayTime: React.FC<DayTimeProps> = ({ gameData, hasResult, castVote, endRound, focusView, timeRemaining }) => {
 	const queryClient = useQueryClient();
 	const { callModal } = useModal();
 
@@ -37,7 +46,7 @@ const DayTime = ({ gameData, hasResult, castVote, endRound, focusView, timer }: 
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
 					<div className={styles.roundTimerContainer}>
 						<h1 className={styles.dayHeader}>Day {gameData?.currentRound?.roundNumber ?? null}</h1>
-						<Timer timer={timer}/>
+						<Timer timeRemaining={timeRemaining}/>
 						
 					</div>
 					{gameData ? <GamePlayerList castVote={castVote} hasResult={hasResult} /> : <p>...loading</p> }

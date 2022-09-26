@@ -168,13 +168,13 @@ const getPlayersInGameByTeam = async (gameId: number) => {
 	return playersByTeam;
 }
 
-const disconnectPlayer = async(playerId: number) => {
+const changeConnectionStatus = async(playerId: number, currentConnectionStatus: boolean) => {
 	return await prisma.player.update({
 		where: { id: playerId },
-		data: { isDisconnected: true }
+		data: { isDisconnected: !currentConnectionStatus }
 	});
 }
 
-export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam, updatePlayerIsReady, getAlivePlayersByGameId, setPlayerSocketId, getPlayerBySocketId, updatePlayerIsHost, disconnectPlayer };
+export { getPlayerById, getPlayersByGameId, createPlayer, updatePlayerById, updatePlayerStatus, getJailedPlayer, getLivingPlayersByGameId, getDeadPlayersByGameId, getPlayersInGameByTeam, updatePlayerIsReady, getAlivePlayersByGameId, setPlayerSocketId, getPlayerBySocketId, updatePlayerIsHost, changeConnectionStatus };
 
 

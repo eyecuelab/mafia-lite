@@ -46,7 +46,8 @@ function Game(): JSX.Element {
 	const [ randomKill, setRandomKill ] = useState(false);
 	const [ gameEndData, setGameEndData ] = useState<GameEndData>();
 	const { gameQueryError, gameData } = useGameStateQuery();
-	const [ timer, setTimer ] = useState(30);
+
+	const [ timeRemaining, setTimeRemaining ] = useState(20);
 	const queryClient = useQueryClient();
 
 	if (gameQueryError instanceof Error) {
@@ -76,19 +77,13 @@ function Game(): JSX.Element {
 		});
 
 		socket.on("start_night", (timer: number) => {
-			setTimer(timer);
 			handleGameState({ hasResult: false });
 		});
 
 		socket.on("start_day", (timer: number) => {
 			console.log("start timer");
-			setTimer(timer);
 			setRandomKill(false);
 			handleGameState({ hasResult: false });
-		});
-
-		socket.on("start_timer", (timer: number) => {
-			setTimer(timer);
 		});
 
 		socket.on("game_player_disconnect", () => {
@@ -97,6 +92,11 @@ function Game(): JSX.Element {
 
 		socket.on("end_game", (gameEndData: { cultistsWin: boolean, winners: Player[] }) => {
 			setGameEndData(gameEndData);
+		});
+
+		socket.on("tick", (timeRemaining: number) => {
+			console.log("timer tick", { timeRemaining });
+			setTimeRemaining(timeRemaining);
 		});
 		
 		return () => {
@@ -108,9 +108,17 @@ function Game(): JSX.Element {
 			socket.off("end_game");
 			socket.off("start_timer");
 			socket.off("game_player_disconnect");
+			socket.off("tick");
 		};
 	}, []);
 
+	useEffect(() => {
+		console.log("Use Effect Ran");
+		if(gameData) {
+			socket.emit("reconnect", gameData?.game.id, gameData?.thisPlayer.id);
+		}
+	}, [gameData?.thisPlayer.isDisconnected]);
+	
 	const voteMutation = useMutation(sendVote, {
 		onSuccess: () => {
 			console.log("vote sent");
@@ -177,9 +185,9 @@ function Game(): JSX.Element {
 				{gameData ?  (
 					(
 						(gameData.currentRound?.currentPhase === "day") ? 
-							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />) 
+							(<DayTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timeRemaining={timeRemaining} />) 
 							: 
-							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timer={timer} />)
+							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timeRemaining={timeRemaining} />)
 					)
 				) : <p>...loading</p>}
 			</React.Fragment>
