@@ -25,6 +25,13 @@
     display: flex;
     flex-direction: row;
     height: 100vh;
+    max-width: 1400px;
+}
+.rulesContainer {
+    position: absolute;
+    bottom: 5%;
+    width: 300px;
+    margin: auto;
 }
 
 .dayHeader {
@@ -33,6 +40,7 @@
     font-weight: 400;
     font-size: 55px;
     margin-right: 25px;
+    margin-top: 0;
 }
 
 .nightHeader {
@@ -41,9 +49,10 @@
     font-weight: 400;
     font-size: 55px;
     margin-right: 25px;
+    margin-top: 0;
 }
 .titleImage {
-	width: 15vw;
+	width: 35%;
     display: block;
     float: left;
     margin-left: 1vw;
@@ -55,7 +64,9 @@
     flex-direction: row;
     text-align: center;
     justify-content: center;
+    margin-top: 5vh;
 }
+
 .playerContainer {
     display: flex;
     width: 100%;
@@ -67,16 +78,17 @@
     background-size: cover;
 }
 .gameScreen {
-    width: 55%;
+    width: 60%;
     margin: 0; 
 }
 .voteResults {
     background: url(../../assets/images/image_23.png);
     background-size: cover; 
-    width: 50%;
+    width: 40%;
     display: flex;
     height: 100%;
-    margin: auto;
+    /* margin: auto; */
+    max-width: 700px;
 }
 .voteResultsNight {
     background: url(../../assets/images/image_34.png);
@@ -84,5 +96,42 @@
     width: 50%;
     display: flex;
     height: 100%;
-    margin: auto;
+    /* margin: auto; */
+    max-width: 700px;
+}
+.gameRoomContainer{
+    max-width: 1600px;
+}
+
+@media screen and (max-width: 1200px) {
+	.roundTimerContainer {
+        flex-direction: column;
+        flex: 0;
+    }
+    .nightHeader {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: normal;
+        font-weight: 400;
+        font-size: 35px;
+        margin-right: 25px;
+        padding: 0;
+        margin: 0;
+    }
+    .dayHeader {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: normal;
+        font-weight: 400;
+        font-size: 35px;
+        margin-right: 25px;
+        padding: 0;
+        margin: 0;
+    }
+	
+}
+@media screen and (max-width: 1000px) {
+	.roundTimerContainer {
+        margin-top: 65px;
+        font-size: 30px;
+    }
+	
 }

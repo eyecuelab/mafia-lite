@@ -5,6 +5,8 @@ const Timer = ({timeRemaining} : {timeRemaining: number}) => {
 			fontSize: "55px",
 			fontFamily: "Bebas Neue",
 			fontWeight: 400,
+			padding: 0,
+			margin: 0,
 			color: (timeRemaining <= 5 ? "red" : "green" && timeRemaining <= 10 ? "Orange" : "green")
 		}}>
 			Timer: {timeRemaining || "Round Over"}</h1>

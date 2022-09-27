@@ -49,14 +49,12 @@ const NightTime: React.FC<NightTimeProps> = ({ gameData, hasResult, castVote, en
 						<Timer timeRemaining={timeRemaining}/>
 					</div>
 					{gameData ? <GamePlayerList castVote={castVote} hasResult={hasResult} /> : <p>...loading</p> }
-					{/* {hasResult ? 
-						<GenericButton text="Start Day" onClick={() => startDay(gameData.game.id)} />
-						:
-						<GenericButton text="End Round" onClick={endRound} />} */}
-					<Rules />	
 				</div>
 				<div className={styles.voteResultsNight}>
 					{focusView()}
+					<div className={styles.rulesContainer}>
+						<Rules />
+					</div>
 				</div>
 			</div>
 		</div> 

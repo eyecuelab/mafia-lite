@@ -179,7 +179,7 @@ function Game(): JSX.Element {
 	} else {
 		const team = gameData?.thisPlayer.team ? gameData.thisPlayer.team : "";
 		return (
-			<React.Fragment>
+			<div>
 				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
 				{gameData && <ChatContainer sender={gameData?.thisPlayer} />}
 				{gameData ?  (
@@ -190,7 +190,7 @@ function Game(): JSX.Element {
 							(<NightTime gameData={gameData} hasResult={hasResult} votingResults={votingResults} castVote={castVote} endRound={endRound} focusView={focusView} timeRemaining={timeRemaining} />)
 					)
 				) : <p>...loading</p>}
-			</React.Fragment>
+			</div>
 		);
 	}
 	

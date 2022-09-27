@@ -70,10 +70,10 @@
 }
 /* Chat Wrapper */
 .chatContainerWrapper {
-  width: 400px;
-  background-color: rgb(148, 146, 146);
   position: absolute;
-  right: 20%;
+  width: 400px;
+  left: 60%;
+  background-color: rgb(148, 146, 146);
   z-index: 3;
   border-radius: 10px;
 }
@@ -329,5 +329,21 @@
   }
   100% {
     height: 0px;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+	.chatContainerWrapper {
+    left: 55%;
+  }
+}
+@media screen and (max-width: 1200px) {
+	.chatContainerWrapper {
+    left: 50%;
+  }
+}
+@media screen and (max-width: 1000px) {
+	.chatContainerWrapper {
+    left: 25%;
   }
 }

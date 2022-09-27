@@ -81,12 +81,12 @@
 
 .playerListGameContainer {
 	display: grid;
-	gap: 30px;
-	grid-template-columns: 500px 500px;
-	width: 100%;
+	grid-template-columns: 420px 420px;
+	width: fit-content;
 	max-height: 70vh;
 	overflow: auto;
   overflow-x: hidden;
+	padding: 0;
 }
 
 .playerListGameContainer::-webkit-scrollbar {
@@ -114,6 +114,9 @@
 	justify-content: left;
 	margin: 0;
 	padding: 0;
+	width: 360px;
+	margin-left: 5px;
+	margin-bottom: 10px;
 	position: relative;
 	border: 3px solid transparent;
 }
@@ -416,9 +419,31 @@
 	}
 	
 }
+
+@media screen and (max-width: 1400px) {
+	.playerListGameContainer {
+		display: grid;
+		grid-template-columns: 1fr;
+		width: 100%;
+		max-height: 70vh;
+		overflow: auto;
+		overflow-x: hidden;
+		padding: 0;
+	}
+	.playerListInnerWrap{
+		width: 95%;
+		margin: auto;
+	}
+	.playerCard { 
+		width: 95%;
+		margin: auto;
+	}
+	
+}
+
   
 @media screen and (max-width: 820px){
-	.playerCard {
+	/* .playerCard {
 		width: 170px;
 	}
 	.yourPlayerBorder {
@@ -428,7 +453,7 @@
 		width: 35vw;
 		top: -100px;
 		left: -255px;  
-	}
+	} */
 
 	.start-game-btn {
 		width: 45vw;

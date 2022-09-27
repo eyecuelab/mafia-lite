@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GameData, Player } from "../../Types/Types";
-import { GhostImages } from "../../assets/images/Images";
+import { GhostImages, MirrorImage } from "../../assets/images/Images";
 import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
 import { getData, postData } from "../../ApiHelper";
@@ -47,26 +47,29 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 	return (
 		<React.Fragment>
 			<div className={styles.ghostViewContainer}>
-				{<p className={styles.targetName}>{targetName}</p>}
-				<img className={styles.ghostImage} src={images[imageIndex]} />
-				{showControls && <div className={styles.ghostButtonControl}>
-					{imageIndex > 0 && <GenericButton
-						className={styles.arrowButton}
-						onClick={() => { setImageIndex(imageIndex - 1); }}
-						text={"<-"}
-					/>}
-					{isNight && <GenericButton
-						className={styles.sendButton}
-						onClick={() => { ghostImageMutation.mutate({ imgIndex: imageIndex }); }}
-						text={"Send"}
-					/>}
-					{imageIndex < (images.length - 1) && <GenericButton
-						className={styles.arrowButton}
-						onClick={() => { setImageIndex(imageIndex + 1); }}
-						text={"->"}
-					/>}
-					
-				</div>}
+				<div className={styles.mirrorContainer}>
+					{<p className={styles.targetName}>{targetName}</p>}
+					<img src={MirrorImage} className={styles.mirrorImage} />
+					<img className={styles.ghostImage} src={images[imageIndex]} />
+					{showControls && <div className={styles.ghostButtonControl}>
+						{imageIndex > 0 && <GenericButton
+							className={styles.arrowButton}
+							onClick={() => { setImageIndex(imageIndex - 1); }}
+							text={"<-"}
+						/>}
+						{isNight && <GenericButton
+							className={styles.sendButton}
+							onClick={() => { ghostImageMutation.mutate({ imgIndex: imageIndex }); }}
+							text={"Send"}
+						/>}
+						{imageIndex < (images.length - 1) && <GenericButton
+							className={styles.arrowButton}
+							onClick={() => { setImageIndex(imageIndex + 1); }}
+							text={"->"}
+						/>}
+						
+					</div>}
+				</div>
 			</div>
 		</React.Fragment>
 	);

@@ -36,7 +36,7 @@ const GamePlayerCard: React.FC<PropTypes> = ({ player, selected, hasResult }) =>
 	}
 
 	const showCultistBadge = (player.team === "cultist") && (gameData?.thisPlayer.team === "cultist");
-	const showStatus = player.status !== "alive" && player.status !== "disconnected";
+	const showStatus = player.status !== "alive";
 	const isThisPlayer = player.id === gameData?.thisPlayer.id;
 
 	const getCardStyle = () => {

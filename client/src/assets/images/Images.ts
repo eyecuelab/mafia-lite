@@ -7,6 +7,7 @@ import JailedBadge from "./ui/image_105.png";
 import TerminatedBadge from "./ui/image_180.png";
 import TitleImage from "./Title.png";
 import ButtonImage from "./ui/image_15.png";
+import MirrorImage from "../../assets/images/image_118_smoke.png";
 
 const NUM_GHOST_IMAGES = 30;
 
@@ -20,4 +21,4 @@ const GhostImages = (() => {
 	return images;
 })();
 
-export { GhostFrame, CultistBadge, AccuseBadge, MurderBadge, MurderedBadge, JailedBadge, TerminatedBadge, GhostImages, TitleImage, ButtonImage };
+export { GhostFrame, CultistBadge, AccuseBadge, MurderBadge, MurderedBadge, JailedBadge, TerminatedBadge, GhostImages, TitleImage, ButtonImage, MirrorImage };
