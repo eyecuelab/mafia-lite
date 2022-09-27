@@ -50,7 +50,7 @@ socket.on("hang-up", (message: VCMessage) => handleIncomingMessage(message, hand
 const sendToServer = (message: VCMessage) => {
 	if (message.type !== "new-ice-candidate")
 		console.log("vc_message", message);
-		
+
 	socket.emit("vc_message", message);
 };
 
@@ -146,11 +146,6 @@ const handleConnectionOfferMessage = (message: VCMessage) => {
 		.then((stream) => {
 			localStream = stream;
 			localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
-			const audioTag = connections.get(message.from)?.audioTag;
-			if (audioTag) {
-				audioTag.srcObject = localStream;
-				audioTag.play();
-			}
 		})
 		.then(() => peerConnection.createAnswer())
 		.then((answer) => peerConnection.setLocalDescription(answer))
@@ -234,15 +229,8 @@ const handleGetUserMediaError = (error: Error) => {
 const initiateConnectionToCall = (id: number) => {
 	createRTCPeerConnection(id);
 
-	const audioTag = connections.get(id)?.audioTag;
-
 	navigator.mediaDevices.getUserMedia(mediaConstraints)
 		.then((localStream: MediaStream) => {
-			if (audioTag) {
-				audioTag.srcObject = localStream;
-				audioTag.play();
-			}
-
 			localStream.getTracks().forEach((track: MediaStreamTrack) => {
 				connections.get(id)?.peerConnection.addTrack(track, localStream);
 			});
