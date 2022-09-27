@@ -29,8 +29,10 @@
 }
 .rulesContainer {
     position: absolute;
-    bottom: 5%;
-    width: 300px;
+    top: 8%;
+    right: 0%;
+    width: 200px;
+    text-align: right;
     margin: auto;
 }
 
@@ -77,13 +79,19 @@
     background: url(../../assets/images/image_16.png);
     background-size: cover;
 }
+.gameScreenImageDay  {
+    background: url(../../assets/images/day_background.png);
+    background-size: cover; 
+}
+.gameScreenImageNight  {
+    background: url(../../assets/images/night_background.png);
+    background-size: cover; 
+}
 .gameScreen {
     width: 60%;
     margin: 0; 
 }
 .voteResults {
-    background: url(../../assets/images/image_23.png);
-    background-size: cover; 
     width: 40%;
     display: flex;
     height: 100%;
@@ -91,8 +99,6 @@
     max-width: 700px;
 }
 .voteResultsNight {
-    background: url(../../assets/images/image_34.png);
-    background-size: cover; 
     width: 50%;
     display: flex;
     height: 100%;
@@ -102,7 +108,11 @@
 .gameRoomContainer{
     max-width: 1600px;
 }
-
+@media screen and(max-width: 1400px) {
+    .gameScreen {
+        width: 40%
+    }
+}
 @media screen and (max-width: 1200px) {
 	.roundTimerContainer {
         flex-direction: column;

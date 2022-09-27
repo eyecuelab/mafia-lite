@@ -40,7 +40,7 @@ const DayTime: React.FC<DayTimeProps> = ({ gameData, hasResult, castVote, endRou
 	};
 
 	return (
-		<div className={styles.gameScreenImage}>
+		<div className={styles.gameScreenImageDay}>
 			<div className={styles.gameScreenContainer}>
 				<div className={styles.gameScreen}>
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
@@ -54,12 +54,10 @@ const DayTime: React.FC<DayTimeProps> = ({ gameData, hasResult, castVote, endRou
 						<GenericButton text="Start Night" onClick={() => startNight(gameData.game.id)} />
 						:
 						<GenericButton text="End Round" onClick={endRound} />} */}
+						
 				</div>
 				<div className={styles.voteResults}>
 					{focusView()}
-					<div className={styles.rulesContainer}>
-						<Rules />
-					</div>
 				</div>
 			</div>
 		</div> 

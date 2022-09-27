@@ -21,4 +21,4 @@ const GhostImages = (() => {
 	return images;
 })();
 
-export { GhostFrame, CultistBadge, AccuseBadge, MurderBadge, MurderedBadge, JailedBadge, TerminatedBadge, GhostImages, TitleImage, ButtonImage, MirrorImage };
+export { GhostFrame, CultistBadge, AccuseBadge, MurderBadge, MurderedBadge, JailedBadge, TerminatedBadge, GhostImages, TitleImage, ButtonImage, MirrorImage};

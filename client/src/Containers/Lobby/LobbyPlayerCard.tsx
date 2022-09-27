@@ -34,7 +34,7 @@ const LobbyPlayerCard: React.FC<propTypes> = ({ player, thisPlayer }) => {
 	});
 
 	const getCardStyle = () => {
-		let style = `${styles.playerCard} ${styles["player-card-entrance"]}`;
+		let style = `${styles.lobbyPlayerCard} ${styles["player-card-entrance"]}`;
 		if (player.isReady) {
 			style += " " + styles.playerCardLobbyReady;
 		}

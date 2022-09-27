@@ -40,7 +40,7 @@ const NightTime: React.FC<NightTimeProps> = ({ gameData, hasResult, castVote, en
 	};
 
 	return (
-		<div className={styles.gameScreenImage}>
+		<div className={styles.gameScreenImageNight}>
 			<div className={styles.gameScreenContainer}>
 				<div className={styles.gameScreen}>
 					<img src={TitleImage} className={styles.titleImage} alt="The Nameless Terror" />
@@ -52,9 +52,6 @@ const NightTime: React.FC<NightTimeProps> = ({ gameData, hasResult, castVote, en
 				</div>
 				<div className={styles.voteResultsNight}>
 					{focusView()}
-					<div className={styles.rulesContainer}>
-						<Rules />
-					</div>
 				</div>
 			</div>
 		</div> 

@@ -96,7 +96,7 @@
   background: rgb(99, 99, 99);        
 }
 .playerListGameContainer::-webkit-scrollbar-thumb {
-  background-color:  rgb(208, 0, 9);     
+  background-color:  rgb(185, 184, 184);     
 }
 .playerListContainer::-webkit-scrollbar {
 	width: 10px;
@@ -133,6 +133,17 @@
 	background-color: rgba(0, 0, 0, 0.75);
 	border-radius: 5px;
 	width: 360px;
+	margin: auto;
+	margin-bottom: 10px;
+	border: 3px solid transparent;
+}
+.lobbyPlayerCard {
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	background-color: rgba(0, 0, 0, 0.75);
+	border-radius: 5px;
+	width: 260px;
 	margin: auto;
 	margin-bottom: 10px;
 	border: 3px solid transparent;
@@ -321,9 +332,9 @@
 	max-width: 200px;
 }
 .cultistBadge {
-	position: relative;
-	bottom: -50px;
-	right: 120px;
+	position: absolute;
+	bottom: -10px;
+	left: -7px;
 	width: 50px;
 }
 .disconnectedOverlay{
@@ -379,8 +390,10 @@
 	border: 4.5px solid transparent;
 	transition: all 0.3s;
 	position: relative;
-	height: 130px;
-	left: 90px;
+	height: 125px;
+	margin-bottom: 10px;
+	border-bottom-right-radius: 0px;
+	border-top-right-radius: 0px;
 }
 .kickButton:hover {
 	cursor: pointer;
@@ -402,9 +415,12 @@
 	padding: 0;
 }
 .cardControlContainer {
+	width: 300px;
+	margin: auto;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	align-items: center;
 }
 
 
@@ -433,6 +449,7 @@
 	.playerListInnerWrap{
 		width: 95%;
 		margin: auto;
+		margin-bottom: 10px;
 	}
 	.playerCard { 
 		width: 95%;
