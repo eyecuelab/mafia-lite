@@ -52,4 +52,4 @@ jobs:
             cache: 'npm'
         - run: cd client && npm i && npm run build;
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: cd client && flyctl deploy -a nameless-terror-client --remote-only
+        - run: cd client && flyctl deploy -a nameless-terror-client-prod --remote-only
