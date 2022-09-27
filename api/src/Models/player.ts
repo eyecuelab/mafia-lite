@@ -9,9 +9,13 @@ const getPlayerById = async (id: number) => {
     return await prisma.player.findUniqueOrThrow({
       where: { id: Number(id) },
     });
-  } catch (error) {
-    throw "Player not found"
-  }
+		} catch (e) {
+			if (e instanceof Error) {
+			throw (e.message);
+		} else {
+			throw (e);
+		}
+	}
 }
 
 const getPlayersByGameId = async (gameId: number) => {

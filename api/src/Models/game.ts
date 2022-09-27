@@ -30,13 +30,19 @@ const getAllGameDetails = async (id: number) => {
 }
 
 const createNewGame = async (name: string, size: number) => {
-  return await prisma.game.create({
+  try {
+    return await prisma.game.create({
     data: {
 			gameCode : RoomCode.generate(),
 			name: name,
 			size: size
-		}
-  });
+    }
+  });  
+  }
+  catch (error) {
+    if (error instanceof Error)
+    throw (error.message)
+  }
 }
 
 const getGameByGameCode = async (gameCode: string) => {
@@ -49,8 +55,9 @@ const getGameByGameCode = async (gameCode: string) => {
       }
     });
   }
-  catch {
-    throw "Game not found";
+  catch (error) {
+    if (error instanceof Error)
+    throw (error.message)
   }
 }
 
@@ -60,9 +67,13 @@ const deletePlayerFromGame = async(playerId: number) => {
         where: { id: playerId } ,
       });
     }
-    catch {
-      throw "Player Could not be deleted";
+    catch (e) {
+      if (e instanceof Error) {
+      throw (e.message);
+    } else {
+      throw (e);
     }
+  }
 }
 
 const reassignHost = async(gameId: number, oldHostId: number) => {

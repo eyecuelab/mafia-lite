@@ -7,7 +7,6 @@ import io from '../server';
 const chatControllers = {
   async sendChat(req: any, res: any) {
     const {senderId, message, chat} = req.body;
-    console.log("MESSAGE REVCIVED ON SERVER : ", message);
 		const playerId = req.session.playerId;
 		if(playerId !== senderId || playerId === undefined){
 			res.status(401).json({error: 'You can only edit your own player'})

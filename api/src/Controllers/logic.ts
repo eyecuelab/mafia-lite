@@ -35,7 +35,12 @@ const logicControllers = {
 			if(player.gameId !== gameId || !player.isHost) {
 				return res.status(401).json({ error: "You are not allowed to start the game" });
 			}
-			const round = await createNewRound(1, gameId);
+			// Checks player count to make sure there are enough players to start the game
+			// const playerCountCheck = await getPlayersByGameId(gameId);
+			// if(playerCountCheck.length < 6) {
+			// 	return res.status(403).json({ error: "You need 6 players to start the game" });
+			// }
+			await createNewRound(1, gameId);
 
 			if(process.env.CREATE_FULL_LOBBY === "true") {
 				const checkPlayers = await getPlayersByGameId((gameId));

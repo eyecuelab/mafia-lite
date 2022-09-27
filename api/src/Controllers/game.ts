@@ -5,7 +5,7 @@ import { Socket } from "socket.io";
 import { disconnect } from "process";
 import { getPlayerById } from "../Models/player";
 
-const minLobbySize = 4;
+const minLobbySize = 6;
 const maxLobbySize = 12;
 
 const gameControllers = {
@@ -62,7 +62,6 @@ const gameControllers = {
 			} else {
 				game = await getGameByGameCode(code?.toUpperCase());
 			}
-
 			if (game) {
 				if (game.players.length >= game.size) {
 					res.status(401).json({ error: "Unable to join, lobby is full" });
@@ -70,7 +69,7 @@ const gameControllers = {
 					res.json(game);
 				}
 			} else {
-				res.status(401).json({ error: "Unable to retreive game" });
+				res.status(401).json({ error: "Unable to retrieve game" });
 			}
 		} catch (error) {
 			res.status(404).json({ error: "Game not found, Please enter a valid game code" });
