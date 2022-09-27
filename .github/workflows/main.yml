@@ -2,19 +2,22 @@ name: Deploy
 on:
   push:
     branches:
+      - main
       - dev
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 jobs:
-  deploy-api:
-      name: Deploy API
+  deploy--dev-api:
+      name: Deploy Dev API
+      if: ${{ github.ref == 'refs/heads/dev' }}
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: cd api && flyctl deploy --remote-only
-  deploy-client:
-      name: Deploy Client App
+        - run: cd api && flyctl deploy -a nameless-terror-api --remote-only
+  deploy-dev-client:
+      name: Deploy Dev Client App
+      if: ${{ github.ref == 'refs/heads/dev' }}
       runs-on: ubuntu-latest
       env:
         VITE_API_ENDPOINT: "https://nameless-terror-api.fly.dev"
@@ -26,4 +29,27 @@ jobs:
             cache: 'npm'
         - run: cd client && npm i && npm run build;
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: cd client && flyctl deploy --remote-only
+        - run: cd client && flyctl deploy -a nameless-terror-client --remote-only
+  deploy-prod-api:
+      name: Deploy Prod API
+      if: ${{ github.ref == 'refs/heads/main' }}
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: cd api && flyctl deploy -a nameless-terror-api-prod --remote-only
+  deploy-prod-client:
+      name: Deploy Prod Client App
+      if: ${{ github.ref == 'refs/heads/main' }}
+      runs-on: ubuntu-latest
+      env:
+        VITE_API_ENDPOINT: "https://nameless-terror-api-prod.fly.dev"
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 18.x
+            cache: 'npm'
+        - run: cd client && npm i && npm run build;
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: cd client && flyctl deploy -a nameless-terror-client --remote-only
