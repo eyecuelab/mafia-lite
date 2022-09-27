@@ -14,7 +14,6 @@ type Connection = {
 }
 
 const connections: Map<number, Connection> = new Map<number, Connection>();
-const audioDiv = document.getElementById("audio");
 
 let connectionBusy = false;
 let roomId: number;
@@ -35,8 +34,8 @@ const setPlayerId = (id: number) => {
 };
 
 const handleIncomingMessage = (message: VCMessage, handler: (message: VCMessage) => any) => {
-	console.log(`recieved ${message.type}: ${message.from}`);
-	console.log("🚀 ~ file: voice.tsx ~ line 39 ~ handleIncomingMessage ~ if check", message.to === playerId && ((message.type === "voice-offer") === (!connections.has(message.from))));
+	if (message.type !== "new-ice-candidate")
+		console.log(`recieved ${message.type}: ${message.from}`);
 	if (message.to === playerId && ((message.type === "voice-offer") === (!connections.has(message.from)))) {
 		console.log(`handling ${message.type}: ${message.from}`);
 		handler(message);
@@ -49,7 +48,9 @@ socket.on("new-ice-candidate", (message: VCMessage) => handleIncomingMessage(mes
 socket.on("hang-up", (message: VCMessage) => handleIncomingMessage(message, handleHangUpMessage));
 
 const sendToServer = (message: VCMessage) => {
-	console.log("vc_message", message);
+	if (message.type !== "new-ice-candidate")
+		console.log("vc_message", message);
+		
 	socket.emit("vc_message", message);
 };
 
@@ -92,8 +93,7 @@ const createRTCPeerConnection = (id: number) => {
 		}
 	};
 
-	const audioTag = audioDiv!.appendChild(document.createElement("audio"));
-
+	const audioTag = new Audio();
 	connections.set(id, {peerConnection, audioTag});
 };
 
