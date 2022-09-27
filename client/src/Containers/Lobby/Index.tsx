@@ -1,6 +1,6 @@
 import Rules from "../../Components/Rules/Rules";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
 import { TitleImage } from "../../assets/images/Images";
@@ -14,7 +14,7 @@ import socket from "../../Hooks/WebsocketHook";
 import LobbyPlayerList from "./LobbyPlayerList";
 import MainPlayerCard from "./MainPlayerCard";
 import LobbyChat from "../../Components/Chat/LobbyChat";
-import { connectToRoom, initiateConnectionToCall, hangUpAllCalls, hangUpCall, setRoomId, setPlayerId } from "../../Voice/voice";
+import { connectToRoom, hangUpAllCalls, setRoomId, hangUpCall, setPlayerId, setHandleError } from "../../Voice/voice";
 import { Player } from "../../Types/Types";
 
 const startNewGame = async (newGame: { gameId: number }) => postData("/start", newGame);
@@ -29,6 +29,9 @@ const Lobby = (): JSX.Element => {
 
 	const [ codeIsCopied, setCodeIsCopied ] = useState(false);
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
+	const [ showCallButton, setShowCallButton ] = useState(true);
+
+	const gameId = useRef(-1);
 
 	const getAllOtherPlayerIds = (players: Player[], thisPlayerId: number) => {
 		const playerIds: number[] = [];
@@ -38,7 +41,6 @@ const Lobby = (): JSX.Element => {
 			}
 		});
 
-		console.log("🚀 ~ file: Index.tsx ~ line 41 ~ getAllOtherPlayerIds ~ playerIds", playerIds);
 		return playerIds;
 	};
 
@@ -50,20 +52,25 @@ const Lobby = (): JSX.Element => {
 	};
 
 	useEffect(() => {
-		if (gameData) {
+		if (gameData && gameData.game.id !== gameId.current) {
+			gameId.current = gameData.game.id;
 			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
 			setRoomId(gameData.game.id);
 			setPlayerId(gameData.thisPlayer.id);
 		}
-	}, [gameData?.game.id]);
+	}, [gameData, gameData?.game.id]);
 
 	useEffect(() => {
+		setHandleError((error: Error) => {
+			callModal(error.message);
+		});
+
 		socket.on("game_start", () => {
 			navigate("/game");
 		});
 
 		socket.on("player_left", (playerId: number) => {
-			// hangUpCall(playerId);
+			hangUpCall(playerId);
 			if(playerId === gameData?.thisPlayer.id) {
 				navigate("/", {replace: true, state: {isKicked : true}});
 			}else {
@@ -71,27 +78,21 @@ const Lobby = (): JSX.Element => {
 			}
 		});
 
-		return () => { 
-			socket.off("game_start");
-			socket.off("player_left");
-		};
-	});
-
-	useEffect(() => {
 		socket.on("playerIsReady", () => {
 			queryClient.invalidateQueries(["games"]);
 		});
 
-		socket.on("player_joined_lobby", (playerId: number) => {
-			// initiateConnectionToCall(playerId);
+		socket.on("player_joined_lobby", () => {
 			queryClient.invalidateQueries(["games"]);
 		});
 
 		return () => {
 			socket.off("playerIsReady");
 			socket.off("player_joined_lobby");
+			socket.off("game_start");
+			socket.off("player_left");
 		};
-	});
+	}, []);
 	
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
@@ -184,10 +185,16 @@ const Lobby = (): JSX.Element => {
 				</div>
 			</div>
 			{gameData && <div>
-				<button onClick={() => {
-					callEntireLobby(gameData.players, gameData.thisPlayer.id);
-				}}>Open Call</button>
-				<button onClick={() => hangUpAllCalls()}>Close Call</button>
+				{showCallButton ?
+					<button onClick={() => {
+						setShowCallButton(false);
+						callEntireLobby(gameData.players, gameData.thisPlayer.id);
+					}}>Open Call</button>
+					:
+					<button onClick={() => {
+						setShowCallButton(true);
+						hangUpAllCalls();
+					}}>Close Call</button>}
 			</div>}
 			<Rules />
 		</div >

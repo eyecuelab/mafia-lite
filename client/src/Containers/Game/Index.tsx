@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "../../ApiHelper";
 import { useModal } from "../../ModalContext";
@@ -12,6 +12,7 @@ import GameOver from "./GameOver";
 import PlayerFocusCard from "../PlayerFocusCard";
 import GhostView from "./GhostView";
 import Rules from "../../Components/Rules/Rules";
+import { setHandleError } from "../../Voice/voice";
 import ChatContainer from "../../Components/Chat/ChatContainer";
 
 
@@ -116,6 +117,12 @@ function Game(): JSX.Element {
 			socket.emit("reconnect", gameData?.game.id, gameData?.thisPlayer.id);
 		}
 	}, [gameData?.thisPlayer.isDisconnected]);
+
+	useEffect(() => {
+		setHandleError((error: Error) => {
+			callModal(error.message);
+		});
+	}, []);
 	
 	const voteMutation = useMutation(sendVote, {
 		onSuccess: () => {

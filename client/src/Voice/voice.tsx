@@ -15,9 +15,10 @@ type Connection = {
 
 const connections: Map<number, Connection> = new Map<number, Connection>();
 
-let connectionBusy = false;
 let roomId: number;
 let playerId: number;
+
+let handleError: (error: Error) => void;
 
 // Audio only
 const mediaConstraints: MediaStreamConstraints = {
@@ -56,7 +57,6 @@ const sendToServer = (message: VCMessage) => {
 
 const createRTCPeerConnection = (id: number) => {
 	console.log(connections);
-	connectionBusy = true;
 	const peerConnection = new RTCPeerConnection({
 		iceServers: [
 			{
@@ -116,11 +116,9 @@ const handleNegotiationNeededEvent = async (id: number) => {
 const handleICEConnectionStateChangeEvent = (id: number) => {
 	const peerConnection = connections.get(id)?.peerConnection;
 	switch(peerConnection?.iceConnectionState) {
+		case "failed": handleError(new Error("Unable to connect to voice call")); break;
 		case "closed":
-		case "failed":
-		case "disconnected":
-			closeCall(id);
-			break;
+		case "disconnected": closeCall(id); break;
 	}
 };
 
@@ -134,7 +132,6 @@ const handleSignalingStateChangeEvent = (id: number) => {
 };
 
 const handleConnectionOfferMessage = (message: VCMessage) => {
-	connectionBusy = true;
 	createRTCPeerConnection(message.from);
 
 	const desc = new RTCSessionDescription(message.data);
@@ -202,6 +199,7 @@ const closeCall = (id: number) => {
 		}
 
 		peerConnection.close();
+		console.log("Closed call: ", id);
 	}
 };
 
@@ -268,4 +266,8 @@ const connectToRoom = (ids: number[]) => {
 	});
 };
 
-export { connectToRoom, initiateConnectionToCall, hangUpAllCalls, hangUpCall, setRoomId, setPlayerId };
+const setHandleError = (newHandleError: (error: Error) => void) => {
+	handleError = newHandleError;
+};
+
+export { connectToRoom, initiateConnectionToCall, hangUpAllCalls, hangUpCall, setRoomId, setPlayerId, setHandleError };
