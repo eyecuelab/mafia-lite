@@ -38,6 +38,7 @@ const Lobby = (): JSX.Element => {
 			}
 		});
 
+		console.log("🚀 ~ file: Index.tsx ~ line 41 ~ getAllOtherPlayerIds ~ playerIds", playerIds);
 		return playerIds;
 	};
 
@@ -53,7 +54,6 @@ const Lobby = (): JSX.Element => {
 			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
 			setRoomId(gameData.game.id);
 			setPlayerId(gameData.thisPlayer.id);
-			// callEntireLobby(gameData.players, gameData.thisPlayer.id);
 		}
 	}, [gameData?.game.id]);
 
@@ -63,7 +63,7 @@ const Lobby = (): JSX.Element => {
 		});
 
 		socket.on("player_left", (playerId: number) => {
-			hangUpCall(playerId);
+			// hangUpCall(playerId);
 			if(playerId === gameData?.thisPlayer.id) {
 				navigate("/", {replace: true, state: {isKicked : true}});
 			}else {
@@ -184,7 +184,9 @@ const Lobby = (): JSX.Element => {
 				</div>
 			</div>
 			{gameData && <div>
-				<button onClick={() => callEntireLobby(gameData.players, gameData.thisPlayer.id)}>Open Call</button>
+				<button onClick={() => {
+					callEntireLobby(gameData.players, gameData.thisPlayer.id);
+				}}>Open Call</button>
 				<button onClick={() => hangUpAllCalls()}>Close Call</button>
 			</div>}
 			<Rules />

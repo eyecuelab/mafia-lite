@@ -36,7 +36,7 @@ const setPlayerId = (id: number) => {
 const handleIncomingMessage = (message: VCMessage, handler: (message: VCMessage) => any) => {
 	if (message.type !== "new-ice-candidate")
 		console.log(`recieved ${message.type}: ${message.from}`);
-	if (message.to === playerId && ((message.type === "voice-offer") === (!connections.has(message.from)))) {
+	if (message.to === playerId /*&& ((message.type === "voice-offer") === (!connections.has(message.from)))*/) {
 		console.log(`handling ${message.type}: ${message.from}`);
 		handler(message);
 	}
@@ -84,7 +84,7 @@ const createRTCPeerConnection = (id: number) => {
 
 	peerConnection.ontrack = (event: RTCTrackEvent) => {
 		const audioTag = connections.get(id)?.audioTag;
-		if (audioTag && audioTag.srcObject) {
+		if (audioTag) {
 			if (audioTag.srcObject !== event.streams[0]) {
 				audioTag.srcObject = event.streams[0];
 			}
@@ -135,7 +135,6 @@ const handleSignalingStateChangeEvent = (id: number) => {
 
 const handleConnectionOfferMessage = (message: VCMessage) => {
 	connectionBusy = true;
-	let localStream: MediaStream;
 	createRTCPeerConnection(message.from);
 
 	const desc = new RTCSessionDescription(message.data);
@@ -144,7 +143,7 @@ const handleConnectionOfferMessage = (message: VCMessage) => {
 	peerConnection?.setRemoteDescription(desc)
 		.then(() => navigator.mediaDevices.getUserMedia(mediaConstraints))
 		.then((stream) => {
-			localStream = stream;
+			const localStream = stream;
 			localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
 		})
 		.then(() => peerConnection.createAnswer())
@@ -229,9 +228,13 @@ const handleGetUserMediaError = (error: Error) => {
 const initiateConnectionToCall = (id: number) => {
 	createRTCPeerConnection(id);
 
+	const audioTag = connections.get(id)?.audioTag;
 	navigator.mediaDevices.getUserMedia(mediaConstraints)
 		.then((localStream: MediaStream) => {
 			localStream.getTracks().forEach((track: MediaStreamTrack) => {
+				if (audioTag) {
+					audioTag.srcObject = localStream;
+				}
 				connections.get(id)?.peerConnection.addTrack(track, localStream);
 			});
 		})

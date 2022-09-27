@@ -62,6 +62,8 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
 }
 
 const setPlayerSocketId = async (playerId: number, socketId: string) => {
+	console.log("🚀 ~ file: player.ts ~ line 65 ~ setPlayerSocketId ~ playerId, socketId", playerId, socketId);
+	
 	return await prisma.player.update({
     where: { id: playerId },
     data: {
