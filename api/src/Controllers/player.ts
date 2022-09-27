@@ -79,19 +79,33 @@ const playerControllers = {
 
 	async getPlayerGame(req: any, res: any) {
 		const playerId = req.session.playerId;
-
 		if (!playerId) {
 			res.status(401).json({error: "Must join game through lobby"});
 		} else {
-			const player = await getPlayerById(playerId);
-			const gameId = player.gameId;
-			const game = await getGameById(gameId);
-			const players = await getPlayersByGameId(gameId);
-			const filteredPlayers = await filterPlayersData(playerId, players);
-			const currentRound = await getCurrentRoundByGameId(gameId);
-			const ghostImages = (await getGhostImages(gameId)) ?? [];
-
-			res.json({ game, players: filteredPlayers, thisPlayer: (await filterPlayerData(playerId, player)), currentRound, ghostImages });
+			try {
+				const player = await getPlayerById(playerId);
+				if (!player) {
+					res.status(404).send({ error: "Player not found" });
+				} else {
+					const gameId = player.gameId;
+					const game = await getGameById(gameId);
+					const players = await getPlayersByGameId(gameId);
+					const filteredPlayers = await filterPlayersData(playerId, players);
+					const currentRound = await getCurrentRoundByGameId(gameId);
+					const ghostImages = (await getGhostImages(gameId)) ?? [];
+	
+					try {
+						const filteredPlayer = await filterPlayerData(playerId, player);
+						res.json({ game, players: filteredPlayers, thisPlayer: filteredPlayer, currentRound, ghostImages });
+					} catch (error) {
+						console.log(error instanceof Error ? error.message : error);
+						res.status(404).send({ error: "Player not found "});
+					}
+				}
+			} catch (error) {
+				console.log(error instanceof Error ? error.message : error);
+				res.status(404).send({ error: "Player not found "});
+			}
 		}
 	},
 	async playerIsReady(req: any, res: any) {
@@ -109,22 +123,26 @@ const playerControllers = {
 	}
 }
 
-export const filterPlayersData = async (playerId: number, players: Player[]) => {
+export const filterPlayersData = async (requesterId: number, players: Player[]) => {
 	let filteredPlayers: FilteredPlayer[] = [];
 	
 	for (let i = 0; i < players.length; i++) {
-		filteredPlayers.push(await filterPlayerData(playerId, players[i]));
+		filteredPlayers.push(await filterPlayerData(requesterId, players[i]));
 	}
 
 	return filteredPlayers;
 }
 
-export const filterPlayerData = async (playerId: number, player: Player): Promise<FilteredPlayer> => {
+export const filterPlayerData = async (requesterId: number, player: Player): Promise<FilteredPlayer> => {
 	let role = undefined;
-	const requester = await getPlayerById(playerId);
+	const requester = await getPlayerById(requesterId);
+	if (!requester) {
+		throw new Error("Requester not found");
+	}
+
 	const requesterTeam = (await getRoleById(requester.roleId))?.type;
 
-	if (requesterTeam === "cultist" || playerId === player.id) {
+	if (requesterTeam === "cultist" || requesterId === player.id) {
 		role = await getRoleById(player.roleId);
 	}
 

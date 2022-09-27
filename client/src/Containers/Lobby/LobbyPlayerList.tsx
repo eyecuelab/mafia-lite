@@ -8,8 +8,6 @@ import LobbyPlayerCard from "./LobbyPlayerCard";
 const LobbyPlayerList: React.FC = () => {
 	const { gameQueryIsLoading, gameQueryError, gameData } = useGameStateQuery();
 	const { callModal } = useModal();
-
-
 	
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);

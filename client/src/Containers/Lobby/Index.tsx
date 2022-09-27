@@ -73,7 +73,7 @@ const Lobby = (): JSX.Element => {
 			hangUpCall(playerId);
 			if(playerId === gameData?.thisPlayer.id) {
 				navigate("/", {replace: true, state: {isKicked : true}});
-			}else {
+			} else {
 				queryClient.invalidateQueries(["games"]);
 			}
 		});

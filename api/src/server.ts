@@ -48,7 +48,7 @@ io.sockets.on('connection', (socket: Socket) => {
 		console.log("Leave Game Hit", gameId);
 		// io.socketsLeave(gameId.toString());
 		socket.leave(gameId.toString());
-		const rooms = getSocketRooms(socket);
+		// const rooms = getSocketRooms(socket);
 	});
 
 	socket.on("reconnect", async (gameId: number, playerId: number) => {
