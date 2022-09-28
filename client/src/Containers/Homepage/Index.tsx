@@ -20,7 +20,7 @@ function Homepage() {
 			const { isKicked } = state;
 			console.log(state);
 			console.log(isKicked);
-			if(isKicked) callModal("You have been kicked from the lobby.");
+			if(isKicked) callModal("Disconnected from lobby");
 		}
 	}, []);
 	return (

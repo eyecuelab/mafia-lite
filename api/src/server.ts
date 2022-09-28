@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import app from "./app";
-import { setPlayerSocketId, getPlayerBySocketId, changeConnectionStatus } from "./Models/player";
+import { setPlayerSocketId, getPlayerBySocketId, changeConnectionStatus, getPlayerById } from "./Models/player";
 import { reassignHost, getAllGameDetails, deletePlayerFromGame } from "./Models/game";
 
 /*** Socket setup ***/
@@ -30,14 +30,22 @@ const getSocketRooms = (socket: Socket) => {
 };
 const handleJoinGame = (socket: any, gameId: number, playerId: any) => {
   console.log("join game", socket.id);
-  setPlayerSocketId(playerId, socket.id);
-  if (socket.rooms.size > 0) {
-    const rooms = getSocketRooms(socket);
-    rooms.forEach((room) => {
-      socket.leave(room);
-    });
-  }
-  socket.join(gameId.toString());
+  try {
+		setPlayerSocketId(playerId, socket.id);
+		if (socket.rooms.size > 0) {
+			const rooms = getSocketRooms(socket);
+			rooms.forEach((room) => {
+				socket.leave(room);
+			});
+		}
+		socket.join(gameId.toString());
+	} catch(error) {
+		if (error instanceof Error) {
+			console.log(error.message);
+		} else {
+			console.log(error);
+		}
+	}
 }
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number, playerId: number)  => {
@@ -72,9 +80,17 @@ io.sockets.on('connection', (socket: Socket) => {
 					socket.in(player.gameId.toString()).emit('lobby_host_change', newHost.name);
 				}
 				if(game.rounds.length === 0) {
-					deletePlayerFromGame(player.id);
 					socket.in(player.gameId.toString()).emit('player_left_chat', player.name);
 					socket.in(player.gameId.toString()).emit('player_left', player.id);
+
+					setTimeout(async () => {
+						const refreshedPlayer = await getPlayerById(player.id);
+						if (refreshedPlayer?.isDisconnected) {
+							await deletePlayerFromGame(refreshedPlayer.id);
+						}
+
+						console.log("After 5 seconds: ", refreshedPlayer?.isDisconnected);
+					}, 5000);
 				}else {
 					socket.in(player.gameId.toString()).emit('game_player_disconnect');
 					socket.in(player.gameId.toString()).emit('game_player_disconnect_chat', disconnectedPlayer.name);

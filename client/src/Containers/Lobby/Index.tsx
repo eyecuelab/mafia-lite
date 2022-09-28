@@ -70,12 +70,15 @@ const Lobby = (): JSX.Element => {
 		});
 
 		socket.on("player_left", (playerId: number) => {
-			hangUpCall(playerId);
-			if(playerId === gameData?.thisPlayer.id) {
-				navigate("/", {replace: true, state: {isKicked : true}});
-			} else {
-				queryClient.invalidateQueries(["games"]);
-			}
+			// console.log("player_left: ", playerId);
+			// hangUpCall(playerId);
+
+			// console.log(playerId + ", " + gameData?.thisPlayer.id);
+			// if(playerId === gameData?.thisPlayer.id) {
+			// 	navigate("/", {replace: true, state: {isKicked : true}});
+			// } else {
+			queryClient.invalidateQueries(["games"]);
+			// }
 		});
 
 		socket.on("playerIsReady", () => {
@@ -93,6 +96,13 @@ const Lobby = (): JSX.Element => {
 			socket.off("player_left");
 		};
 	}, []);
+
+	useEffect(() => {
+		console.log("Use Effect Ran");
+		if(gameData) {
+			socket.emit("reconnect", gameData?.game.id, gameData?.thisPlayer.id);
+		}
+	}, [gameData?.thisPlayer.isDisconnected]);
 	
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
@@ -139,6 +149,13 @@ const Lobby = (): JSX.Element => {
 
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);
+		console.log("Error");
+		console.log(gameQueryError.message.toLowerCase().trim());
+		console.log(gameQueryError.message.toLowerCase().trim() === "player not found");
+		if (gameQueryError.message.toLowerCase().trim() === "player not found") {
+			console.log("navigated");
+			navigate("/", {replace: true, state: {isKicked : true}});
+		}
 	}
 
 	return (
