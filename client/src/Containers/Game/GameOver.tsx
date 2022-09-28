@@ -9,14 +9,14 @@ import { useModal } from "../../ModalContext";
 import { useNavigate } from "react-router-dom";
 import socket from "../../Hooks/WebsocketHook";
 
+
+
 const gameLeave = async (payload: { gameId: number, id: number }) => postData("/game/end", payload); 
 
-const GameOver = ({ cultistsWin,}: { winners: Player[]; cultistsWin: boolean; }) => {
+const GameOver = ({ cultistsWin, winners}: { winners: Player[]; cultistsWin: boolean; }) => {
 	const { callModal } = useModal();
 	const navigate = useNavigate();
 	const {gameQueryIsLoading, gameQueryError, gameData} = useGameStateQuery();
-
-	
 
 	let backgroundImg = "";
 	let winner = "";
@@ -62,20 +62,38 @@ const GameOver = ({ cultistsWin,}: { winners: Player[]; cultistsWin: boolean; })
 
 	return (
 		<div className={GameOverCSS[`${backgroundImg}`]}>
-			<img className={GameOverCSS["title-Img"]} src={TitleImage} />
-			<div className={GameOverCSS["player-list-wrapper"]}>
-				<h1 className={GameOverCSS["winner-header"]}>
+			
+			<div className={GameOverCSS["game-over-container"]}>
+				<div className={GameOverCSS["player-list-wrapper"]}>
+					<img className={GameOverCSS["title-Img"]} src={TitleImage} />
+					<h1 className={GameOverCSS["winner-header"]}>
 					The {winner} Won...
-				</h1>
-				<p className={GameOverCSS["paragraph"]}>
-					{paragraph}<br/>
-					<br/>{paragraph2}
-				</p>
-				<MenuButton
-					onClick={onDoneClick}
-					className={GameOverCSS["Done-button"]}
-					text={"Done"}
-				/>
+					</h1>
+				
+					<p className={GameOverCSS["paragraph"]}>
+						{paragraph}<br/>
+						<br/>{paragraph2}
+					</p>
+					<MenuButton
+						onClick={onDoneClick}
+						className={GameOverCSS["Done-button"]}
+						text={"Done"}
+					/>
+				</div>
+				<div className={GameOverCSS["winner-list-Container"]}>
+					<h1 className={GameOverCSS["winners-header"]}>Winners</h1>
+					<ul className={GameOverCSS["winner-list"]}>
+						{winners.map((winner) => (
+							<li className={GameOverCSS["winner-list-item"]} key={winner.id}>
+								<img className={GameOverCSS["winner-avatar"]} src={winner.avatar}/>
+								<div className={GameOverCSS.winnerListItemDetails}>
+									<p className={GameOverCSS["winner-list-name"]}>{winner.name}</p>
+									<p className={GameOverCSS["winner-list-status"]}><span className={GameOverCSS["playerStatus"]}>Status : </span>{winner.status}</p>
+								</div>
+							</li>)
+						)}
+					</ul>
+				</div>
 			</div>
 		</div>
 	);

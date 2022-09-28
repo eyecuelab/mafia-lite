@@ -5,7 +5,7 @@ import Rules from "../../Components/Rules/Rules";
 import {useLocation } from "react-router-dom";
 import { useModal } from "../../ModalContext";
 import { useEffect } from "react";
-import Timer from "../../Components/Timer/Timer";
+
 
 interface CustomizedState {
 	isKicked: boolean | undefined
