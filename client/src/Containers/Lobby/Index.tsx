@@ -184,17 +184,18 @@ const Lobby = (): JSX.Element => {
 					</div>
 				</div>
 			</div>
-			{gameData && <div>
-				{showCallButton ?
-					<button onClick={() => {
-						setShowCallButton(false);
-						callEntireLobby(gameData.players, gameData.thisPlayer.id);
-					}}>Open Call</button>
-					:
-					<button onClick={() => {
-						setShowCallButton(true);
-						hangUpAllCalls();
-					}}>Close Call</button>}
+			{gameData && 
+			<div>
+				{showCallButton &&
+				<button onClick={() => {
+					setShowCallButton(false);
+					callEntireLobby(gameData.players, gameData.thisPlayer.id);
+				}}>Open Call</button>}
+
+				<button onClick={() => {
+					setShowCallButton(true);
+					hangUpAllCalls();
+				}}>Close Call</button>
 			</div>}
 			<Rules />
 		</div >
