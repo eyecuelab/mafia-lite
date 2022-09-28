@@ -2,7 +2,7 @@ import { Player, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const createNewRound = async (roundNumber: number, gameId: number) => {
-
+	console.log("Creating round ", roundNumber);
 	return await prisma.round.create({
 		data: {
 			gameId,
