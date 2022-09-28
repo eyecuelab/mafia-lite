@@ -12,8 +12,11 @@ const AllChat = ({sender, activeChat, setNotificationCount, notificationCount}: 
 	useEffect(() => {
 		messagesRef.current?.scrollIntoView({ behavior: "smooth" });
 		if(activeChat !== "all" && messages.length >= 1){
-			const newNumber = notificationCount + 1;
-			setNotificationCount(newNumber);
+			console.log(messages[messages.length - 1]);
+			if(messages[messages.length - 1].senderId !== 0) {
+				const newNumber = notificationCount + 1;
+				setNotificationCount(newNumber);
+			}
 		}
 	}, [messages]);
 	useEffect(() => {
@@ -28,11 +31,23 @@ const AllChat = ({sender, activeChat, setNotificationCount, notificationCount}: 
 		socket.on("game_player_disconnect_chat", (name: string) => {
 			setMessages(messages => [...messages, {message: `${name} has left`, senderId: -1, senderName: name}]);
 		});
+		socket.on("vote_results_tie_chat", () => {
+			setMessages(messages => [...messages, {message: "Tie: No one is jailed/terminated", senderId: 0, senderName: "server"}]);
+		});
+		socket.on("vote_results_chat_tie_night", (name: string, team: string) => {
+			setMessages(messages => [...messages, {message: `${name} (${team}) has been murdered by Cthulhu`, senderId: 0, senderName: "server"}]);
+		});
+		socket.on("vote_results_chat", (name: string, status: string) => {
+			setMessages(messages => [...messages, {message: `${name} has been ${status}`, senderId: 0, senderName: "server"}]);
+		});
 		return () => { 
 			socket.off("all_chat_message");
 			socket.off("game_player_disconnect_chat");
+			socket.off("vote_results_tie_chat");
+			socket.off("vote_results_chat_tie_night");
+			socket.off("vote_results_chat");
 		};
-	});
+	}, []);
 	return (
 		<div className={(activeChat === "all")? styles.allChatContainer : styles.hideAllChatContainer}>
 			<div className={styles.chatBodyContainer}>

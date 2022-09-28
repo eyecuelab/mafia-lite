@@ -70,14 +70,17 @@ const playerVote = async (gameId: number, phase: string, candidateId: number, vo
 const emitVoteResult = async(gameId: number, playerId?: number, randomKill?: boolean) => {
   if (!playerId) {
 		io.in(gameId.toString()).emit('vote_results_tie');
+		io.in(gameId.toString()).emit('vote_results_tie_chat');
   } else if(randomKill) {
     const player = await getPlayerById(playerId);
 		const filteredPlayer = await filterPlayerData(player.id, player);
 		io.in(gameId.toString()).emit('vote_results_tie_night', filteredPlayer);
+		io.in(gameId.toString()).emit('vote_results_chat_tie_night', filteredPlayer.name, filteredPlayer.team);
   } else {
 		const player = await getPlayerById(playerId);
 		const filteredPlayer = await filterPlayerData(player.id, player);
 		io.in(gameId.toString()).emit('vote_results', filteredPlayer);
+		io.in(gameId.toString()).emit('vote_results_chat', filteredPlayer.name, filteredPlayer.status);
   }
 }
 
