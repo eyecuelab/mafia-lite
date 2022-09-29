@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GameData, Player } from "../../Types/Types";
-import { GhostImages, MirrorImage } from "../../assets/images/Images";
+import { GhostImages, UpdatedMirrorImage } from "../../assets/images/Images";
 import GenericButton from "../../Components/GenericButton";
 import { useModal } from "../../ModalContext";
 import { getData, postData } from "../../ApiHelper";
@@ -48,9 +48,11 @@ const GhostView = ({ gameData }: { gameData: GameData }) => {
 		<React.Fragment>
 			<div className={styles.ghostViewContainer}>
 				<div className={styles.mirrorContainer}>
+					<div className={styles.imageContainer}>
+						<img src={UpdatedMirrorImage} className={styles.mirrorImage} />
+						<img className={styles.ghostImage} src={images[imageIndex]} />
+					</div>
 					{<p className={styles.targetName}>{targetName}</p>}
-					<img src={MirrorImage} className={styles.mirrorImage} />
-					<img className={styles.ghostImage} src={images[imageIndex]} />
 					{showControls && <div className={styles.ghostButtonControl}>
 						{imageIndex > 0 && <GenericButton
 							className={styles.arrowButton}
