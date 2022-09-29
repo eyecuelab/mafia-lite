@@ -2,9 +2,10 @@ import { TitleImage } from "../../assets/images/Images";
 import MenuButton from "../../Components/MenuButton";
 import HomepageCSS from "./Homepage.module.css";
 import Rules from "../../Components/Rules/Rules";
-import {useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useModal } from "../../ModalContext";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 interface CustomizedState {
@@ -15,12 +16,16 @@ function Homepage() {
 	const { callModal } = useModal();
 	const location = useLocation();
 	const state = location.state as CustomizedState;
+	const queryClient = useQueryClient();
+
 	useEffect(() => {
+		queryClient.removeQueries(["games"], { exact: true });
 		if(state) {
 			const { isKicked } = state;
 			if(isKicked) callModal("Disconnected from lobby");
 		}
 	}, []);
+
 	return (
 		<div>
 			<div className={HomepageCSS["homepage-title-wrapper"]}>

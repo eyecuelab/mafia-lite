@@ -5,17 +5,11 @@ import { getRoleById } from './role';
 const prisma = new PrismaClient();
 
 const getPlayerById = async (id: number) => {
-	// console.trace();
   try {
     return await prisma.player.findUniqueOrThrow({
       where: { id: Number(id) },
     });
 		} catch (e) {
-			// console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-			// console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-			// console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-			// console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-			// console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			if (e instanceof Error) {
 			throw (e.message);
 		} else {

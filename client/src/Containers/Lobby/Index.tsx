@@ -51,7 +51,8 @@ const Lobby = (): JSX.Element => {
 	};
 
 	useEffect(() => {
-		queryClient.invalidateQueries(["games"]);
+		// console.log("invalidate queries");
+		// queryClient.invalidateQueries(["games"]);
 
 		setHandleError((error: Error) => {
 			callModal(error.message);
@@ -143,6 +144,7 @@ const Lobby = (): JSX.Element => {
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);
 		if (gameQueryError.message.toLowerCase().trim() === "player not found") {
+			queryClient.removeQueries(["games"], { exact: true });
 			navigate("/", {replace: true, state: {isKicked : true}});
 		}
 	}
