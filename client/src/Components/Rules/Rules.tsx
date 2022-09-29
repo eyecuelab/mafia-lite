@@ -43,7 +43,7 @@ const Rules = (): JSX.Element => {
 					<p className={styles.smallHeader}>DAY PHASE: Ghosts</p>
 					<p className={styles.paraContent}>Ghosts have no special actions they can take during the day phase, however, they are allowed to listen in on the living players discussion.</p>
 
-					<h3 className={styles.smallHeader}>END OF THE GAME:</h3>
+					<h3 className={styles.listHeader}>END OF THE GAME:</h3>
 					<p className={styles.paraContent}>After the end of the first round, rounds will continue until either all cultists are eliminated or if at any point the investigators, excluding jailed players, don&apos;t outnumber the cultists.</p>
 				</div>
 			)} className={styles.questionMark} alt="question mark" />
