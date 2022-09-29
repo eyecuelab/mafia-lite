@@ -28,10 +28,9 @@ const getSocketRooms = (socket: Socket) => {
 
 	return rooms;
 };
+
 const handleJoinGame = (socket: any, gameId: number, playerId: any) => {
-  console.log("join game", socket.id);
   try {
-		console.log("server.ts ~ line 32", socket.id, gameId, playerId);
 		setPlayerSocketId(playerId, socket.id);
 		if (socket.rooms.size > 0) {
 			const rooms = getSocketRooms(socket);
@@ -41,29 +40,20 @@ const handleJoinGame = (socket: any, gameId: number, playerId: any) => {
 		}
 		socket.join(gameId.toString());
 	} catch (error) {
-		if (error instanceof Error) {
-			console.log(error.message);
-		} else {
-			console.log(error);
-		}
+		console.log(error instanceof Error ? error.message : error);
 	}
 }
+
 io.sockets.on('connection', (socket: Socket) => {
 	socket.on("join", (gameId: number, playerId: number)  => {
 			handleJoinGame(socket, gameId, playerId);
 	});
 
 	socket.on("leave_game", (gameId: number) => {
-		console.log("Leave Game Hit", gameId);
-		// io.socketsLeave(gameId.toString());
 		socket.leave(gameId.toString());
-		// const rooms = getSocketRooms(socket);
 	});
 
 	socket.on("reconnect", async (gameId: number, playerId: number) => {
-		console.log("reconnecting");
-		console.log("gameId: ", gameId);
-		console.log("playerId: ", playerId);
 		handleJoinGame(socket, gameId, playerId);
 		await changeConnectionStatus(playerId, true)
 		socket.in(gameId.toString()).emit('game_player_disconnect');
@@ -76,19 +66,11 @@ io.sockets.on('connection', (socket: Socket) => {
 			const disconnectedPlayer = await changeConnectionStatus(player.id, player.isDisconnected);
 			const game = await getAllGameDetails(player.gameId);
 			if (game) {
-				console.log("sanity 1")
 				if (player.isHost &&  game.players.length > 1) {
-					console.log("sanity 2")
 					setTimeout(async () => {
-						console.log("Assigning player");
 						const refreshedPlayer = await getPlayerById(player.id);
-						console.log("Player: ", refreshedPlayer);
 						try {
 							const refreshedGame = await getGameById(game.id);
-							console.log("Game: ", refreshedGame);
-							console.log("bool1: ", !refreshedPlayer);
-							console.log("bool2: ", refreshedPlayer.isDisconnected);
-							console.log("bool3: ", refreshedGame);
 							if ((!refreshedPlayer || refreshedPlayer.isDisconnected) && refreshedGame) {
 								const newHost = await reassignHost(refreshedGame.id, player.id);
 								socket.in(player.gameId.toString()).emit('lobby_host_change', newHost.name);
@@ -107,8 +89,6 @@ io.sockets.on('connection', (socket: Socket) => {
 						if (!refreshedPlayer || refreshedPlayer.isDisconnected) {
 							await deletePlayerFromGame(refreshedPlayer.id);
 						}
-
-						console.log("After 5 seconds: ", refreshedPlayer?.isDisconnected);
 					}, 5000);
 				} else {
 					socket.in(player.gameId.toString()).emit('game_player_disconnect');
@@ -119,7 +99,8 @@ io.sockets.on('connection', (socket: Socket) => {
 				socket.in(player.gameId.toString()).emit('game_player_disconnect_chat', disconnectedPlayer.name);
 			}
 		}
-	})
+	});
+
 	socket.on("start_new_game", () => {
 		const rooms = getSocketRooms(socket);
 		console.log("starting game...");
@@ -133,12 +114,12 @@ io.sockets.on('connection', (socket: Socket) => {
 		}
 	});
 
-	/************************** Voice Chat **************************/
-
 	socket.on("vc_message", (message: { target: number, type: string, data: any }) => {
 		const { target, type } = message;
 		console.log("vc_message: ", type, socket.id);
-		socket.to(target.toString()).emit(type, message);
+		if (message && target && type) {
+			socket.to(target.toString()).emit(type, message);
+		}
 	});
 });
 
