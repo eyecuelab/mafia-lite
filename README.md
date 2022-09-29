@@ -1,5 +1,6 @@
 # <a href="https://fontmeme.com/28-days-later-font/"><img src="https://fontmeme.com/permalink/220921/5ac21dc9e124a866294624f7adbab248.png" alt="28-days-later-font" border="0"></a>
 
+## [![Generic badge](https://img.shields.io/static/v1?label=CLICK-HERE&message=TO-PLAY-THE-NAMLESS-TERROR&color=important)](https://nameless-terror-client-prod.fly.dev/)
 ## _Summer Internship 2022_
 
 ### 🧑🏽‍🤝‍🧑🏼 Maintainers
