@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../ApiHelper";
 import { TitleImage } from "../../assets/images/Images";
-import GenericButton from "../../Components/GenericButton";
 import MenuButton from "../../Components/MenuButton";
 import SubTitle from "../../Components/Titles/SubTitle";
 import styles from "./Lobby.module.css";
@@ -31,7 +30,7 @@ const Lobby = (): JSX.Element => {
 	const [ linkIsCopied, setLinkIsCopied ] = useState(false);
 	const [ showCallButton, setShowCallButton ] = useState(true);
 
-	const gameId = useRef(-1);
+	const gameId = useRef(parseInt(window.localStorage.getItem("gameId") ?? "-1"));
 
 	const getAllOtherPlayerIds = (players: Player[], thisPlayerId: number) => {
 		const playerIds: number[] = [];
@@ -52,15 +51,8 @@ const Lobby = (): JSX.Element => {
 	};
 
 	useEffect(() => {
-		if (gameData && gameData.game.id !== gameId.current) {
-			gameId.current = gameData.game.id;
-			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
-			setRoomId(gameData.game.id);
-			setPlayerId(gameData.thisPlayer.id);
-		}
-	}, [gameData, gameData?.game.id]);
+		queryClient.invalidateQueries(["games"]);
 
-	useEffect(() => {
 		setHandleError((error: Error) => {
 			callModal(error.message);
 		});
@@ -70,15 +62,8 @@ const Lobby = (): JSX.Element => {
 		});
 
 		socket.on("player_left", (playerId: number) => {
-			// console.log("player_left: ", playerId);
-			// hangUpCall(playerId);
-
-			// console.log(playerId + ", " + gameData?.thisPlayer.id);
-			// if(playerId === gameData?.thisPlayer.id) {
-			// 	navigate("/", {replace: true, state: {isKicked : true}});
-			// } else {
+			hangUpCall(playerId);
 			queryClient.invalidateQueries(["games"]);
-			// }
 		});
 
 		socket.on("playerIsReady", () => {
@@ -98,11 +83,22 @@ const Lobby = (): JSX.Element => {
 	}, []);
 
 	useEffect(() => {
-		console.log("Use Effect Ran");
-		if(gameData) {
+		if(gameData && gameData.thisPlayer.isDisconnected) {
 			socket.emit("reconnect", gameData?.game.id, gameData?.thisPlayer.id);
 		}
 	}, [gameData?.thisPlayer.isDisconnected]);
+
+	useEffect(() => {
+		if (gameData && gameData.game.id !== gameId.current) {
+			gameId.current = gameData.game.id;
+			window.localStorage.setItem("gameId", gameId.current.toString());
+			socket.emit("join", gameData.game.id, gameData.thisPlayer.id);
+			setRoomId(gameData.game.id);
+			setPlayerId(gameData.thisPlayer.id);
+		}
+
+		return () => { queryClient.invalidateQueries(["games"]); };
+	}, [gameData, gameData?.game.id]);
 	
 	const copyToClipBoard = (gameCode: string) => {
 		navigator.clipboard.writeText(gameCode);
@@ -118,9 +114,6 @@ const Lobby = (): JSX.Element => {
 	};
 
 	const playerLeaveMutation = useMutation(playerLeave, {
-		onSuccess: () => {
-			console.log("player");
-		},
 		onError: (error) => {
 			if (error instanceof Error) {
 				callModal(error.message);
@@ -149,11 +142,7 @@ const Lobby = (): JSX.Element => {
 
 	if (gameQueryError instanceof Error) {
 		callModal(gameQueryError.message);
-		console.log("Error");
-		console.log(gameQueryError.message.toLowerCase().trim());
-		console.log(gameQueryError.message.toLowerCase().trim() === "player not found");
 		if (gameQueryError.message.toLowerCase().trim() === "player not found") {
-			console.log("navigated");
 			navigate("/", {replace: true, state: {isKicked : true}});
 		}
 	}
@@ -173,26 +162,21 @@ const Lobby = (): JSX.Element => {
 							<button className={styles.copyButton} onClick={() => copyToClipBoard(gameData.game.gameCode)}>{(codeIsCopied) ? "Copied" : "Copy Code"} </button>
 							<button className={styles.copyButton} onClick={() => copyLinkToClipBoard(gameData.game.gameCode)}>{(linkIsCopied) ? "Copied Link" : "Copy Link"} </button>
 						</div>
-						{(gameData.thisPlayer.isHost) ?
+						{(gameData.thisPlayer.isHost) &&
 							<div className={styles.hostButtonGroup}>
 								<MenuButton
 									onClick={() => { newGameMutation.mutate({ gameId: gameData.game.id }); }}
 									className={styles["start-game-btn"]}
 									text={"START GAME"}
 								/>
-								<GenericButton
-									onClick={() => (navigate("/newgame"))}
-									className={styles["cancel-game-btn"]}
-									text={"CANCEL GAME"}
-								/>
-							</div> : 
-							<div>
-								<MenuButton
-									onClick={onLeaveGameButtonClick}
-									className={styles["start-game-btn"]}
-									text={"LEAVE GAME"}
-								/>
 							</div>}
+						<div>
+							<MenuButton
+								onClick={onLeaveGameButtonClick}
+								className={styles["start-game-btn"]}
+								text={"LEAVE GAME"}
+							/>
+						</div>
 					</div> : null}
 					<div className={styles.otherPlayers}>
 						<SubTitle title={"JOINING GAME"} />

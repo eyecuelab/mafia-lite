@@ -76,13 +76,13 @@ const deletePlayerFromGame = async(playerId: number) => {
   }
 }
 
-const reassignHost = async(gameId: number, oldHostId: number) => {
+const reassignHost = async(gameId: number, oldHostId?: number) => {
     const players = await getPlayersByGameId(gameId);
     const eligiblePlayers = players.filter((player : Player) => {
       return !player.isDisconnected && player.id !== oldHostId
     })
     const shuffledPlayers = Utility.shuffleArray(eligiblePlayers);
-	  const newHost = await updatePlayerIsHost(shuffledPlayers[0].id, oldHostId);
+		const newHost = await updatePlayerIsHost(shuffledPlayers[0].id, oldHostId);
     return newHost;
 }
 

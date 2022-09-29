@@ -18,8 +18,6 @@ function Homepage() {
 	useEffect(() => {
 		if(state) {
 			const { isKicked } = state;
-			console.log(state);
-			console.log(isKicked);
 			if(isKicked) callModal("Disconnected from lobby");
 		}
 	}, []);
