@@ -15,9 +15,9 @@ import io from '../server';
 
 const NUM_TRAIT_REPEATS = 4;
 const NUM_TRAITS_PER_PLAYER = 3;
-const DAYTIMER = 20000;
-const NIGHTTIMER = 20000;
-const ROUND_TIME = 20;
+const DAYTIMER = 91000;
+const NIGHTTIMER = 91000;
+const ROUND_TIME = 90;
 
 type VoteResult = {
 	id: number
@@ -180,9 +180,9 @@ const tallyVotes = async (gameId: number) => {
 				await updateEndOfRoundStatus(gameId, voteResults[0].id);
 				emitVoteResult(gameId, voteResults[0].id);
 				setTimeout(async () => {
-					if(isNight) {
+					if (isNight) {
 						startDay(gameId);
-					}else {
+					} else {
 						startNight(gameId);	
 					}
 				}, 5000)
