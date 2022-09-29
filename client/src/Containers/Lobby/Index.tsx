@@ -154,6 +154,20 @@ const Lobby = (): JSX.Element => {
 			<div className={styles.lobbyPageContainer}>
 				<img src={TitleImage} className={styles.logoImage} alt="The Nameless Terror" />
 				<h1 className={styles.lobbyName}>{gameData?.game?.name}</h1>
+				{gameData && 
+					<div className={styles.voiceButtonContainer}>
+						<p className={styles.phoneImg}>&#9742;</p>
+						{showCallButton &&
+						<button className={styles.openCall} onClick={() => {
+							setShowCallButton(false);
+							callEntireLobby(gameData.players, gameData.thisPlayer.id);
+						}}>Open Call</button>}
+
+						<button className={styles.closeCall} onClick={() => {
+							setShowCallButton(true);
+							hangUpAllCalls();
+						}}>Close Call</button>
+					</div>}
 				{gameData && <LobbyChat sender={gameData?.thisPlayer}/>}
 				<div className={styles.lobbyContainer}>
 					{(gameData) ? <div className={styles.playerStatus}>
@@ -187,19 +201,7 @@ const Lobby = (): JSX.Element => {
 					</div>
 				</div>
 			</div>
-			{gameData && 
-			<div>
-				{showCallButton &&
-				<button onClick={() => {
-					setShowCallButton(false);
-					callEntireLobby(gameData.players, gameData.thisPlayer.id);
-				}}>Open Call</button>}
-
-				<button onClick={() => {
-					setShowCallButton(true);
-					hangUpAllCalls();
-				}}>Close Call</button>
-			</div>}
+			
 			<Rules />
 		</div >
 	);

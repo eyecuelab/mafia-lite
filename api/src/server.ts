@@ -49,15 +49,25 @@ io.sockets.on('connection', (socket: Socket) => {
 			handleJoinGame(socket, gameId, playerId);
 	});
 
-	socket.on("leave_game", (gameId: number) => {
+	socket.on('leave_game', (gameId: number) => {
+		console.log("Leave Game Hit", gameId);
+		// io.socketsLeave(gameId.toString());
 		socket.leave(gameId.toString());
 	});
 
 	socket.on("reconnect", async (gameId: number, playerId: number) => {
+		// if (reason === 'io client disconnect') {
+		// 	socket.connect();
+		// }
+		console.log(gameId);
+		console.log(playerId);
+		console.log("reconnecting");
 		handleJoinGame(socket, gameId, playerId);
 		await changeConnectionStatus(playerId, true)
 		socket.in(gameId.toString()).emit('game_player_disconnect');
-  })
+  	// req.session.destroy(req.session.playerId);
+		// console.log('session killed');
+});
 
 	socket.on("disconnect", async () => {
 		console.log("disconnect", socket.id);
