@@ -71,7 +71,9 @@ function CreatePlayer() {
 			<form onSubmit={onSubmit}>
 				<input
 					className={CreatePlayerCSS["user-selection-input"]}
-					name="name" 
+					name="name"
+					maxLength={20}
+					minLength={1} 
 					placeholder="Enter Character Name" 
 					onChange={e => setName(e.target.value)} 
 				/>

@@ -65,15 +65,17 @@ const createPlayer = async (gameId: number, isHost: boolean, name: string) => {
   });
 }
 
-const setPlayerSocketId = async (playerId: number, socketId: string) => {
-	console.log("🚀 ~ file: player.ts ~ line 65 ~ setPlayerSocketId ~ playerId, socketId", playerId, socketId);
-	
-	return await prisma.player.update({
-    where: { id: playerId },
-    data: {
-      socketId: socketId
-    }
-  });
+const setPlayerSocketId = async (playerId: number, socketId: string) => {	
+	try {
+		return await prisma.player.update({
+			where: { id: playerId },
+			data: {
+				socketId: socketId
+			}
+		});
+	} catch (error) {
+		throw error;
+	}
 }
 const getPlayerBySocketId = async (sockedId: string) => {
 	return await prisma.player.findFirst({
@@ -103,11 +105,20 @@ const updatePlayerIsReady = async (id: number, readyStatus: boolean) => {
 		data: { isReady: readyStatus }
 	});
 }
-const updatePlayerIsHost = async (newHostId: number, oldHostId: number) => {
-	await prisma.player.update({
-		where: { id: oldHostId },
-		data: { isHost: false }
-	});
+const updatePlayerIsHost = async (newHostId: number, oldHostId?: number) => {
+	if (oldHostId) {
+		const oldHost = await prisma.player.findUnique({
+			where: { id: oldHostId }
+		});
+
+		if (oldHost) {
+			await prisma.player.update({
+				where: { id: oldHostId },
+				data: { isHost: false }
+			});
+		}
+	}
+	
 	return await prisma.player.update({
 		where: { id: newHostId },
 		data: { isHost: true }

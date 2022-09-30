@@ -15,9 +15,9 @@ import io from '../server';
 
 const NUM_TRAIT_REPEATS = 4;
 const NUM_TRAITS_PER_PLAYER = 3;
-const DAYTIMER = 20000;
-const NIGHTTIMER = 20000;
-const ROUND_TIME = 20;
+const DAYTIMER = 91000;
+const NIGHTTIMER = 91000;
+const ROUND_TIME = 90;
 
 type VoteResult = {
 	id: number
@@ -40,7 +40,7 @@ const logicControllers = {
 			// if(playerCountCheck.length < 6) {
 			// 	return res.status(403).json({ error: "You need 6 players to start the game" });
 			// }
-			await createNewRound(1, gameId);
+			// await createNewRound(1, gameId);
 
 			if(process.env.CREATE_FULL_LOBBY === "true") {
 				const checkPlayers = await getPlayersByGameId((gameId));
@@ -106,15 +106,19 @@ const logicControllers = {
 }
 export default logicControllers;
 const startDay = async (gameId: number) => {
+	console.log("Starting day");
 	const gameEndData = await checkEndConditions(gameId);
 	if (gameEndData) {
 		emitEndGame(gameId, gameEndData);
 		// res.json({ message: `Game Over: ${gameEndData.cultistsWin ? "Cultists" : "Investigators"} win` });
 	} else {
 		const currentRound = await getCurrentRoundByGameId(gameId);
-		const newRound = await createNewRound(currentRound.roundNumber + 1, gameId);
+		await createNewRound((currentRound?.roundNumber ?? 0)  + 1, gameId);
 
-		emitStartDay(gameId, currentRound.ghostImages);
+		if (currentRound) {
+			emitStartDay(gameId, currentRound.ghostImages);
+		}
+		
 		setTimeout(async () => {
 			await tallyVotes(gameId);
 		}, DAYTIMER);
@@ -133,6 +137,7 @@ const startDay = async (gameId: number) => {
 	}
 }	// }
 const startNight = async (gameId: number) => {
+	console.log("Starting night");
 		const gameEndData = await checkEndConditions(gameId);
 		if (gameEndData) {
 			emitEndGame(gameId, gameEndData);
@@ -167,15 +172,17 @@ const tallyVotes = async (gameId: number) => {
 	const players = await getPlayersByGameId(gameId);
 	const isNight = round.currentPhase === "night";
 	const voteResults = countVotes(players, votes);
+
+	console.log("Calling tally votes: ", isNight);
 		
 	if(voteResults.length > 0 && voteResults[0].count !== voteResults[1].count) {
 			try {
 				await updateEndOfRoundStatus(gameId, voteResults[0].id);
 				emitVoteResult(gameId, voteResults[0].id);
 				setTimeout(async () => {
-					if(isNight) {
+					if (isNight) {
 						startDay(gameId);
-					}else {
+					} else {
 						startNight(gameId);	
 					}
 				}, 5000)
@@ -200,7 +207,7 @@ const tallyVotes = async (gameId: number) => {
 		}, 5000)
 	  }
 	}
-  }
+}
 const countVotes = (players: Player[], votes: Vote[]) => {
 	let voteResults: VoteResult[] = [];
 	players.forEach((player) => {

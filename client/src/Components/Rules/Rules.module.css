@@ -46,13 +46,25 @@
 .headerTwo {
   color: rgb(208, 0, 9);
   font-weight: 400;
-} 
+  text-decoration: underline;
+}
+
+.paraContent {
+  font-weight: 400;
+  font-size: 20px;
+}
 
 .listHeader {
-  font-size: 20px;
   font-weight: 400;
+  font-size: 28px;
+  text-decoration: underline;
+  color: orange;
 }
 
 .smallHeader {
   font-weight: 400;
+  font-size: 24px;
+  color: darkgrey;
+  text-decoration: underline;
 }
+

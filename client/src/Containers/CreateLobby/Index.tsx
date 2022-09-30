@@ -71,6 +71,8 @@ function CreateLobby() {
 					<input
 						className={CreateLobbyCSS["user-selection-input"]}
 						name="name" 
+						maxLength={40}
+						minLength={1}
 						placeholder="Enter game name" 
 						onChange={e => setLobbyName(e.target.value)} />
 					<select

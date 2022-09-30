@@ -11,7 +11,7 @@ import style from "./Game.module.css";
 import GameOver from "./GameOver";
 import PlayerFocusCard from "../PlayerFocusCard";
 import GhostView from "./GhostView";
-import Rules from "../../Components/Rules/Rules";
+import ShortRules from "../../Components/Rules/ShortRules";
 import { setHandleError } from "../../Voice/voice";
 import ChatContainer from "../../Components/Chat/ChatContainer";
 
@@ -94,7 +94,6 @@ function Game(): JSX.Element {
 		});
 
 		socket.on("tick", (timeRemaining: number) => {
-			console.log("timer tick", { timeRemaining });
 			setTimeRemaining(timeRemaining);
 		});
 		
@@ -187,7 +186,7 @@ function Game(): JSX.Element {
 			<div>
 				<p className={`${style["team"]} ${style[team]}`}>{gameData?.thisPlayer.team}</p>
 				<div className={style.rulesContainer}>
-					<Rules />
+					<ShortRules playerTeam={gameData?.thisPlayer.team} playerStatus={gameData?.thisPlayer.status}/>
 				</div>
 				{gameData && <ChatContainer sender={gameData?.thisPlayer} />}
 				{gameData ?  (

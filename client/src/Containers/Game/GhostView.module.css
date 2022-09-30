@@ -1,82 +1,89 @@
 .ghostViewContainer {
-    width: 80%;
-    margin: auto;
-    position: relative;
-    height: 70vh;
-    /* bottom: -15%;
-   left: z;
-    /* background: url("../../assets/images/image_118_smoke.png") no-repeat center;
-    background-size: contain; */
-    font-family: 'Bebas Neue', sans-serif;
+	width: 80%;
+	height: 70vh;
+	margin: auto;
+	margin-left: 10%;
+	margin-bottom: 15%;
+	/* bottom: -15%;
+	left: z;
+	background: url("../../assets/images/image_118_smoke.png") no-repeat center;
+	background-size: contain; */
+	font-family: 'Bebas Neue', sans-serif;
+}
+.mirrorImage, .smoke {
+	width: 99%;
+	min-width: 300px;
+}
+.smoke {
+	position: absolute
 }
 .mirrorImage {
-    position: absolute;
-    width: 100%;
-    min-width: 300px;
+	display: inline;
+	z-index: 2;
 }
 .mirrorContainer {
-    position: relative;
-    top: 45%;
-    left: 6%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 .targetName {
-    position: absolute;
-    bottom: -300px;
-    font-size: 35px;
-    font-weight: bold;
-    min-height: 40px;
+	font-size: 35px;
+	font-weight: bold;
+	min-height: 40px;
+}
+.imageContainer {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 .ghostImage {
-    width: 40%;
-    position: absolute;
-    min-width: 150px;
-    /* position: relative; */
-    /* top: 18%; */
-    /* border-top: 70px rgba(232, 232, 232, 0.605) solid;
-    border-bottom: 70px rgba(232, 232, 232, 0.605) solid; */
+	width: 70%;
+	min-width: 200px;
+	position: absolute;
+	/* position: relative; */
+	/* top: 18%; */
+	/* border-top: 70px rgba(232, 232, 232, 0.605) solid;
+	border-bottom: 70px rgba(232, 232, 232, 0.605) solid; */
 }
 .ghostButtonControl {
-    position: relative;
-    bottom: -340px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    min-height: 50px;
-    width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	min-height: 5%;
+	width: 100%;
 }
 .sendButton {
-    font-family: 'Bebas Neue', sans-serif;
-    height: 40px;
-    width: 120px;
-    border-radius: 5px;
-    margin: 20px;
-    background-color: #000000;
-    color: white;
-    font-weight: bold;
-    font-size: 27px;
-    border: solid gray 1px;
+	font-family: 'Bebas Neue', sans-serif;
+	height: 40px;
+	width: 120px;
+	border-radius: 5px;
+	margin: 20px;
+	background-color: #000000;
+	color: white;
+	font-weight: bold;
+	font-size: 27px;
+	border: solid gray 1px;
 }
 .sendButton:hover {
-    cursor: pointer;
-    border: 1px solid white;
+	cursor: pointer;
+	border: 1px solid white;
 }
 .arrowButton {
-    font-family: 'Bebas Neue', sans-serif;
-    width: 70px;
-    height: 40px;
-    background-color: #000000;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
-    border: solid gray 1px;
-    border-radius: 5px;
+	font-family: 'Bebas Neue', sans-serif;
+	width: 70px;
+	height: 40px;
+	background-color: #000000;
+	color: white;
+	font-size: 30px;
+	font-weight: bold;
+	border: solid gray 1px;
+	border-radius: 5px;
 }
 .arrowButton:hover {
-    cursor: pointer;
-    border: 1px solid white;
+	cursor: pointer;
+	border: 1px solid white;
 }
